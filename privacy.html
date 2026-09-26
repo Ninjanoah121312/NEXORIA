@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — NEXORIA</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css">
+<link rel="stylesheet" href="style.css">
+<script>
+  (function () {
+    try {
+      var pref = localStorage.getItem("tk_theme") || "system";
+      var resolved = pref === "system"
+        ? (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark")
+        : pref;
+      document.documentElement.setAttribute("data-theme-boot", resolved);
+    } catch (e) {}
+  })();
+</script>
+<style>
+  .legal-wrap { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+  .legal-back { display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim); font-size: 13px; font-weight: 600; text-decoration: none; margin-bottom: 24px; }
+  .legal-back:hover { color: var(--violet); }
+  .legal-panel { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--panel-border); border-radius: 18px; padding: 40px 44px; }
+  .legal-panel h1 { font-family: var(--font-display); font-size: 26px; margin-bottom: 6px; }
+  .legal-panel .legal-updated { color: var(--text-dim); font-size: 12.5px; font-weight: 600; margin-bottom: 28px; }
+  .legal-panel h2 { font-size: 16px; margin: 30px 0 10px; color: var(--violet); }
+  .legal-panel p { font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 10px; }
+  .legal-panel ul { margin: 6px 0 14px 22px; }
+  .legal-panel li { font-size: 14px; line-height: 1.7; margin-bottom: 6px; }
+  .legal-panel a { color: var(--violet); text-decoration: none; }
+  .legal-panel a:hover { text-decoration: underline; }
+</style>
+</head>
+<body data-theme="dark">
+<div class="legal-wrap">
+  <a class="legal-back" href="./"><i class="ti ti-arrow-left"></i> Back to NEXORIA</a>
+  <div class="legal-panel">
+    <h1>NEXORIA — Privacy Policy</h1>
+    <div class="legal-updated">Last Updated: September 25, 2026</div>
+    <p>This Privacy Policy explains what information NEXORIA may collect, why it is used, and how it is handled when you use the NEXORIA Discord bot or dashboard.</p>
+
+    <h2>1. Information We May Collect</h2>
+    <p>Depending on the features you use, NEXORIA may process or store information such as:</p>
+    <ul>
+      <li>Discord server IDs.</li>
+      <li>Discord user IDs.</li>
+      <li>Discord role and permission information required for bot functionality.</li>
+      <li>Server configuration and settings.</li>
+      <li>Custom commands created through NEXORIA.</li>
+      <li>Ticket information and ticket configuration.</li>
+      <li>Server logging configuration.</li>
+      <li>Dashboard account or session information.</li>
+      <li>Information provided when contacting NEXORIA for support.</li>
+    </ul>
+    <p>NEXORIA does not intentionally collect information that is not required for its features.</p>
+
+    <h2>2. How Information Is Used</h2>
+    <p>Information may be used to:</p>
+    <ul>
+      <li>Provide and operate NEXORIA's features.</li>
+      <li>Save server settings and configurations.</li>
+      <li>Provide ticket and support functionality.</li>
+      <li>Provide server logging features.</li>
+      <li>Operate the NEXORIA dashboard.</li>
+      <li>Maintain security and prevent abuse.</li>
+      <li>Respond to support requests.</li>
+      <li>Improve and develop NEXORIA.</li>
+    </ul>
+
+    <h2>3. Data Sharing</h2>
+    <p>NEXORIA does not sell your personal information.</p>
+    <p>Information may be processed by third-party services when necessary to operate parts of NEXORIA, such as Discord or services used to host and operate the bot and dashboard.</p>
+
+    <h2>4. Data Retention</h2>
+    <p>Information may be retained for as long as it is necessary to provide NEXORIA's features or for legitimate operational and security purposes.</p>
+    <p>Some server configuration may remain stored after the bot is removed from a server unless it is deleted through an available deletion process or otherwise removed as part of normal data management.</p>
+
+    <h2>5. Your Rights</h2>
+    <p>Depending on your location and applicable law, you may have rights regarding personal information associated with you, including requesting access to or deletion of certain information.</p>
+    <p>To request assistance with your data, contact us through the official NEXORIA Discord server.</p>
+
+    <h2>6. Security</h2>
+    <p>Reasonable measures are used to protect information handled by NEXORIA. However, no online service can guarantee absolute security.</p>
+
+    <h2>7. Children's Privacy</h2>
+    <p>NEXORIA is a Discord bot and is not specifically designed to collect personal information from children. Users should follow Discord's applicable age requirements and policies.</p>
+
+    <h2>8. Changes to This Policy</h2>
+    <p>This Privacy Policy may be updated as NEXORIA changes or new features are introduced. The latest version will be published through NEXORIA's official channels.</p>
+
+    <h2>9. Contact</h2>
+    <p>For privacy questions, data requests, support, or suggestions, join the official NEXORIA Discord server:<br><a id="legal-discord-link" href="#" target="_blank" rel="noopener">—</a></p>
+    <p>NEXORIA Website:<br><a id="legal-site-link" href="#" target="_blank" rel="noopener">—</a></p>
+  </div>
+</div>
+<script>
+  document.write(`<script src="config.js?v=${Date.now()}"><\/script>`);
+</script>
+<script>
+  window.addEventListener("load", function () {
+    var cfg = window.TICKET_KEEPER_CONFIG || {};
+    var discordLink = document.getElementById("legal-discord-link");
+    var siteLink = document.getElementById("legal-site-link");
+    if (discordLink && cfg.DISCORD_SUPPORT_URL) {
+      discordLink.href = cfg.DISCORD_SUPPORT_URL;
+      discordLink.textContent = cfg.DISCORD_SUPPORT_URL;
+    }
+    if (siteLink) {
+      var url = window.location.origin + (cfg.BASE_PATH || "/");
+      siteLink.href = url;
+      siteLink.textContent = url;
+    }
+  });
+</script>
+</body>
+</html>

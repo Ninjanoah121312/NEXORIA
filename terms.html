@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms of Service — NEXORIA</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css">
+<link rel="stylesheet" href="style.css">
+<script>
+  (function () {
+    try {
+      var pref = localStorage.getItem("tk_theme") || "system";
+      var resolved = pref === "system"
+        ? (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark")
+        : pref;
+      document.documentElement.setAttribute("data-theme-boot", resolved);
+    } catch (e) {}
+  })();
+</script>
+<style>
+  .legal-wrap { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+  .legal-back { display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim); font-size: 13px; font-weight: 600; text-decoration: none; margin-bottom: 24px; }
+  .legal-back:hover { color: var(--violet); }
+  .legal-panel { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--panel-border); border-radius: 18px; padding: 40px 44px; }
+  .legal-panel h1 { font-family: var(--font-display); font-size: 26px; margin-bottom: 6px; }
+  .legal-panel .legal-updated { color: var(--text-dim); font-size: 12.5px; font-weight: 600; margin-bottom: 28px; }
+  .legal-panel h2 { font-size: 16px; margin: 30px 0 10px; color: var(--violet); }
+  .legal-panel p { font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 10px; }
+  .legal-panel ul { margin: 6px 0 14px 22px; }
+  .legal-panel li { font-size: 14px; line-height: 1.7; margin-bottom: 6px; }
+  .legal-panel a { color: var(--violet); text-decoration: none; }
+  .legal-panel a:hover { text-decoration: underline; }
+</style>
+</head>
+<body data-theme="dark">
+<div class="legal-wrap">
+  <a class="legal-back" href="./"><i class="ti ti-arrow-left"></i> Back to NEXORIA</a>
+  <div class="legal-panel">
+    <h1>NEXORIA — Terms of Service</h1>
+    <div class="legal-updated">Last Updated: September 25, 2026</div>
+    <p>By using NEXORIA, inviting the bot to your Discord server, or using the NEXORIA dashboard, you agree to these Terms of Service.</p>
+
+    <h2>1. About NEXORIA</h2>
+    <p>NEXORIA is a general-purpose Discord bot designed to provide server management and community features, including ticket support, custom commands, server logging, moderation tools, and dashboard functionality.</p>
+
+    <h2>2. Acceptable Use</h2>
+    <p>You agree not to use NEXORIA to:</p>
+    <ul>
+      <li>Break Discord's Terms of Service or Community Guidelines.</li>
+      <li>Use the bot for illegal activities.</li>
+      <li>Abuse, exploit, or intentionally disrupt NEXORIA.</li>
+      <li>Attempt to gain unauthorized access to NEXORIA, its dashboard, or its systems.</li>
+      <li>Use NEXORIA to distribute malicious content or harmful software.</li>
+      <li>Circumvent security or access restrictions.</li>
+    </ul>
+    <p>You are responsible for how NEXORIA is configured and used in your Discord server.</p>
+
+    <h2>3. Discord</h2>
+    <p>NEXORIA operates through Discord and is subject to Discord's rules and policies. Your use of Discord remains subject to Discord's own Terms of Service and Community Guidelines.</p>
+
+    <h2>4. Availability</h2>
+    <p>NEXORIA is provided on an ongoing basis, but availability is not guaranteed. Features may be changed, removed, temporarily disabled, or discontinued at any time.</p>
+    <p>We may perform maintenance or updates that temporarily affect the availability of the bot or dashboard.</p>
+
+    <h2>5. Server Data</h2>
+    <p>Depending on the features you use, NEXORIA may store information required to operate the bot, such as server configuration, settings, custom commands, ticket information, and logging configuration.</p>
+    <p>For information about data collection and handling, please see the <a href="privacy.html">NEXORIA Privacy Policy</a>.</p>
+
+    <h2>6. Termination</h2>
+    <p>Access to NEXORIA may be restricted or terminated if these Terms are violated, if the bot is abused, or when necessary to protect NEXORIA and its users.</p>
+    <p>You may stop using NEXORIA at any time by removing the bot from your server and ceasing use of the dashboard.</p>
+
+    <h2>7. Changes</h2>
+    <p>These Terms may be updated as NEXORIA develops. Continued use of NEXORIA after changes are published constitutes acceptance of the updated Terms.</p>
+
+    <h2>8. Contact</h2>
+    <p>For support, questions, or suggestions, join the official NEXORIA Discord server:<br><a id="legal-discord-link" href="#" target="_blank" rel="noopener">—</a></p>
+    <p>NEXORIA Website:<br><a id="legal-site-link" href="#" target="_blank" rel="noopener">—</a></p>
+  </div>
+</div>
+<script>
+  // The Discord invite (it rotates/expires) and the site's own public
+  // URL are never hardcoded here — both are read live from
+  // config.js's single copy so this page can't go stale on its own.
+  document.write(`<script src="config.js?v=${Date.now()}"><\/script>`);
+</script>
+<script>
+  window.addEventListener("load", function () {
+    var cfg = window.TICKET_KEEPER_CONFIG || {};
+    var discordLink = document.getElementById("legal-discord-link");
+    var siteLink = document.getElementById("legal-site-link");
+    if (discordLink && cfg.DISCORD_SUPPORT_URL) {
+      discordLink.href = cfg.DISCORD_SUPPORT_URL;
+      discordLink.textContent = cfg.DISCORD_SUPPORT_URL;
+    }
+    if (siteLink) {
+      var url = window.location.origin + (cfg.BASE_PATH || "/");
+      siteLink.href = url;
+      siteLink.textContent = url;
+    }
+  });
+</script>
+</body>
+</html>
