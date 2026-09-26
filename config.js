@@ -33,4 +33,15 @@ window.TICKET_KEEPER_CONFIG = {
   // Adjust the `permissions` integer to match exactly what your bot
   // needs (Manage Channels, Manage Roles, etc).
   BOT_PERMISSIONS: "268435472"
+
+  // Your NEXORIA Discord support/community server invite link. This is
+  // the ONE place this ever needs to be changed — every button, the
+  // Terms of Service page, and the Privacy Policy page all read it from
+  // here at load time rather than having it typed out in several
+  // places, since invite links can expire/rotate. bot.js also reads
+  // this exact value straight out of this file at startup (see
+  // loadDiscordSupportUrl() near the top of bot.js) so Discord-side
+  // messages (server-added/removed announcements, /help) link to the
+  // same server without it being duplicated into config.env too.
+  DISCORD_SUPPORT_URL: "https://discord.gg/QJSvzR9VHC"
 };
