@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXORA — Dashboard</title>
+<title>NEXORIA — Dashboard</title>
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css">
 <link rel="stylesheet" href="style.css">
@@ -31,14 +31,16 @@
 <section id="screen-landing" class="screen active">
   <div class="landing-wrap">
     <div class="hero-text-panel">
-      <div class="brand-row"><div class="brand-glyph brand-glyph-lg"><img src="logo.png" alt="NEXORA logo"></div>NEXORA</div>
+      <div class="brand-row"><div class="brand-glyph brand-glyph-lg"><img src="logo.png" alt="NEXORIA logo"></div>NEXORIA</div>
       <h1 class="landing-title">Tickets that<br><span class="accent">never fall through</span></h1>
       <p class="landing-sub">Invite the bot, sign in with Discord, and manage every open ticket across your servers from one dashboard.</p>
       <div class="landing-actions">
         <a href="#" id="btn-invite" class="btn btn-primary" data-icon="plus"><i class="ti ti-plus"></i> Invite to server</a>
         <a href="#" id="btn-login" class="btn btn-ghost">Open dashboard</a>
+        <a href="#" id="btn-discord-support" class="btn btn-ghost" style="display:none" target="_blank" rel="noopener"><i class="ti ti-brand-discord"></i> Support Server</a>
       </div>
     </div>
+    <div class="hero-side-col">
     <div class="hud-panel">
       <div class="hud-title-row">
         <span class="hud-title">SYSTEM STATUS</span>
@@ -57,6 +59,14 @@
         </div>
       </div>
     </div>
+    <div class="hud-panel watching-panel" id="watching-panel" style="display:none">
+      <div class="hud-title-row">
+        <span class="hud-title" data-icon="eye"><i class="ti ti-eye"></i> NEXORIA IS WATCHING</span>
+      </div>
+      <div class="watching-summary" id="watching-summary">— servers, — members</div>
+      <div class="watching-top-list" id="watching-top-list"></div>
+    </div>
+    </div>
   </div>
 </section>
 
@@ -65,7 +75,7 @@
   <div class="app-shell-with-topbar">
     <div class="topbar">
       <div class="topbar-left">
-        <div class="brand-row" style="margin-bottom:0"><div class="brand-glyph"><img src="logo.png" alt="NEXORA logo"></div>NEXORA</div>
+        <div class="brand-row" style="margin-bottom:0"><div class="brand-glyph"><img src="logo.png" alt="NEXORIA logo"></div>NEXORIA</div>
       </div>
       <div class="topbar-right">
         <span class="status-pip checking" id="picker-status-pip"><span class="status-dot"></span>Checking…</span>
@@ -73,7 +83,7 @@
     </div>
     <div class="app-shell">
       <nav class="app-sidebar" id="picker-sidebar">
-        <div class="app-sidebar-brand"><div class="brand-glyph"><img src="logo.png" alt="NEXORA logo"></div><span style="font-weight:700;font-size:13.5px">NEXORA</span></div>
+        <div class="app-sidebar-brand"><div class="brand-glyph"><img src="logo.png" alt="NEXORIA logo"></div><span style="font-weight:700;font-size:13.5px">NEXORIA</span></div>
         <div class="picker-server-switch dropdown-anchor">
           <button class="server-switch-trigger-picker" id="picker-server-switch">
             <div class="server-icon" data-icon="servers"><i class="ti ti-server-2"></i></div>
@@ -155,6 +165,25 @@
      instead of window.confirm/alert or its own bespoke overlay markup,
      so every popup in the app looks and behaves the same way. -->
 <div id="dc-modal-root"></div>
+
+<!-- First-visit Terms of Service / Privacy Policy gate. Hidden by
+     default (see style.css) — initTosGate() in app.js only reveals it
+     when localStorage has no record of the person having agreed yet,
+     and it sits above absolutely everything else (higher than
+     #dc-modal-root) so nothing behind it is reachable until they do.
+     The Terms/Privacy links open in a new tab, so reading either
+     never requires leaving or dismissing this screen first. -->
+<div id="tos-gate-overlay" class="tos-gate-overlay" style="display:none">
+  <div class="tos-gate-card">
+    <div class="brand-row" style="justify-content:center"><div class="brand-glyph"><img src="logo.png" alt="NEXORIA logo"></div>NEXORIA</div>
+    <p class="tos-gate-text">Before you continue, please read and agree to our Terms of Service and Privacy Policy.</p>
+    <label class="tos-gate-check">
+      <input type="checkbox" id="tos-gate-checkbox">
+      <span>I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms of Service</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a></span>
+    </label>
+    <button class="btn btn-primary" id="tos-gate-continue" disabled style="width:100%;justify-content:center">Continue</button>
+  </div>
+</div>
 
 <script>
   // GitHub Pages serves static files with long browser cache lifetimes,
