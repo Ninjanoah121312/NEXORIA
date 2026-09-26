@@ -53,7 +53,7 @@ body {
   transition: background-color .15s ease, color .15s ease;
   position: relative;
 }
-/* NEXORA's actual background.png (a large character illustration, not
+/* NEXORIA's actual background.png (a large character illustration, not
    a tileable texture) as a genuinely quiet backdrop — greyscale +
    dimmed + positioned behind every other element on the page, never
    competing with text or cards for attention. A dedicated ::before
@@ -117,7 +117,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--panel-border) transparent; 
    the compact topbar sizing every other .brand-row instance uses. */
 .brand-row:has(.brand-glyph-lg) { gap: 14px; font-size: 20px; font-weight: 700; color: var(--text); font-family: var(--font-display); }
 .brand-glyph { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--violet), var(--pink)); display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 13px; color: #0a0b14; flex-shrink: 0; overflow: hidden; }
-/* The real NEXORA logo.png, from the site repo root, filling the same
+/* The real NEXORIA logo.png, from the site repo root, filling the same
    glyph slot the fake "NX" text box used to occupy. object-fit:cover
    crops it to the circle rather than squashing its aspect ratio; the
    gradient background above still shows through as a fallback for the
@@ -138,7 +138,82 @@ html { scrollbar-width: thin; scrollbar-color: var(--panel-border) transparent; 
 .btn-icon { padding: 8px; display: inline-grid; place-items: center; }
 .btn:disabled { opacity: .5; pointer-events: none; }
 
+/* First-visit Terms of Service / Privacy Policy gate (see index.html
+   and initTosGate() in app.js). z-index sits above the shared modal
+   system (#dc-modal-root) since this must block everything, including
+   any modal that might otherwise try to open underneath it. */
+.tos-gate-overlay { position: fixed; inset: 0; z-index: 999; background: rgba(4,4,10,.82); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; }
+.tos-gate-card { width: 100%; max-width: 420px; background: var(--panel-solid); border: 1px solid var(--panel-border); border-radius: 16px; padding: 28px 26px; text-align: center; }
+.tos-gate-text { font-size: 13.5px; color: var(--text-dim); line-height: 1.6; margin: 14px 0 18px; }
+.tos-gate-check { display: flex; align-items: flex-start; gap: 10px; text-align: left; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 20px; cursor: pointer; }
+.tos-gate-check input { margin-top: 2px; width: 15px; height: 15px; accent-color: var(--violet); flex-shrink: 0; cursor: pointer; }
+.tos-gate-check a { color: var(--violet); }
+.tos-gate-card .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* ============================================================
+   Variable autocomplete + highlight editor (shared/_variables.js).
+   Textarea stays in normal document flow (so its own rows/height CSS
+   still sizes the wrapper) but is made visually transparent with a
+   higher z-index; the backdrop sits behind it at inset:0, showing the
+   same text with {tokens} highlighted, and only the real caret shows
+   through from the textarea on top.
+   ============================================================ */
+.dc-var-editor-wrap { position: relative; }
+.dc-var-backdrop {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  overflow: hidden; white-space: pre-wrap; word-wrap: break-word;
+  color: var(--text);
+}
+.dc-var-token { color: var(--violet); background: rgba(139,92,246,.14); border-radius: 4px; }
+.dc-var-token-open { color: var(--violet); opacity: .75; }
+textarea.dc-var-textarea {
+  position: relative; z-index: 2;
+  background: transparent !important; color: transparent !important;
+  caret-color: var(--text);
+}
+.dc-var-dropdown {
+  position: absolute; z-index: 210; width: 260px; max-height: 220px; overflow-y: auto;
+  background: var(--panel-solid); border: 1px solid var(--panel-border); border-radius: 10px;
+  box-shadow: 0 12px 30px -8px rgba(0,0,0,.5); padding: 4px;
+}
+.dc-var-dropdown-item { display: flex; flex-direction: column; gap: 1px; padding: 7px 9px; border-radius: 7px; cursor: pointer; }
+.dc-var-dropdown-item:hover, .dc-var-dropdown-item.active { background: rgba(139,92,246,.14); }
+.dc-var-dropdown-key { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 700; color: var(--violet); }
+.dc-var-dropdown-desc { font-size: 11px; color: var(--text-dim); }
+
+/* ============================================================
+   Documentation panel — module list + content pane, plus the
+   variable reference table reused on both the Info tab and every
+   module's own doc page.
+   ============================================================ */
+.docs-layout { display: flex; gap: 26px; align-items: flex-start; }
+.docs-sidebar { width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 0; }
+.docs-sidebar-item { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 10px; border-radius: 8px; background: none; border: none; color: var(--text-dim); font-size: 13px; font-weight: 600; text-align: left; cursor: pointer; }
+.docs-sidebar-item:hover { background: var(--hover-bg); color: var(--text); }
+.docs-sidebar-item.active { background: rgba(139,92,246,.14); color: var(--violet); }
+.docs-content { flex: 1; min-width: 0; }
+.docs-var-group { margin-bottom: 16px; }
+.docs-var-group-label { font-size: 10.5px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+.docs-var-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; border-top: 1px solid var(--panel-border); }
+.docs-var-group .docs-var-row:first-of-type { border-top: none; }
+.docs-var-desc { font-size: 12.5px; color: var(--text-dim); }
+@media (max-width: 760px) { .docs-layout { flex-direction: column; } .docs-sidebar { width: 100%; position: static; flex-direction: row; overflow-x: auto; } }
+
+.hero-side-col { display: flex; flex-direction: column; gap: 16px; }
 .hud-panel { background: var(--panel); backdrop-filter: blur(6px); border: 1px solid var(--panel-border); border-radius: 14px; padding: 20px; position: relative; }
+/* "NEXORIA is watching" box — live server/member count + top 3 servers
+   by member count, sourced from the same /status data as the SYSTEM
+   STATUS card above it. Hidden (display:none, see index.html) until
+   refreshHeroStatus() has real numbers to show, rather than flashing
+   dashes on first paint. */
+.watching-summary { font-size: 20px; font-weight: 700; margin: 10px 0 14px; }
+.watching-summary .accent { color: var(--violet); }
+.watching-top-list { display: flex; flex-direction: column; gap: 8px; }
+.watching-top-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 600; }
+.watching-top-rank { width: 18px; flex-shrink: 0; color: var(--text-dim); font-weight: 800; }
+.watching-top-icon { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: var(--input-bg); }
+.watching-top-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.watching-top-count { color: var(--text-dim); flex-shrink: 0; }
 /* Same translucent-panel-over-backdrop recipe as .hud-panel, sized for
    the landing hero's headline/subtext/buttons instead of a compact
    stat card — this is what makes the hero text readable sitting
@@ -654,7 +729,7 @@ textarea.embed-inline-input.embed-card-desc { font-size: 13px; color: var(--text
 .share-page-wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
 
 /* ============================================================
-   NEXORA additions below this line
+   NEXORIA additions below this line
    ============================================================ */
 
 /* ---------- #12: four evenly-spaced landing hero stats (2x2 grid) --- */
