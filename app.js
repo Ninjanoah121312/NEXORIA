@@ -1,5 +1,5 @@
 // ============================================================
-// NEXORA — frontend app logic
+// NEXORIA — frontend app logic
 // Static site (GitHub Pages) talking to:
 //   1) Discord's OAuth + REST API directly (PKCE, no secret needed here)
 //   2) Your own hosted bot (bot/bot.js) over CFG.LOCAL_BOT_URL
@@ -173,7 +173,9 @@ const routes = {
       return { screen: "picker", panel: "my-tickets" };
     }
     if (parts[0] === "premium") return { screen: "picker", panel: "premium" };
-    if (parts[0] === "docs") return { screen: "picker", panel: "docs" };
+    // /docs with no scope lands on the base Info tab; /docs/<moduleId>
+    // opens straight to that module's own documentation page.
+    if (parts[0] === "docs") return { screen: "picker", panel: "docs", docsModuleId: parts[1] || null };
     if (parts[0] === "admin") return { screen: "picker", panel: "admin" };
     if (parts[0] === "share" && parts[1]) return { screen: "share", shareId: parts[1] };
     if (parts[0] === "servers" && parts[1]) {
@@ -198,6 +200,9 @@ const routes = {
   },
   myTicketUrl(guildId, ticketId) {
     return `/my-tickets/ticket/${guildId}/${ticketId}`;
+  },
+  docsUrl(moduleId) {
+    return moduleId ? `/docs/${moduleId}` : "/docs";
   },
 };
 
@@ -537,6 +542,7 @@ function renderSidebarBottom(slotId) {
         </div>
       </div>
       <a href="#" class="nav-item sb-status-link">${icon("status")} Status</a>
+      ${CFG.DISCORD_SUPPORT_URL ? `<a href="${CFG.DISCORD_SUPPORT_URL}" target="_blank" rel="noopener" class="nav-item sb-discord-link"><i class="ti ti-brand-discord" style="font-size:18px;width:20px;text-align:center"></i> Support Server</a>` : ""}
       <div class="sidebar-profile sb-profile-trigger">
         <img class="sidebar-profile-avatar" src="${avatarUrl(session.user)}" alt="">
         <div class="sidebar-profile-name">${escapeHtml(session.user.username)}</div>
@@ -769,7 +775,7 @@ async function renderFromRoute() {
   if (route.screen !== "landing" && !session) { routes.go("/", true); showScreen("screen-landing"); return; }
 
   if (route.screen === "landing") { showScreen("screen-landing"); return; }
-  if (route.screen === "picker") { await enterPicker(route.panel, { myTicketGuildId: route.myTicketGuildId, myTicketId: route.myTicketId }); return; }
+  if (route.screen === "picker") { await enterPicker(route.panel, { myTicketGuildId: route.myTicketGuildId, myTicketId: route.myTicketId, docsModuleId: route.docsModuleId }); return; }
   if (route.screen === "dashboard") {
     if (!currentGuild || currentGuild.id !== route.guildId) {
       currentGuild = { id: route.guildId, name: null, icon: null };
@@ -789,6 +795,33 @@ async function refreshHeroStatus() {
   set("hero-uptime", info ? formatUptime(info.uptimeSeconds) : "—");
   set("hero-bot-tag", info?.botTag ?? "—");
   ["picker-status-pip", "dash-status-pip"].forEach(id => { const el = document.getElementById(id); if (el) renderStatusPip(el, info); });
+  paintWatchingPanel(info);
+}
+
+// "NEXORIA is watching" box on the landing page: total servers/members
+// across every guild the bot is in, plus the top 3 by member count.
+// Uses the same /status payload refreshHeroStatus already fetched — no
+// extra request. Left hidden (see index.html) until there's a real
+// guild list to show, rather than flashing "0 servers, 0 members".
+function paintWatchingPanel(info) {
+  const panel = document.getElementById("watching-panel");
+  if (!panel) return;
+  const guilds = info?.guilds || [];
+  if (!info?.online || guilds.length === 0) { panel.style.display = "none"; return; }
+  panel.style.display = "";
+  const totalMembers = guilds.reduce((sum, g) => sum + (g.memberCount || 0), 0);
+  document.getElementById("watching-summary").innerHTML =
+    `<span class="accent">${guilds.length}</span> server${guilds.length === 1 ? "" : "s"} · <span class="accent">${totalMembers.toLocaleString()}</span> member${totalMembers === 1 ? "" : "s"}`;
+  const top3 = [...guilds].sort((a, b) => (b.memberCount || 0) - (a.memberCount || 0)).slice(0, 3);
+  document.getElementById("watching-top-list").innerHTML = top3.map((g, i) => `
+    <div class="watching-top-row">
+      <span class="watching-top-rank">#${i + 1}</span>
+      ${g.icon
+        ? `<img class="watching-top-icon" src="https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png" alt="">`
+        : `<span class="watching-top-icon server-icon" style="display:flex;align-items:center;justify-content:center;font-size:9px">${initials(g.name)}</span>`}
+      <span class="watching-top-name">${escapeHtml(g.name)}</span>
+      <span class="watching-top-count">${(g.memberCount || 0).toLocaleString()}</span>
+    </div>`).join("");
 }
 
 // ============================================================
@@ -807,7 +840,7 @@ async function enterPicker(panel, deepLink = {}) {
   if (pickerActivePanel === "my-tickets" && deepLink.myTicketGuildId && deepLink.myTicketId) {
     await openMyTicketDetail(deepLink.myTicketGuildId, deepLink.myTicketId, false);
   } else {
-    await renderPickerPanel(pickerActivePanel);
+    await renderPickerPanel(pickerActivePanel, deepLink);
   }
 
   document.querySelectorAll("#picker-sidebar [data-picker-panel]").forEach(el => {
@@ -826,20 +859,167 @@ function paintPickerNav() {
   });
 }
 
-async function renderPickerPanel(panel) {
+async function renderPickerPanel(panel, deepLink = {}) {
   const root = document.getElementById("picker-panel-root");
   if (panel === "my-tickets") return renderMyTicketsPanel(root);
   if (panel === "premium") return renderPremiumPanel(root);
   if (panel === "admin") return renderAdminPanel(root);
-  if (panel === "docs") return renderDocsPanel(root);
+  if (panel === "docs") return renderDocsPanel(root, deepLink.docsModuleId || null);
   return renderDashboardPanel(root);
 }
 
-function renderDocsPanel(root) {
+// ============================================================
+// Documentation
+// ============================================================
+// Left-hand list: a fixed "Info" entry (general info + the Discord
+// link + Terms/Privacy + the full variable reference) plus one entry
+// per module that shipped a Documentation/<id>.doc.json — read
+// straight from the same /modules manifest the dashboard sidebar uses,
+// so a module with no doc file simply doesn't show up here rather
+// than linking to a 404. A search box filters that list by name.
+// Selecting "Info" or no scope at all is exactly what /docs (no
+// module) and NEXORIA's /help command (no scope given) land on;
+// picking a module matches /docs/<moduleId> and /help <module>.
+let docsModulesCache = null;
+async function loadDocsModuleList() {
+  if (docsModulesCache) return docsModulesCache;
+  try {
+    const manifest = await api("/modules");
+    docsModulesCache = (manifest.modules || []).filter(m => m.doc);
+  } catch {
+    docsModulesCache = [];
+  }
+  return docsModulesCache;
+}
+
+function prettifyModuleId(id) {
+  return id.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+}
+
+async function renderDocsPanel(root, initialModuleId) {
   root.innerHTML = `
     <h1 class="picker-heading">Documentation</h1>
-    <p class="picker-sub">Guides, module references, and setup instructions for NEXORA.</p>
-    <div class="empty-state">${icon("document", 28)}Documentation is coming soon — check back here for setup guides, module references, and API details.</div>`;
+    <p class="picker-sub">Guides, module references, and every variable NEXORIA supports.</p>
+    <div class="docs-layout">
+      <div class="docs-sidebar">
+        <input type="text" class="search-input" id="docs-search" placeholder="Search modules…" style="margin-bottom:10px">
+        <div id="docs-module-list">${loadingBlock("Loading modules…")}</div>
+      </div>
+      <div class="docs-content" id="docs-content">${loadingBlock("Loading…")}</div>
+    </div>`;
+
+  const modules = await loadDocsModuleList();
+  const listEl = document.getElementById("docs-module-list");
+  let activeId = initialModuleId && modules.some(m => m.id === initialModuleId) ? initialModuleId : null;
+
+  function paintList(filter) {
+    const q = (filter || "").toLowerCase();
+    const items = [{ id: null, label: "Info" }, ...modules.map(m => ({ id: m.id, label: prettifyModuleId(m.id) }))]
+      .filter(it => !q || it.label.toLowerCase().includes(q));
+    listEl.innerHTML = items.map(it => `
+      <button class="docs-sidebar-item ${activeId === it.id ? "active" : ""}" data-docs-id="${it.id || ""}">
+        ${it.id ? icon("category-2", 16) : icon("help-circle", 16)} ${escapeHtml(it.label)}
+      </button>`).join("") || `<div class="field-hint" style="padding:8px">No matches.</div>`;
+    listEl.querySelectorAll("[data-docs-id]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeId = btn.dataset.docsId || null;
+        routes.go(routes.docsUrl(activeId), true);
+        paintList(document.getElementById("docs-search").value);
+        paintContent();
+      });
+    });
+  }
+
+  async function paintContent() {
+    const content = document.getElementById("docs-content");
+    if (!activeId) { renderDocsInfoTab(content); return; }
+    const mod = modules.find(m => m.id === activeId);
+    content.innerHTML = loadingBlock("Loading documentation…");
+    try {
+      const doc = await fetch(`${CFG.LOCAL_BOT_URL}/modules-static/${mod.doc}`).then(r => r.json());
+      const varsRes = await fetch(`${CFG.LOCAL_BOT_URL}/variables`).then(r => r.json()).catch(() => ({ variables: [] }));
+      const relevantVars = (varsRes.variables || []).filter(v => !v.moduleId || v.moduleId === activeId);
+      content.innerHTML = `
+        <h2 style="margin-bottom:4px">${escapeHtml(doc.title || prettifyModuleId(activeId))}</h2>
+        <p class="picker-sub" style="margin-bottom:20px">${escapeHtml(doc.summary || "")}</p>
+        ${(doc.sections || []).map(s => `<div class="settings-section-block"><h4>${escapeHtml(s.heading || "")}</h4><p>${escapeHtml(s.body || "")}</p></div>`).join("")}
+        ${renderVariableReference(relevantVars, `Variables for ${prettifyModuleId(activeId)}`)}`;
+    } catch {
+      content.innerHTML = `<div class="empty-state">${icon("document", 28)}Couldn't load this module's documentation right now.</div>`;
+    }
+  }
+
+  document.getElementById("docs-search").addEventListener("input", (e) => paintList(e.target.value));
+  paintList("");
+  await paintContent();
+}
+
+function renderVariableReference(variables, heading = "All Variables") {
+  const groups = {};
+  variables.forEach(v => { (groups[v.group] = groups[v.group] || []).push(v); });
+  const groupOrder = Object.keys(groups).sort();
+  return `
+    <div class="settings-section-block">
+      <h4>${icon("variable", 16)} ${escapeHtml(heading)}</h4>
+      <input type="text" class="search-input" id="docs-var-search" placeholder="Search variables…" style="margin:10px 0">
+      <div id="docs-var-table">${groupOrder.map(g => renderVarGroup(g, groups[g])).join("")}</div>
+    </div>`;
+}
+function renderVarGroup(group, vars) {
+  return `
+    <div class="docs-var-group" data-var-group>
+      <div class="docs-var-group-label">${escapeHtml(group)}</div>
+      ${vars.map(v => `
+        <div class="docs-var-row" data-var-row data-var-search="${escapeHtml(v.key + " " + (v.description || ""))}">
+          <code class="cc-command-trigger-chip">{${escapeHtml(v.key)}}</code>
+          <span class="docs-var-desc">${escapeHtml(v.description || "")}</span>
+        </div>`).join("")}
+    </div>`;
+}
+
+function renderDocsInfoTab(content) {
+  const discordUrl = CFG.DISCORD_SUPPORT_URL || "#";
+  content.innerHTML = `
+    <h2 style="margin-bottom:4px">Info</h2>
+    <p class="picker-sub" style="margin-bottom:20px">General information about NEXORIA, plus the full list of variables usable anywhere they're supported.</p>
+    <div class="settings-section-block">
+      <h4><i class="ti ti-brand-discord" style="font-size:16px;vertical-align:-3px;margin-right:6px"></i>Support &amp; Suggestions</h4>
+      <p>Join the official NEXORIA Discord server for help, updates, and to make suggestions — feature requests and feedback all happen there now.</p>
+      <a class="btn btn-primary btn-small" href="${escapeHtml(discordUrl)}" target="_blank" rel="noopener" style="margin-top:8px;display:inline-flex"><i class="ti ti-brand-discord"></i> Join the Discord</a>
+    </div>
+    <div class="settings-section-block">
+      <h4>${icon("shield-check", 16)} Legal</h4>
+      <p><a href="terms.html" target="_blank" rel="noopener">Terms of Service</a> &nbsp;·&nbsp; <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a></p>
+    </div>
+    ${renderVariableReference([], "All Variables")}`;
+
+  // The Info tab's reference always shows every variable, unscoped —
+  // fetched separately here (rather than reusing renderVariableReference's
+  // built-in fetch) since this tab has no single module to filter to.
+  fetch(`${CFG.LOCAL_BOT_URL}/variables`).then(r => r.json()).then(d => {
+    const table = document.getElementById("docs-var-table");
+    if (!table) return;
+    const groups = {};
+    (d.variables || []).forEach(v => { (groups[v.group] = groups[v.group] || []).push(v); });
+    table.innerHTML = Object.keys(groups).sort().map(g => renderVarGroup(g, groups[g])).join("");
+    wireVarSearch();
+  }).catch(() => {});
+  wireVarSearch();
+}
+
+function wireVarSearch() {
+  const input = document.getElementById("docs-var-search");
+  if (!input) return;
+  input.addEventListener("input", () => {
+    const q = input.value.toLowerCase();
+    document.querySelectorAll("[data-var-row]").forEach(row => {
+      row.style.display = !q || row.dataset.varSearch.toLowerCase().includes(q) ? "" : "none";
+    });
+    document.querySelectorAll("[data-var-group]").forEach(group => {
+      const anyVisible = Array.from(group.querySelectorAll("[data-var-row]")).some(r => r.style.display !== "none");
+      group.style.display = anyVisible ? "" : "none";
+    });
+  });
 }
 
 async function renderDashboardPanel(root) {
@@ -1688,7 +1868,7 @@ async function enterSharePage(shareId) {
     const data = await api(`/share/tickets/${shareId}`);
     const { ticket, guildName, messages } = data;
     root.innerHTML = `
-      <div class="brand-row" style="margin-bottom:18px"><div class="brand-glyph"><img src="logo.png" alt="NEXORA logo"></div>NEXORA</div>
+      <div class="brand-row" style="margin-bottom:18px"><div class="brand-glyph"><img src="logo.png" alt="NEXORIA logo"></div>NEXORIA</div>
       <div class="modal-panel" style="max-width:800px;max-height:none;margin:0 auto">
         <div class="transcript-header">
           <div>
@@ -1715,7 +1895,7 @@ async function enterSharePage(shareId) {
       </div>`;
   } catch (e) {
     root.innerHTML = `
-      <div class="brand-row" style="margin-bottom:18px"><div class="brand-glyph"><img src="logo.png" alt="NEXORA logo"></div>NEXORA</div>
+      <div class="brand-row" style="margin-bottom:18px"><div class="brand-glyph"><img src="logo.png" alt="NEXORIA logo"></div>NEXORIA</div>
       <div class="empty-state"><i class="ti ti-link-off glyph"></i>${escapeHtml(e.message || "This share link is invalid.")}</div>`;
   }
 }
@@ -1959,7 +2139,7 @@ async function paintServerSwitcherPanel(panel) {
     <div class="dropdown-panel-title">Staff Servers</div>
     <input type="text" class="dropdown-panel-search" id="dash-crumb-search" placeholder="Search servers…">
     <div id="dash-crumb-list">
-      ${withBot.length ? withBot.map(rowHtml).join("") : `<div class="dropdown-panel-empty">NEXORA isn't on any server you manage yet.</div>`}
+      ${withBot.length ? withBot.map(rowHtml).join("") : `<div class="dropdown-panel-empty">NEXORIA isn't on any server you manage yet.</div>`}
     </div>
     <div class="dropdown-panel-footer-action">
       <button class="btn btn-ghost btn-small" id="dash-crumb-view-all" style="width:100%">${icon("servers")} View All Servers</button>
@@ -2228,6 +2408,27 @@ function formatDuration(totalSeconds) {
 // ============================================================
 // Wiring
 // ============================================================
+// Bump this if the Terms/Privacy content changes enough that
+// previously-agreed visitors should be asked again — everyone who
+// already agreed under an older key just gets the gate once more.
+const TOS_AGREEMENT_KEY = "tk_tos_agreed_v1";
+function initTosGate() {
+  const overlay = document.getElementById("tos-gate-overlay");
+  if (!overlay) return;
+  if (localStorage.getItem(TOS_AGREEMENT_KEY) === "1") return; // already agreed — stays hidden
+  overlay.style.display = "flex";
+  document.body.style.overflow = "hidden";
+  const checkbox = document.getElementById("tos-gate-checkbox");
+  const continueBtn = document.getElementById("tos-gate-continue");
+  checkbox.addEventListener("change", () => { continueBtn.disabled = !checkbox.checked; });
+  continueBtn.addEventListener("click", () => {
+    if (!checkbox.checked) return;
+    try { localStorage.setItem(TOS_AGREEMENT_KEY, "1"); } catch { /* privacy mode etc — gate just reappears next visit, non-fatal */ }
+    overlay.style.display = "none";
+    document.body.style.overflow = "";
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   function on(id, event, handler) {
     const el = document.getElementById(id);
@@ -2235,6 +2436,9 @@ document.addEventListener("DOMContentLoaded", () => {
     else console.warn(`Wiring: #${id} not found in the page — skipping its listener.`);
   }
 
+  initTosGate();
+  const discordBtn = document.getElementById("btn-discord-support");
+  if (discordBtn && CFG.DISCORD_SUPPORT_URL) { discordBtn.href = CFG.DISCORD_SUPPORT_URL; discordBtn.style.display = ""; }
   on("btn-login", "click", (e) => { e.preventDefault(); beginLogin(); });
   on("btn-invite", "click", (e) => { e.preventDefault(); window.open(inviteUrl(), "_blank"); });
   on("btn-logout", "click", () => { clearSession(); routes.go("/", true); showScreen("screen-landing"); });
