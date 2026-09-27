@@ -129,7 +129,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--panel-border) transparent; 
 .landing-sub { margin-top: 18px; color: var(--text-dim); font-size: 16.5px; line-height: 1.65; max-width: 46ch; }
 .landing-actions { margin-top: 32px; display: flex; gap: 14px; flex-wrap: wrap; }
 
-.btn { padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 8px; transition: transform .12s ease, border-color .12s ease, background .12s ease; white-space: nowrap; }
+.btn { padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 8px; transition: transform .12s ease, border-color .12s ease, background .12s ease; white-space: nowrap; font-family: inherit; cursor: pointer; text-decoration: none; }
 .btn:hover { transform: translateY(-1px); }
 .btn-primary { background: linear-gradient(120deg, var(--violet), var(--violet-dim)); color: #fff; box-shadow: 0 0 0 1px rgba(139,92,246,.4), 0 8px 22px -8px rgba(139,92,246,.6); }
 .btn-ghost { background: var(--input-bg); border-color: var(--panel-border); color: var(--text); }
@@ -303,7 +303,7 @@ textarea.dc-var-textarea {
 .server-switch-trigger-picker .dash-nav-server-name { color: var(--violet); }
 
 .nav-section-label { font-size: 10.5px; font-weight: 700; letter-spacing: .04em; color: var(--text-dim); padding: 14px 10px 6px; text-transform: uppercase; }
-.nav-item { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--text-dim); margin-bottom: 1px; cursor: pointer; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--text-dim); margin-bottom: 1px; cursor: pointer; width: 100%; background: none; border: none; font-family: inherit; text-align: left; text-decoration: none; }
 .nav-item i { font-size: 15px; width: 16px; flex-shrink: 0; }
 /* Custom colored SVG nav icons (see navIcon() in app.js) — sized and
    aligned the same way .nav-item i is, so a module list mixing an SVG
