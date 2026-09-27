@@ -2462,6 +2462,7 @@ const TOS_AGREEMENT_KEY = "tk_tos_agreed_v1";
 function initTosGate() {
   const overlay = document.getElementById("tos-gate-overlay");
   if (!overlay) return;
+  if (!CFG) { console.error("[ToS gate] CFG is missing (config.js failed to load) — the gate's Terms/Privacy links can't be built, skipping it entirely rather than showing broken links."); return; }
   // Built from BASE_PATH + origin rather than left as the plain
   // relative "terms.html"/"privacy.html" in the HTML — a relative link
   // is only reliable when the gate happens to show while the SPA's
@@ -2493,16 +2494,34 @@ document.addEventListener("DOMContentLoaded", () => {
     if (el) el.addEventListener(event, handler);
     else console.warn(`Wiring: #${id} not found in the page — skipping its listener.`);
   }
+  // This whole handler used to be one unbroken run of statements — if
+  // ANY one of them threw (initTosGate() throwing because CFG was
+  // undefined is exactly how this was first found, but it's not
+  // specific to that one bug), every single line after it, INCLUDING
+  // boot() and the setInterval(...) status poll below, silently never
+  // ran at all. That's what a permanently-stuck "Checking…" with
+  // nothing else on the page working actually was — not a status-poll
+  // bug, a bootstrap-never-happened bug. Each independent step below
+  // now runs in its own try/catch so one broken piece can never again
+  // take the rest of the app down with it — worst case, one button
+  // doesn't do anything and the console says exactly which.
+  function step(name, fn) {
+    try { fn(); } catch (e) { console.error(`[boot] "${name}" failed and was skipped — everything else still continues:`, e); }
+  }
 
-  initTosGate();
-  const discordBtn = document.getElementById("btn-discord-support");
-  if (discordBtn && CFG.DISCORD_SUPPORT_URL) { discordBtn.href = CFG.DISCORD_SUPPORT_URL; discordBtn.style.display = ""; }
-  on("btn-login", "click", (e) => { e.preventDefault(); beginLogin(); });
-  on("btn-invite", "click", (e) => { e.preventDefault(); window.open(inviteUrl(), "_blank"); });
-  on("btn-logout", "click", () => { clearSession(); routes.go("/", true); showScreen("screen-landing"); });
-  on("btn-back", "click", () => {
-    if (window.location.pathname.includes("/servers/")) { routes.go("/dashboard"); enterPicker(); }
-    else window.history.back();
+  step("ToS gate", () => initTosGate());
+  step("Discord support button", () => {
+    const discordBtn = document.getElementById("btn-discord-support");
+    if (discordBtn && CFG?.DISCORD_SUPPORT_URL) { discordBtn.href = CFG.DISCORD_SUPPORT_URL; discordBtn.style.display = ""; }
+  });
+  step("landing/topbar button wiring", () => {
+    on("btn-login", "click", (e) => { e.preventDefault(); beginLogin(); });
+    on("btn-invite", "click", (e) => { e.preventDefault(); window.open(inviteUrl(), "_blank"); });
+    on("btn-logout", "click", () => { clearSession(); routes.go("/", true); showScreen("screen-landing"); });
+    on("btn-back", "click", () => {
+      if (window.location.pathname.includes("/servers/")) { routes.go("/dashboard"); enterPicker(); }
+      else window.history.back();
+    });
   });
 
   boot();
