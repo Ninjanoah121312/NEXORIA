@@ -35,9 +35,18 @@
       <h1 class="landing-title">Tickets that<br><span class="accent">never fall through</span></h1>
       <p class="landing-sub">Invite the bot, sign in with Discord, and manage every open ticket across your servers from one dashboard.</p>
       <div class="landing-actions">
-        <a href="#" id="btn-invite" class="btn btn-primary" data-icon="plus"><i class="ti ti-plus"></i> Invite to server</a>
-        <a href="#" id="btn-login" class="btn btn-ghost">Open dashboard</a>
-        <a href="#" id="btn-discord-support" class="btn btn-ghost" style="display:none" target="_blank" rel="noopener"><i class="ti ti-brand-discord"></i> Support Server</a>
+        <!-- Real <button>s, not <a href="#">s — a JS-only "link" that
+             never actually goes anywhere doesn't need to be an anchor,
+             and href="#" specifically causes: the URL bar picking up a
+             stray "#" if the click ever fires before this script has
+             finished attaching its listener, and a "/#" turning up in
+             any hover preview or hover/right-click "copy link" even
+             when nothing's wrong. A button has neither problem, and
+             the .btn/.btn-primary/.btn-ghost styling applies the same
+             either way. -->
+        <button type="button" id="btn-invite" class="btn btn-primary" data-icon="plus"><i class="ti ti-plus"></i> Invite to server</button>
+        <button type="button" id="btn-login" class="btn btn-ghost">Open dashboard</button>
+        <a id="btn-discord-support" class="btn btn-ghost" style="display:none" target="_blank" rel="noopener"><i class="ti ti-brand-discord"></i> Support Server</a>
       </div>
     </div>
     <div class="hero-side-col">
