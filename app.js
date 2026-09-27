@@ -761,6 +761,14 @@ let currentGuildDisabledModules = [];
 // Boot + top-level routing
 // ============================================================
 async function boot() {
+  // The router (routes.parse()/routes.go()) only ever looks at
+  // pathname — a stray "#" (or "#anything") left over in the address
+  // bar, from wherever it came from, is never read or routed on, but
+  // it's confusing to see sitting there, so it's stripped the moment
+  // the app takes over.
+  if (window.location.hash) {
+    window.history.replaceState({}, "", window.location.pathname + window.location.search);
+  }
   const redirectPath = sessionStorage.getItem("tk_redirect_path");
   if (redirectPath) {
     sessionStorage.removeItem("tk_redirect_path");
