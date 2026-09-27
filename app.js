@@ -15,6 +15,61 @@
 // ============================================================
 
 const CFG = window.TICKET_KEEPER_CONFIG;
+
+// GitHub Pages is static, so the browser talks directly to the bot tunnel.
+// start-tunnel.ps1 updates the public config on GitHub. We deliberately read
+// that file from raw GitHub instead of trusting the copy bundled into the
+// GitHub Pages deployment, because Pages can take a while to redeploy/cache it.
+const PUBLIC_CONFIG_FILE = "https://raw.githubusercontent.com/Ninjanoah121312/NEXORIA/main/config.js";
+let BOT_ENDPOINT_SOURCE = "bundled config.js";
+let endpointLastResolved = 0;
+let endpointResolvePromise = null;
+const ENDPOINT_REFRESH_MS = 10000;
+
+function normaliseBotUrl(value) {
+  return String(value || "").trim().replace(/\/$/, "");
+}
+
+async function resolveBotEndpoint(force = false) {
+  if (!CFG) return null;
+  const now = Date.now();
+  if (!force && CFG.LOCAL_BOT_URL && now - endpointLastResolved < ENDPOINT_REFRESH_MS) {
+    return normaliseBotUrl(CFG.LOCAL_BOT_URL);
+  }
+  if (endpointResolvePromise) return endpointResolvePromise;
+
+  endpointResolvePromise = (async () => {
+    try {
+      const res = await fetch(`${PUBLIC_CONFIG_FILE}?cacheBust=${now}`, {
+        cache: "no-store",
+        headers: { "Accept": "text/javascript, */*" },
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!res.ok) throw new Error(`GitHub config HTTP ${res.status}`);
+      const text = await res.text();
+      const match = text.match(/LOCAL_BOT_URL\s*:\s*["'](https:\/\/[^"']+\.trycloudflare\.com)\/?["']/i);
+      if (!match) throw new Error("LOCAL_BOT_URL was not found in GitHub config.js");
+      CFG.LOCAL_BOT_URL = normaliseBotUrl(match[1]);
+      endpointLastResolved = Date.now();
+      BOT_ENDPOINT_SOURCE = "GitHub raw config.js";
+      console.info(`[bridge] Current tunnel: ${CFG.LOCAL_BOT_URL}`);
+      return CFG.LOCAL_BOT_URL;
+    } catch (e) {
+      // Keep the last known URL. A temporary GitHub/raw failure must not
+      // make a currently working tunnel disappear from the dashboard.
+      endpointLastResolved = Date.now();
+      console.warn("[bridge] Could not refresh GitHub config.js:", e?.message || e);
+      return normaliseBotUrl(CFG.LOCAL_BOT_URL) || null;
+    } finally {
+      endpointResolvePromise = null;
+    }
+  })();
+
+  return endpointResolvePromise;
+}
+
+if (!CFG) console.error("[boot] config.js did not load; bot status cannot be checked.");
+
 if (!CFG) console.error("[boot] window.TICKET_KEEPER_CONFIG is missing — config.js failed to load or ran after this script. Nothing that talks to the bot or Discord will work until that's fixed.");
 
 // Any error that reaches here would otherwise fail completely silently
@@ -440,100 +495,29 @@ function isAdmin(guild) {
 async function pingLocalBot() {
   const startedAt = performance.now();
   try {
-    // Cloudflare Quick Tunnels can occasionally take longer than a local
-    // request. Two seconds was short enough to mislabel a healthy bot as
-    // offline, so allow a more realistic window and bypass browser caches.
-    const res = await fetch(`${CFG.LOCAL_BOT_URL}/status`, {
+    // Refresh the tunnel URL periodically. This is important because
+    // Cloudflare Quick Tunnels change every time start-tunnel.ps1 starts.
+    const botUrl = await resolveBotEndpoint();
+    if (!botUrl) throw new Error("No bot tunnel URL is configured.");
+
+    const res = await fetch(`${botUrl}/status?nocache=${Date.now()}`, {
+      method: "GET",
       cache: "no-store",
-      headers: { "Accept": "application/json" },
+      headers: { "Accept": "application/json", "Cache-Control": "no-cache" },
       signal: AbortSignal.timeout(8000),
     });
-    if (!res.ok) {
-      console.warn(`[status] GET ${CFG.LOCAL_BOT_URL}/status returned HTTP ${res.status}.`);
-      return null;
-    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const data = await res.json();
     if (!data || typeof data.online !== "boolean" || !Array.isArray(data.guilds)) {
-      console.warn(`[status] ${CFG.LOCAL_BOT_URL}/status responded, but its JSON did not match the expected bot status format.`, data);
-      return null;
+      throw new Error("The bot returned an invalid /status response.");
     }
     data.latencyMs = Math.round(performance.now() - startedAt);
     return data;
   } catch (e) {
-    // This message helps distinguish a tunnel/DNS/timeout/CORS problem from
-    // a Discord bot problem. Check this line in DevTools Console if the UI
-    // still says the bot is down.
-    console.warn(`[status] Could not read ${CFG.LOCAL_BOT_URL}/status (${e.name}: ${e.message}). Check the tunnel URL, browser Network tab, and CORS response.`);
+    console.warn("[status] Bot tunnel check failed:", e?.message || e);
     return null;
   }
-}
-async function api(path, options = {}) {
-  let res;
-  try {
-    res = await fetch(`${CFG.LOCAL_BOT_URL}${path}`, {
-      ...options,
-      headers: { "Content-Type": "application/json", ...(options.headers || {}) },
-      signal: AbortSignal.timeout(10000),
-    });
-  } catch (e) {
-    // fetch() throwing here (rather than resolving with a non-ok
-    // status) means the request never reached the bot at all — the
-    // tunnel is down, the bot's PC is off, or AbortSignal.timeout
-    // fired. The raw error in either case is an unreadable
-    // "TypeError: Failed to fetch" / "AbortError: signal timed out"
-    // with no indication of what actually went wrong — this was
-    // previously uncaught here entirely, so every single api() call
-    // anywhere in the app (nearly everything) could throw that raw
-    // text straight into a UI error message. Replaced with one clear,
-    // actionable message covering both cases.
-    const timedOut = e?.name === "TimeoutError" || e?.name === "AbortError";
-    throw new Error(timedOut
-      ? "The bot didn't respond in time — check that it's running and your tunnel is up."
-      : "Couldn't reach the bot — check that it's running and your tunnel is up.");
-  }
-  if (!res.ok) {
-    let detail = "";
-    try {
-      const text = await res.text();
-      try {
-        detail = JSON.parse(text).error || "";
-      } catch {
-        // The bot didn't return JSON (an unexpected HTML error page from
-        // Express itself, a proxy, etc). Rather than dumping raw HTML
-        // markup into the UI (unreadable, and looks broken), fall back
-        // to a short, honest message that still names the HTTP status.
-        detail = "";
-      }
-    } catch { /* couldn't even read the body */ }
-    throw new Error(detail || `Request failed (HTTP ${res.status}). The bot may need to be restarted — check its console output.`);
-  }
-  return res.json();
-}
-
-// ============================================================
-// Theme — #18: three-way Light / Dark / System selector, replacing the
-// old two-way on/off toggle. "system" tracks prefers-color-scheme live
-// (via a media query listener) rather than being resolved once at
-// apply-time, so the page follows the OS if the person leaves it set
-// to System and changes their OS theme later.
-// ============================================================
-const systemThemeQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
-function resolveSystemTheme() { return systemThemeQuery && systemThemeQuery.matches ? "light" : "dark"; }
-function applyTheme(theme) {
-  // theme is the person's PREFERENCE: "light" | "dark" | "system".
-  // The actual attribute painted on <body> is always a concrete
-  // "light"/"dark" — "system" resolves to whichever the OS reports.
-  const resolved = theme === "system" ? resolveSystemTheme() : theme;
-  document.body.setAttribute("data-theme", resolved);
-  localStorage.setItem(LS.theme, theme);
-  document.querySelectorAll("[id^=btn-theme]").forEach(btn => {
-    btn.innerHTML = resolved === "dark" ? `<i class="ti ti-moon"></i>` : `<i class="ti ti-sun"></i>`;
-  });
-}
-function getThemePreference() { return localStorage.getItem(LS.theme) || "system"; }
-if (systemThemeQuery) {
-  systemThemeQuery.addEventListener("change", () => { if (getThemePreference() === "system") applyTheme("system"); });
 }
 
 // Shared bottom-of-sidebar block: the theme picker sits above
@@ -776,7 +760,7 @@ async function boot() {
   const route = routes.parse();
   if (route.screen === "share") { await enterSharePage(route.shareId); return; }
 
-  refreshHeroStatus();
+  await refreshHeroStatus();
 
   if (code) {
     url.searchParams.delete("code");
@@ -815,6 +799,18 @@ async function renderFromRoute() {
 }
 
 async function refreshHeroStatus() {
+  // The initial HTML says "Checking…". Every completed check must replace
+  // that state with either Up or Down; it must never remain stuck forever.
+  const statusEls = ["hero-status-pip", "picker-status-pip", "dash-status-pip"]
+    .map(id => document.getElementById(id)).filter(Boolean);
+  if (!botInfoCache) {
+    statusEls.forEach(el => {
+      el.classList.remove("online", "checking");
+      el.classList.add("offline");
+      el.innerHTML = '<span class="status-dot"></span>Bot Servers down';
+    });
+  }
+
   let info = null;
   try {
     info = await pingLocalBot();
@@ -2006,6 +2002,7 @@ function loadStyle(href) {
 }
 
 async function ensureModulesLoaded() {
+  await resolveBotEndpoint();
   if (modulesLoaded) return true;
   if (Date.now() < modulesRetryAfter) return false;
   if (modulesLoadingPromise) return modulesLoadingPromise;
