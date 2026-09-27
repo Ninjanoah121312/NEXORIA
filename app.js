@@ -558,7 +558,7 @@ function renderSidebarBottom(slotId) {
   slot.innerHTML = `
     <div class="sidebar-bottom">
       <a href="${inviteUrl()}" target="_blank" rel="noopener" class="nav-item sb-invite-link">${icon("plus")} Invite Bot</a>
-      <a href="#" class="nav-item sb-docs-link">${icon("document")} Documentation</a>
+      <button type="button" class="nav-item sb-docs-link">${icon("document")} Documentation</button>
       <div class="theme-picker-anchor">
         <div class="nav-item sidebar-theme-row theme-picker-trigger">
           ${icon(currentOpt.icon)} <span class="sidebar-theme-label">${currentOpt.label}</span>
@@ -568,7 +568,7 @@ function renderSidebarBottom(slotId) {
           ${THEME_OPTIONS.map(o => `<button class="theme-picker-item ${o.id === currentPref ? "active" : ""}" data-theme-opt="${o.id}">${icon(o.icon)} ${o.label}</button>`).join("")}
         </div>
       </div>
-      <a href="#" class="nav-item sb-status-link">${icon("status")} Status</a>
+      <button type="button" class="nav-item sb-status-link">${icon("status")} Status</button>
       ${CFG.DISCORD_SUPPORT_URL ? `<a href="${CFG.DISCORD_SUPPORT_URL}" target="_blank" rel="noopener" class="nav-item sb-discord-link"><i class="ti ti-brand-discord" style="font-size:18px;width:20px;text-align:center"></i> Support Server</a>` : ""}
       <div class="sidebar-profile sb-profile-trigger">
         <img class="sidebar-profile-avatar" src="${avatarUrl(session.user)}" alt="">
