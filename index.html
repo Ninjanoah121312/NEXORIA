@@ -177,10 +177,25 @@
   <div class="tos-gate-card">
     <div class="brand-row" style="justify-content:center"><div class="brand-glyph"><img src="logo.png" alt="NEXORIA logo"></div>NEXORIA</div>
     <p class="tos-gate-text">Before you continue, please read and agree to our Terms of Service and Privacy Policy.</p>
-    <label class="tos-gate-check">
+    <div class="tos-gate-check">
       <input type="checkbox" id="tos-gate-checkbox">
-      <span>I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms of Service</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a></span>
-    </label>
+      <!-- Deliberately NOT wrapped in a <label for="tos-gate-checkbox">
+           together with the two links below — a label forwards clicks
+           on any plain-text descendant to its checkbox, and nesting
+           real links inside that same label has been an inconsistent
+           source of swallowed clicks across browsers. The checkbox
+           toggles by clicking the box or the plain text next to it
+           (via the id-for pair below); the links are its own separate
+           siblings so nothing can intercept their click. Their href is
+           set in JS (initTosGate(), from BASE_PATH) rather than a
+           relative "terms.html" here, so it resolves correctly no
+           matter which route happens to be showing when this gate
+           appears. -->
+      <label for="tos-gate-checkbox">I agree to the NEXORIA</label>
+      <a id="tos-gate-terms-link" href="terms.html" target="_blank" rel="noopener">Terms of Service</a>
+      <span>and</span>
+      <a id="tos-gate-privacy-link" href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
+    </div>
     <button class="btn btn-primary" id="tos-gate-continue" disabled style="width:100%;justify-content:center">Continue</button>
   </div>
 </div>
