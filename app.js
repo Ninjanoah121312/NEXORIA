@@ -439,37 +439,32 @@ function isAdmin(guild) {
 // ============================================================
 async function pingLocalBot() {
   const startedAt = performance.now();
-  // Short timeouts (2s each) so a down bot is detected and re-checked
-  // roughly every second as intended, rather than one slow check (up
-  // to 16s with the old 8s+8s timeouts) blocking the in-flight guard
-  // in the polling loop below for most of that window.
   try {
-    const res = await fetch(`${CFG.LOCAL_BOT_URL}/status`, { signal: AbortSignal.timeout(2000) });
-    if (res.ok) {
-      const data = await res.json();
-      // Round-trip time for this exact request — the only place we can
-      // measure latency from, since the bot itself doesn't report one.
-      data.latencyMs = Math.round(performance.now() - startedAt);
-      return data;
+    // Cloudflare Quick Tunnels can occasionally take longer than a local
+    // request. Two seconds was short enough to mislabel a healthy bot as
+    // offline, so allow a more realistic window and bypass browser caches.
+    const res = await fetch(`${CFG.LOCAL_BOT_URL}/status`, {
+      cache: "no-store",
+      headers: { "Accept": "application/json" },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) {
+      console.warn(`[status] GET ${CFG.LOCAL_BOT_URL}/status returned HTTP ${res.status}.`);
+      return null;
     }
-    console.warn(`[status] GET /status responded with HTTP ${res.status} — treating the bot as offline.`);
+
+    const data = await res.json();
+    if (!data || typeof data.online !== "boolean" || !Array.isArray(data.guilds)) {
+      console.warn(`[status] ${CFG.LOCAL_BOT_URL}/status responded, but its JSON did not match the expected bot status format.`, data);
+      return null;
+    }
+    data.latencyMs = Math.round(performance.now() - startedAt);
+    return data;
   } catch (e) {
-    // Logged rather than silently swallowed: a CORS rejection, a DNS
-    // failure, and a timeout all land here and all look identical in
-    // the UI ("offline"), but they need completely different fixes —
-    // check this message (and the Network tab) before assuming the bot
-    // itself is the problem. A CORS rejection specifically means the
-    // request DID reach the bridge (it may even show 200 in the
-    // Network tab) but the browser refused to hand the response to
-    // this page — that's a config.env ALLOWED_ORIGIN mismatch, not a
-    // dead tunnel or a dead bot.
-    console.warn(`[status] GET ${CFG.LOCAL_BOT_URL}/status failed (${e.name}: ${e.message}) — falling back to a root check.`);
-  }
-  try {
-    await fetch(`${CFG.LOCAL_BOT_URL}/`, { signal: AbortSignal.timeout(2000) });
-    return null;
-  } catch (e) {
-    console.warn(`[status] Root check against ${CFG.LOCAL_BOT_URL}/ also failed (${e.name}: ${e.message}) — the bot looks fully unreachable from this browser.`);
+    // This message helps distinguish a tunnel/DNS/timeout/CORS problem from
+    // a Discord bot problem. Check this line in DevTools Console if the UI
+    // still says the bot is down.
+    console.warn(`[status] Could not read ${CFG.LOCAL_BOT_URL}/status (${e.name}: ${e.message}). Check the tunnel URL, browser Network tab, and CORS response.`);
     return null;
   }
 }
@@ -1960,38 +1955,91 @@ async function enterSharePage(shareId) {
 const CORE_PANELS = [{ id: "status", label: "Status", icon: "ti-activity" }];
 
 let modulesLoaded = false;
-let modulesLoadFailed = false;
+let modulesLoadingPromise = null;
+let modulesRetryAfter = 0;
 
+// Keep module asset loads idempotent. A tunnel can come online after the
+// first page load, and the manifest may need to be retried; already-loaded
+// shared/module scripts must not execute a second time during that retry.
+const loadedScriptUrls = new Set();
+const loadingScriptPromises = new Map();
 function loadScript(src) {
-  return new Promise((resolve, reject) => {
-    const s = document.createElement("script");
-    s.src = src;
-    s.onload = resolve;
-    s.onerror = () => reject(new Error(`Failed to load ${src}`));
-    document.body.appendChild(s);
+  const absoluteUrl = new URL(src, document.baseURI).href;
+  if (loadedScriptUrls.has(absoluteUrl)) return Promise.resolve();
+  if (loadingScriptPromises.has(absoluteUrl)) return loadingScriptPromises.get(absoluteUrl);
+
+  const promise = new Promise((resolve, reject) => {
+    const existing = [...document.scripts].find(script => script.src === absoluteUrl);
+    if (existing?.dataset.loaded === "true") {
+      loadedScriptUrls.add(absoluteUrl);
+      resolve();
+      return;
+    }
+
+    const s = existing || document.createElement("script");
+    s.src = absoluteUrl;
+    s.onload = () => {
+      s.dataset.loaded = "true";
+      loadedScriptUrls.add(absoluteUrl);
+      loadingScriptPromises.delete(absoluteUrl);
+      resolve();
+    };
+    s.onerror = () => {
+      loadingScriptPromises.delete(absoluteUrl);
+      if (!existing) s.remove();
+      reject(new Error(`Failed to load ${absoluteUrl}`));
+    };
+    if (!existing) document.body.appendChild(s);
   });
+
+  loadingScriptPromises.set(absoluteUrl, promise);
+  return promise;
 }
 function loadStyle(href) {
-  if (document.querySelector(`link[href="${href}"]`)) return;
+  const absoluteUrl = new URL(href, document.baseURI).href;
+  if (document.querySelector(`link[href="${absoluteUrl}"]`)) return;
   const l = document.createElement("link");
   l.rel = "stylesheet";
-  l.href = href;
+  l.href = absoluteUrl;
+  l.onerror = () => l.remove(); // allow a later tunnel retry to try again
   document.head.appendChild(l);
 }
 
 async function ensureModulesLoaded() {
-  if (modulesLoaded || modulesLoadFailed) return;
-  try {
-    const manifest = await api("/modules");
-    for (const file of manifest.shared || []) await loadScript(`${CFG.LOCAL_BOT_URL}/modules-static/${file}`);
-    for (const mod of manifest.modules || []) {
-      if (mod.css) loadStyle(`${CFG.LOCAL_BOT_URL}/modules-static/${mod.css}`);
-      if (mod.js) await loadScript(`${CFG.LOCAL_BOT_URL}/modules-static/${mod.js}`);
+  if (modulesLoaded) return true;
+  if (Date.now() < modulesRetryAfter) return false;
+  if (modulesLoadingPromise) return modulesLoadingPromise;
+
+  modulesLoadingPromise = (async () => {
+    try {
+      const manifest = await api("/modules", { cache: "no-store" });
+      if (!manifest || !Array.isArray(manifest.modules)) {
+        throw new Error("The bot returned an invalid /modules manifest.");
+      }
+      for (const file of manifest.shared || []) {
+        await loadScript(`${CFG.LOCAL_BOT_URL}/modules-static/${file}`);
+      }
+      for (const mod of manifest.modules) {
+        if (mod.css) loadStyle(`${CFG.LOCAL_BOT_URL}/modules-static/${mod.css}`);
+        if (mod.js) await loadScript(`${CFG.LOCAL_BOT_URL}/modules-static/${mod.js}`);
+      }
+      modulesLoaded = true;
+      modulesRetryAfter = 0;
+      console.info(`[modules] Loaded ${manifest.modules.length} module(s) from the bot tunnel.`);
+      return true;
+    } catch (e) {
+      // A temporary tunnel failure must not permanently disable modules for
+      // this browser session. Retry after a short pause instead of hammering
+      // a disconnected tunnel on every status poll.
+      modulesRetryAfter = Date.now() + 5000;
+      console.error("[modules] Could not load modules from the bot tunnel; retrying shortly:", e);
+      return false;
+    } finally {
+      modulesLoadingPromise = null;
     }
-    modulesLoaded = true;
-  } catch {
-    modulesLoadFailed = true;
-  }
+  })();
+
+  return modulesLoadingPromise;
 }
 
 function buildContext(extra = {}) {
@@ -2462,7 +2510,6 @@ const TOS_AGREEMENT_KEY = "tk_tos_agreed_v1";
 function initTosGate() {
   const overlay = document.getElementById("tos-gate-overlay");
   if (!overlay) return;
-  if (!CFG) { console.error("[ToS gate] CFG is missing (config.js failed to load) — the gate's Terms/Privacy links can't be built, skipping it entirely rather than showing broken links."); return; }
   // Built from BASE_PATH + origin rather than left as the plain
   // relative "terms.html"/"privacy.html" in the HTML — a relative link
   // is only reliable when the gate happens to show while the SPA's
@@ -2494,34 +2541,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (el) el.addEventListener(event, handler);
     else console.warn(`Wiring: #${id} not found in the page — skipping its listener.`);
   }
-  // This whole handler used to be one unbroken run of statements — if
-  // ANY one of them threw (initTosGate() throwing because CFG was
-  // undefined is exactly how this was first found, but it's not
-  // specific to that one bug), every single line after it, INCLUDING
-  // boot() and the setInterval(...) status poll below, silently never
-  // ran at all. That's what a permanently-stuck "Checking…" with
-  // nothing else on the page working actually was — not a status-poll
-  // bug, a bootstrap-never-happened bug. Each independent step below
-  // now runs in its own try/catch so one broken piece can never again
-  // take the rest of the app down with it — worst case, one button
-  // doesn't do anything and the console says exactly which.
-  function step(name, fn) {
-    try { fn(); } catch (e) { console.error(`[boot] "${name}" failed and was skipped — everything else still continues:`, e); }
-  }
 
-  step("ToS gate", () => initTosGate());
-  step("Discord support button", () => {
-    const discordBtn = document.getElementById("btn-discord-support");
-    if (discordBtn && CFG?.DISCORD_SUPPORT_URL) { discordBtn.href = CFG.DISCORD_SUPPORT_URL; discordBtn.style.display = ""; }
-  });
-  step("landing/topbar button wiring", () => {
-    on("btn-login", "click", (e) => { e.preventDefault(); beginLogin(); });
-    on("btn-invite", "click", (e) => { e.preventDefault(); window.open(inviteUrl(), "_blank"); });
-    on("btn-logout", "click", () => { clearSession(); routes.go("/", true); showScreen("screen-landing"); });
-    on("btn-back", "click", () => {
-      if (window.location.pathname.includes("/servers/")) { routes.go("/dashboard"); enterPicker(); }
-      else window.history.back();
-    });
+  initTosGate();
+  const discordBtn = document.getElementById("btn-discord-support");
+  if (discordBtn && CFG.DISCORD_SUPPORT_URL) { discordBtn.href = CFG.DISCORD_SUPPORT_URL; discordBtn.style.display = ""; }
+  on("btn-login", "click", (e) => { e.preventDefault(); beginLogin(); });
+  on("btn-invite", "click", (e) => { e.preventDefault(); window.open(inviteUrl(), "_blank"); });
+  on("btn-logout", "click", () => { clearSession(); routes.go("/", true); showScreen("screen-landing"); });
+  on("btn-back", "click", () => {
+    if (window.location.pathname.includes("/servers/")) { routes.go("/dashboard"); enterPicker(); }
+    else window.history.back();
   });
 
   boot();
@@ -2539,11 +2568,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (polling) return;
     polling = true;
     try {
-      const wasOnline = botInfoCache?.online;
       await refreshHeroStatus();
-      if (!wasOnline && botInfoCache?.online && document.getElementById("screen-dashboard").classList.contains("active")) {
-        await ensureModulesLoaded();
-        buildSidebar(currentGuildDisabledModules);
+      if (botInfoCache?.online && !modulesLoaded && document.getElementById("screen-dashboard").classList.contains("active")) {
+        const loaded = await ensureModulesLoaded();
+        if (loaded) buildSidebar(currentGuildDisabledModules);
       }
     } catch (e) {
       // Without this, a thrown error here (network hiccup, a bug in
