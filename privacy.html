@@ -91,15 +91,15 @@
     <p>This Privacy Policy may be updated as NEXORIA changes or new features are introduced. The latest version will be published through NEXORIA's official channels.</p>
 
     <h2>9. Contact</h2>
-    <p>For privacy questions, data requests, support, or suggestions, join the official NEXORIA Discord server:<br><a id="legal-discord-link" href="#" target="_blank" rel="noopener">—</a></p>
-    <p>NEXORIA Website:<br><a id="legal-site-link" href="#" target="_blank" rel="noopener">—</a></p>
+    <p>For privacy questions, data requests, support, or suggestions, join the official NEXORIA Discord server:<br><a id="legal-discord-link" target="_blank" rel="noopener">—</a></p>
+    <p>NEXORIA Website:<br><a id="legal-site-link" target="_blank" rel="noopener">—</a></p>
   </div>
 </div>
 <script>
   document.write(`<script src="config.js?v=${Date.now()}"><\/script>`);
 </script>
 <script>
-  window.addEventListener("load", function () {
+  document.addEventListener("DOMContentLoaded", function () {
     var cfg = window.TICKET_KEEPER_CONFIG || {};
     var discordLink = document.getElementById("legal-discord-link");
     var siteLink = document.getElementById("legal-site-link");
