@@ -15,6 +15,20 @@
 // ============================================================
 
 const CFG = window.TICKET_KEEPER_CONFIG;
+if (!CFG) console.error("[boot] window.TICKET_KEEPER_CONFIG is missing — config.js failed to load or ran after this script. Nothing that talks to the bot or Discord will work until that's fixed.");
+
+// Any error that reaches here would otherwise fail completely silently
+// to anyone not already watching the console (which is exactly what
+// "the page doesn't load right, no idea why" looks like from the
+// outside) — logging every uncaught error and rejected promise, with
+// the full object, is the fastest way to actually see what broke.
+window.addEventListener("error", (e) => {
+  console.error("[uncaught error]", e.message, "at", `${e.filename}:${e.lineno}:${e.colno}`, e.error);
+});
+window.addEventListener("unhandledrejection", (e) => {
+  console.error("[unhandled promise rejection]", e.reason);
+});
+
 const LS = {
   verifier: "tk_pkce_verifier",
   token: "tk_access_token",
@@ -438,11 +452,24 @@ async function pingLocalBot() {
       data.latencyMs = Math.round(performance.now() - startedAt);
       return data;
     }
-  } catch { /* fall through to root check below */ }
+    console.warn(`[status] GET /status responded with HTTP ${res.status} — treating the bot as offline.`);
+  } catch (e) {
+    // Logged rather than silently swallowed: a CORS rejection, a DNS
+    // failure, and a timeout all land here and all look identical in
+    // the UI ("offline"), but they need completely different fixes —
+    // check this message (and the Network tab) before assuming the bot
+    // itself is the problem. A CORS rejection specifically means the
+    // request DID reach the bridge (it may even show 200 in the
+    // Network tab) but the browser refused to hand the response to
+    // this page — that's a config.env ALLOWED_ORIGIN mismatch, not a
+    // dead tunnel or a dead bot.
+    console.warn(`[status] GET ${CFG.LOCAL_BOT_URL}/status failed (${e.name}: ${e.message}) — falling back to a root check.`);
+  }
   try {
     await fetch(`${CFG.LOCAL_BOT_URL}/`, { signal: AbortSignal.timeout(2000) });
     return null;
-  } catch {
+  } catch (e) {
+    console.warn(`[status] Root check against ${CFG.LOCAL_BOT_URL}/ also failed (${e.name}: ${e.message}) — the bot looks fully unreachable from this browser.`);
     return null;
   }
 }
@@ -785,7 +812,16 @@ async function renderFromRoute() {
 }
 
 async function refreshHeroStatus() {
-  const info = await pingLocalBot();
+  let info = null;
+  try {
+    info = await pingLocalBot();
+  } catch (e) {
+    // pingLocalBot() already catches everything internally and resolves
+    // to null rather than throwing — this is only a safety net in case
+    // that ever changes. Either way, `info` staying null below means
+    // every pip renders as "down" instead of getting stuck mid-update.
+    console.error("[status] pingLocalBot threw unexpectedly:", e);
+  }
   botInfoCache = info;
   const heroPip = document.getElementById("hero-status-pip");
   if (heroPip) renderStatusPip(heroPip, info);
@@ -795,7 +831,10 @@ async function refreshHeroStatus() {
   set("hero-uptime", info ? formatUptime(info.uptimeSeconds) : "—");
   set("hero-bot-tag", info?.botTag ?? "—");
   ["picker-status-pip", "dash-status-pip"].forEach(id => { const el = document.getElementById(id); if (el) renderStatusPip(el, info); });
-  paintWatchingPanel(info);
+  // Isolated in its own try/catch so a bug in this one decorative panel
+  // can never again take the actual status pips above down with it —
+  // everything above this line has already committed to the DOM by now.
+  try { paintWatchingPanel(info); } catch (e) { console.error("[status] paintWatchingPanel failed:", e); }
 }
 
 // "NEXORIA is watching" box on the landing page: total servers/members
@@ -2415,6 +2454,17 @@ const TOS_AGREEMENT_KEY = "tk_tos_agreed_v1";
 function initTosGate() {
   const overlay = document.getElementById("tos-gate-overlay");
   if (!overlay) return;
+  // Built from BASE_PATH + origin rather than left as the plain
+  // relative "terms.html"/"privacy.html" in the HTML — a relative link
+  // is only reliable when the gate happens to show while the SPA's
+  // pushState-driven URL is sitting at the site root. Since this gate
+  // can in principle show up on any route, an absolute URL removes any
+  // doubt about where it resolves to.
+  const termsLink = document.getElementById("tos-gate-terms-link");
+  const privacyLink = document.getElementById("tos-gate-privacy-link");
+  const siteRoot = window.location.origin + CFG.BASE_PATH;
+  if (termsLink) termsLink.href = `${siteRoot}terms.html`;
+  if (privacyLink) privacyLink.href = `${siteRoot}privacy.html`;
   if (localStorage.getItem(TOS_AGREEMENT_KEY) === "1") return; // already agreed — stays hidden
   overlay.style.display = "flex";
   document.body.style.overflow = "hidden";
@@ -2468,6 +2518,13 @@ document.addEventListener("DOMContentLoaded", () => {
         await ensureModulesLoaded();
         buildSidebar(currentGuildDisabledModules);
       }
+    } catch (e) {
+      // Without this, a thrown error here (network hiccup, a bug in
+      // whatever refreshHeroStatus does next) was silently swallowed —
+      // `finally` alone doesn't catch anything, it only guarantees
+      // `polling` resets. Surfacing it in the console at least gives
+      // something to look at instead of an unexplained frozen "Checking…".
+      console.error("[status poll] refreshHeroStatus failed:", e);
     } finally {
       polling = false;
     }
