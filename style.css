@@ -145,9 +145,11 @@ html { scrollbar-width: thin; scrollbar-color: var(--panel-border) transparent; 
 .tos-gate-overlay { position: fixed; inset: 0; z-index: 999; background: rgba(4,4,10,.82); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; }
 .tos-gate-card { width: 100%; max-width: 420px; background: var(--panel-solid); border: 1px solid var(--panel-border); border-radius: 16px; padding: 28px 26px; text-align: center; }
 .tos-gate-text { font-size: 13.5px; color: var(--text-dim); line-height: 1.6; margin: 14px 0 18px; }
-.tos-gate-check { display: flex; align-items: flex-start; gap: 10px; text-align: left; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 20px; cursor: pointer; }
-.tos-gate-check input { margin-top: 2px; width: 15px; height: 15px; accent-color: var(--violet); flex-shrink: 0; cursor: pointer; }
-.tos-gate-check a { color: var(--violet); }
+.tos-gate-check { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; text-align: left; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 20px; }
+.tos-gate-check input { width: 15px; height: 15px; accent-color: var(--violet); flex-shrink: 0; cursor: pointer; margin-right: 4px; }
+.tos-gate-check label { cursor: pointer; }
+.tos-gate-check a { color: var(--violet); text-decoration: underline; text-underline-offset: 2px; }
+.tos-gate-check span { color: var(--text-dim); }
 .tos-gate-card .btn:disabled { opacity: .45; cursor: not-allowed; }
 
 /* ============================================================
