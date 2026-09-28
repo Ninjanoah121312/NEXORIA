@@ -16,7 +16,7 @@
 
 const CFG = window.TICKET_KEEPER_CONFIG || {};
 const DISCORD_SUPPORT_FALLBACK_URL = "https://discord.gg/QJSvzR9VHC";
-CFG.DISCORD_SUPPORT_URL = DISCORD_SUPPORT_FALLBACK_URL;
+CFG.DISCORD_SUPPORT_URL = CFG.DISCORD_SUPPORT_URL || DISCORD_SUPPORT_FALLBACK_URL;
 if (!CFG) console.error("[boot] window.TICKET_KEEPER_CONFIG is missing — config.js failed to load or ran after this script. Nothing that talks to the bot or Discord will work until that's fixed.");
 
 // Any error that reaches here would otherwise fail completely silently
@@ -230,20 +230,27 @@ window.addEventListener("popstate", () => renderFromRoute());
 // browser's native confirm()/alert() or a one-off overlay div.
 // ============================================================
 
-// Safely render Discord custom emoji syntax: <:name:id> and <a:name:id>.
+// Discord custom emoji renderer.
+// Converts <:name:id> and <a:name:id> into Discord CDN images while
+// escaping all surrounding message text.
 function renderDiscordContent(value) {
   const text = String(value ?? "");
   const re = /<(a?):([A-Za-z0-9_~\-]+):(\d+)>/g;
-  let html = "", last = 0, m;
-  while ((m = re.exec(text)) !== null) {
-    html += escapeHtml(text.slice(last, m.index));
-    const ext = m[1] === "a" ? "gif" : "png";
-    const alt = escapeHtml(`:${m[2]}:`);
-    const url = `https://cdn.discordapp.com/emojis/${m[3]}.${ext}?size=32&quality=lossless`;
+  let html = "";
+  let last = 0;
+  let match;
+
+  while ((match = re.exec(text)) !== null) {
+    html += escapeHtml(text.slice(last, match.index));
+    const ext = match[1] === "a" ? "gif" : "png";
+    const alt = escapeHtml(`:${match[2]}:`);
+    const url = `https://cdn.discordapp.com/emojis/${match[3]}.${ext}?size=32&quality=lossless`;
     html += `<img class="discord-custom-emoji" src="${url}" alt="${alt}" title="${alt}" loading="lazy" decoding="async" draggable="false" onerror="this.replaceWith(document.createTextNode(this.alt))">`;
     last = re.lastIndex;
   }
-  return html + escapeHtml(text.slice(last));
+
+  html += escapeHtml(text.slice(last));
+  return html;
 }
 
 function escapeHtml(s) { return (s || "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
@@ -493,14 +500,37 @@ async function pingLocalBot() {
   }
 }
 async function api(path, options = {}) {
+  const method = String(options.method || "GET").toUpperCase();
+  const retryable = method === "GET" || method === "HEAD";
+  const maxAttempts = retryable ? 3 : 1;
   let res;
-  try {
-    res = await fetch(`${CFG.LOCAL_BOT_URL}${path}`, {
-      ...options,
-      headers: { "Content-Type": "application/json", ...(options.headers || {}) },
-      signal: AbortSignal.timeout(10000),
-    });
-  } catch (e) {
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      res = await fetch(`${CFG.LOCAL_BOT_URL}${path}`, {
+        ...options,
+        headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+        signal: AbortSignal.timeout(10000),
+      });
+
+      // Quick Tunnel startup/reconnects commonly surface as transient 5xx
+      // responses. Retry idempotent reads, but never automatically repeat
+      // POST/PUT/PATCH/DELETE operations that could perform an action twice.
+      if (retryable && attempt < maxAttempts && [502, 503, 504].includes(res.status)) {
+        await new Promise(resolve => setTimeout(resolve, 700 * attempt));
+        continue;
+      }
+      break;
+    } catch (e) {
+      lastError = e;
+      if (!retryable || attempt >= maxAttempts) break;
+      await new Promise(resolve => setTimeout(resolve, 700 * attempt));
+    }
+  }
+
+  if (!res) {
+    const e = lastError || new Error("Request failed");
     // fetch() throwing here (rather than resolving with a non-ok
     // status) means the request never reached the bot at all — the
     // tunnel is down, the bot's PC is off, or AbortSignal.timeout
@@ -780,6 +810,28 @@ function timeAgoGlobal(iso) {
 let botInfoCache = null;
 let currentGuild = null;   // { id, name, icon }
 let currentGuildDisabledModules = [];
+let routeRetryTimer = null;
+let routeRetryAttempt = 0;
+
+// The bridge sits behind a Quick Tunnel, so a freshly-created tunnel can
+// briefly return DNS/502/1033-style failures even though the bot is healthy.
+// Keep the UI alive and retry screen rendering instead of letting one
+// transient network failure abort the whole app boot.
+function scheduleRouteRetry(reason = "temporary network failure") {
+  if (routeRetryTimer) return;
+  routeRetryAttempt = Math.min(routeRetryAttempt + 1, 8);
+  const delay = Math.min(15000, 1000 * Math.pow(1.6, routeRetryAttempt - 1));
+  console.warn(`[route] ${reason}; retrying in ${Math.round(delay)}ms.`);
+  routeRetryTimer = setTimeout(async () => {
+    routeRetryTimer = null;
+    try {
+      await renderFromRoute();
+      routeRetryAttempt = 0;
+    } catch (e) {
+      scheduleRouteRetry(e?.message || "screen failed to render");
+    }
+  }, delay);
+}
 
 // ============================================================
 // Boot + top-level routing
@@ -805,7 +857,7 @@ async function boot() {
   const route = routes.parse();
   if (route.screen === "share") { await enterSharePage(route.shareId); return; }
 
-  refreshHeroStatus();
+  void refreshHeroStatus().catch(e => console.error("[status] initial refresh failed:", e));
 
   if (code) {
     url.searchParams.delete("code");
@@ -815,7 +867,8 @@ async function boot() {
       const user = await fetchMe(tokenData.access_token);
       saveSession(tokenData, user);
       routes.go(sessionStorage.getItem("tk_post_login_redirect") || "/dashboard", true);
-      renderFromRoute();
+      try { await renderFromRoute(); }
+      catch (e) { scheduleRouteRetry(e?.message || "screen failed to render after login"); }
     } catch (e) {
       await DCModal.alert(e.message || "Login failed", { title: "Login failed" });
       routes.go("/", true);
@@ -823,7 +876,12 @@ async function boot() {
     }
     return;
   }
-  renderFromRoute();
+  try {
+    await renderFromRoute();
+    routeRetryAttempt = 0;
+  } catch (e) {
+    scheduleRouteRetry(e?.message || "screen failed to render");
+  }
 }
 
 async function renderFromRoute() {
@@ -831,14 +889,7 @@ async function renderFromRoute() {
   const session = getSession();
 
   if (route.screen === "share") { await enterSharePage(route.shareId); return; }
-  if (route.screen !== "landing" && !session) {
-    await new Promise(resolve => setTimeout(resolve, 250));
-    if (!getSession()) {
-      routes.go("/", true);
-      showScreen("screen-landing");
-      return;
-    }
-  }
+  if (route.screen !== "landing" && !session) { routes.go("/", true); showScreen("screen-landing"); return; }
 
   if (route.screen === "landing") { showScreen("screen-landing"); return; }
   if (route.screen === "picker") { await enterPicker(route.panel, { myTicketGuildId: route.myTicketGuildId, myTicketId: route.myTicketId, docsModuleId: route.docsModuleId }); return; }
@@ -861,6 +912,10 @@ async function refreshHeroStatus() {
     // every pip renders as "down" instead of getting stuck mid-update.
     console.error("[status] pingLocalBot threw unexpectedly:", e);
   }
+  // Keep the last known-good payload during a transient tunnel hiccup.
+  // This prevents the entire landing/dashboard UI from flashing to blank
+  // or "down" while Quick Tunnel reconnects. A genuinely cold start still
+  // renders as offline because botInfoCache starts as null.
   if (info) botInfoCache = info;
   const displayInfo = info || botInfoCache;
   const heroPip = document.getElementById("hero-status-pip");
@@ -1167,18 +1222,21 @@ async function renderDashboardPanel(root) {
     wireDashButtons();
   }
 
-  async function loadWithRetry() {
+  async function loadDashboardWithRetry() {
     try {
       await loadAndPaint();
+      return true;
     } catch (e) {
-      console.warn("[servers] temporary load failure; retrying:", e);
+      console.warn("[servers] temporary load failure; keeping UI alive and retrying:", e);
       countEl.textContent = "Retrying…";
-      setTimeout(loadWithRetry, 1500);
+      setTimeout(() => loadDashboardWithRetry(), 1500);
+      return false;
     }
   }
-  await loadWithRetry();
 
-  document.getElementById("ds-search").addEventListener("input", (e) => {
+  await loadDashboardWithRetry();
+
+  document.getElementById("ds-search")?.addEventListener("input", (e) => {
     const q = e.target.value.trim().toLowerCase();
     grid.querySelectorAll(".server-card[data-server-name]").forEach(card => {
       card.style.display = card.dataset.serverName.includes(q) ? "" : "none";
@@ -1190,20 +1248,20 @@ async function renderDashboardPanel(root) {
   // The button shows a brief spinning-icon "working" state so it's
   // clear the click registered while the requests are in flight.
   const refreshBtn = document.getElementById("ds-refresh-btn");
-  refreshBtn.addEventListener("click", async () => {
+  refreshBtn?.addEventListener("click", async () => {
     refreshBtn.disabled = true;
     refreshBtn.classList.add("btn-refreshing");
     try {
       await refreshHeroStatus();
       await loadAndPaint();
     } catch (e) {
-      console.warn("[servers] refresh failed; retrying:", e);
+      console.warn("[servers] refresh failed; retrying in background:", e);
       setTimeout(async () => {
         try {
           await refreshHeroStatus();
           await loadAndPaint();
         } catch {
-          // Background polling/retry will continue.
+          // The normal polling/retry loop will continue.
         }
       }, 1500);
     } finally {
@@ -2024,20 +2082,26 @@ function loadStyle(href) {
 async function ensureModulesLoaded() {
   if (modulesLoaded) return;
   modulesLoadFailed = false;
+
   try {
     const manifest = await api("/modules");
-    for (const file of manifest.shared || []) await loadScript(`${CFG.LOCAL_BOT_URL}/modules-static/${file}`);
+
+    for (const file of manifest.shared || []) {
+      await loadScript(`${CFG.LOCAL_BOT_URL}/modules-static/${file}`);
+    }
+
     for (const mod of manifest.modules || []) {
       if (mod.css) loadStyle(`${CFG.LOCAL_BOT_URL}/modules-static/${mod.css}`);
       if (mod.js) await loadScript(`${CFG.LOCAL_BOT_URL}/modules-static/${mod.js}`);
     }
+
     modulesLoaded = true;
   } catch (e) {
     modulesLoadFailed = true;
-    console.warn("[modules] temporary load failure; retrying:", e);
+    console.warn("[modules] temporary load failure; retrying in background:", e);
     setTimeout(() => {
       if (!modulesLoaded) ensureModulesLoaded();
-    }, 2000);
+    }, 1500);
   }
 }
 
@@ -2205,11 +2269,7 @@ async function paintServerSwitcherPanel(panel) {
     const guilds = await fetchMyGuilds(session.token);
     manageable = guilds.filter(isAdmin).sort((a, b) => a.name.localeCompare(b.name));
   } catch (e) {
-    console.warn("[server switcher] temporary load failure; retrying:", e);
-    panel.innerHTML = loadingBlock("Loading servers…");
-    setTimeout(() => {
-      if (document.body.contains(panel)) paintServerSwitcherPanel(panel);
-    }, 1500);
+    panel.innerHTML = `<div class="dropdown-panel-empty">Couldn't load servers: ${escapeHtml(e.message)}</div>`;
     return;
   }
   const botGuildIds = new Set((botInfoCache?.guilds || []).map(g => g.id));
@@ -2555,7 +2615,10 @@ document.addEventListener("DOMContentLoaded", () => {
     else window.history.back();
   });
 
-  boot();
+  void boot().catch(e => {
+    console.error("[boot] initial boot failed; the app will retry automatically:", e);
+    scheduleRouteRetry(e?.message || "initial boot failed");
+  });
   // Poll every second so "Bot Servers up/down" reflects reality almost
   // immediately rather than being up to 15s stale. pingLocalBot's own
   // request can take a few seconds in the worst case (its /status call
@@ -2572,12 +2635,22 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const wasOnline = botInfoCache?.online;
       await refreshHeroStatus();
-      if (!wasOnline && botInfoCache?.online && document.getElementById("screen-dashboard").classList.contains("active")) {
-        await ensureModulesLoaded();
-        buildSidebar(currentGuildDisabledModules);
+      if (!wasOnline && botInfoCache?.online) {
+        routeRetryAttempt = 0;
+        if (document.getElementById("screen-dashboard")?.classList.contains("active")) {
+          await ensureModulesLoaded();
+          buildSidebar(currentGuildDisabledModules);
+        }
+        if (routeRetryTimer) { clearTimeout(routeRetryTimer); routeRetryTimer = null; }
+        try { await renderFromRoute(); } catch (e) { scheduleRouteRetry(e?.message || "screen recovery failed"); }
       }
     } catch (e) {
-      console.warn("[status poll] temporary failure; will retry:", e);
+      // Without this, a thrown error here (network hiccup, a bug in
+      // whatever refreshHeroStatus does next) was silently swallowed —
+      // `finally` alone doesn't catch anything, it only guarantees
+      // `polling` resets. Surfacing it in the console at least gives
+      // something to look at instead of an unexplained frozen "Checking…".
+      console.warn("[status poll] temporary failure; retrying:", e);
     } finally {
       polling = false;
     }
