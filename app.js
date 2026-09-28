@@ -14,7 +14,9 @@
 //   /share/:shareId                          public read-only ticket view
 // ============================================================
 
-const CFG = window.TICKET_KEEPER_CONFIG;
+const CFG = window.TICKET_KEEPER_CONFIG || {};
+const DISCORD_SUPPORT_FALLBACK_URL = "https://discord.gg/QJSvzR9VHC";
+CFG.DISCORD_SUPPORT_URL = DISCORD_SUPPORT_FALLBACK_URL;
 if (!CFG) console.error("[boot] window.TICKET_KEEPER_CONFIG is missing — config.js failed to load or ran after this script. Nothing that talks to the bot or Discord will work until that's fixed.");
 
 // Any error that reaches here would otherwise fail completely silently
@@ -227,6 +229,23 @@ window.addEventListener("popstate", () => renderFromRoute());
 // fully custom body) renders through this, so nothing anywhere uses the
 // browser's native confirm()/alert() or a one-off overlay div.
 // ============================================================
+
+// Safely render Discord custom emoji syntax: <:name:id> and <a:name:id>.
+function renderDiscordContent(value) {
+  const text = String(value ?? "");
+  const re = /<(a?):([A-Za-z0-9_~\-]+):(\d+)>/g;
+  let html = "", last = 0, m;
+  while ((m = re.exec(text)) !== null) {
+    html += escapeHtml(text.slice(last, m.index));
+    const ext = m[1] === "a" ? "gif" : "png";
+    const alt = escapeHtml(`:${m[2]}:`);
+    const url = `https://cdn.discordapp.com/emojis/${m[3]}.${ext}?size=32&quality=lossless`;
+    html += `<img class="discord-custom-emoji" src="${url}" alt="${alt}" title="${alt}" loading="lazy" decoding="async" draggable="false" onerror="this.replaceWith(document.createTextNode(this.alt))">`;
+    last = re.lastIndex;
+  }
+  return html + escapeHtml(text.slice(last));
+}
+
 function escapeHtml(s) { return (s || "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
 
 const DCModal = (() => {
@@ -1038,7 +1057,7 @@ function renderVarGroup(group, vars) {
 }
 
 function renderDocsInfoTab(content) {
-  const discordUrl = CFG.DISCORD_SUPPORT_URL || "#";
+  const discordUrl = CFG.DISCORD_SUPPORT_URL || DISCORD_SUPPORT_FALLBACK_URL;
   content.innerHTML = `
     <h2 style="margin-bottom:4px">Info</h2>
     <p class="picker-sub" style="margin-bottom:20px">General information about NEXORIA, plus the full list of variables usable anywhere they're supported.</p>
@@ -2527,7 +2546,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initTosGate();
   const discordBtn = document.getElementById("btn-discord-support");
-  if (discordBtn && CFG.DISCORD_SUPPORT_URL) { discordBtn.href = CFG.DISCORD_SUPPORT_URL; discordBtn.style.display = ""; }
+  if (discordBtn) { discordBtn.href = CFG.DISCORD_SUPPORT_URL; discordBtn.style.display = ""; }
   on("btn-login", "click", (e) => { e.preventDefault(); beginLogin(); });
   on("btn-invite", "click", (e) => { e.preventDefault(); window.open(inviteUrl(), "_blank"); });
   on("btn-logout", "click", () => { clearSession(); routes.go("/", true); showScreen("screen-landing"); });
