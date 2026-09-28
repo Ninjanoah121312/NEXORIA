@@ -213,7 +213,29 @@ textarea.dc-var-textarea {
 .watching-top-list { display: flex; flex-direction: column; gap: 8px; }
 .watching-top-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 600; }
 .watching-top-rank { width: 18px; flex-shrink: 0; color: var(--text-dim); font-weight: 800; }
-.watching-top-icon { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: var(--input-bg); }
+.watching-top-icon {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  min-height: 26px;
+  max-width: 26px;
+  max-height: 26px;
+  aspect-ratio: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  overflow: hidden;
+  flex: 0 0 26px;
+  padding: 0;
+  margin: 0;
+  background: var(--input-bg);
+  line-height: 1;
+  vertical-align: middle;
+}
 .watching-top-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .watching-top-count { color: var(--text-dim); flex-shrink: 0; }
 /* Same translucent-panel-over-backdrop recipe as .hud-panel, sized for
