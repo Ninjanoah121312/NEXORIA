@@ -73,7 +73,7 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   background-color: var(--bg);
   background-image: url("background.png");
   background-size: cover;
@@ -104,7 +104,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--panel-border) transparent; 
 ::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
 
-.screen { min-height: 100vh; display: none; }
+.screen { min-height: 100vh; display: none; position: relative; z-index: 1; }
 .screen.active { display: block; }
 
 /* ---------- Landing ---------- */
@@ -137,7 +137,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--panel-border) transparent; 
 }
 .brand-glyph-lg { width: 46px; height: 46px; border-radius: 50%; }
 .landing-title { font-family: var(--font-display); font-weight: 700; font-size: 50px; line-height: 1.12; }
-.landing-title .accent { background: linear-gradient(120deg, var(--violet), var(--pink)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.landing-title .accent { background: linear-gradient(120deg, var(--violet), var(--pink)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; display: inline-block; }
 .landing-sub { margin-top: 18px; color: var(--text-dim); font-size: 16.5px; line-height: 1.65; max-width: 46ch; }
 .landing-actions { margin-top: 32px; display: flex; gap: 14px; flex-wrap: wrap; }
 
@@ -225,7 +225,27 @@ textarea.dc-var-textarea {
 .watching-top-list { display: flex; flex-direction: column; gap: 8px; }
 .watching-top-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 600; }
 .watching-top-rank { width: 18px; flex-shrink: 0; color: var(--text-dim); font-weight: 800; }
-.watching-top-icon { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: var(--input-bg); }
+.watching-top-icon {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  min-height: 26px;
+  max-width: 26px;
+  max-height: 26px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  flex: 0 0 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  background: var(--input-bg);
+  line-height: 1;
+}
 .watching-top-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .watching-top-count { color: var(--text-dim); flex-shrink: 0; }
 /* Same translucent-panel-over-backdrop recipe as .hud-panel, sized for
@@ -840,7 +860,7 @@ textarea.embed-inline-input.embed-card-desc { font-size: 13px; color: var(--text
 .ticket-viewer-row:first-child { border-top: none; }
 .ticket-viewer-time { font-size: 11.5px; color: var(--text-dim); flex-shrink: 0; }
 
-/* Discord custom emojis: keep every emoji visually aligned with surrounding text. */
+/* Discord custom emojis rendered by app.js from <:name:id> / <a:name:id>. */
 .discord-custom-emoji {
   width: 1.35em;
   height: 1.35em;
