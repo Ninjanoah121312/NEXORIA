@@ -1,0 +1,3181 @@
+// app.js
+const CFG = window.TICKET_KEEPER_CONFIG;
+if (!CFG)
+    console.error("[boot] window.TICKET_KEEPER_CONFIG is missing — config.js failed to load or ran after this script. Nothing that talks to the bot or Discord will work until that's fixed.");
+window.addEventListener("error", (e) => {
+    console.error("[uncaught error]", e.message, "at", `${e.filename}:${e.lineno}:${e.colno}`, e.error);
+});
+window.addEventListener("unhandledrejection", (e) => {
+    console.error("[unhandled promise rejection]", e.reason);
+});
+const LS = {
+    verifier: "tk_pkce_verifier",
+    token: "tk_access_token",
+    tokenExpiry: "tk_token_expiry",
+    user: "tk_user",
+    theme: "tk_theme",
+    language: "nexoria_language",
+};
+const ADMINISTRATOR = 0x8;
+const ICON_PATHS = {
+    dashboard: `<rect x="2.5" y="2.5" width="7" height="7" rx="1.6" fill="#8b5cf6"/><rect x="10.5" y="2.5" width="7" height="4.5" rx="1.4" fill="#f472b6"/><rect x="10.5" y="8" width="7" height="9.5" rx="1.6" fill="#22d3ee"/><rect x="2.5" y="10.5" width="7" height="7" rx="1.6" fill="#22d3ee" opacity=".55"/>`,
+    tickets: `<path d="M2.5 6.8c0-1 .8-1.8 1.8-1.8h11.4c1 0 1.8.8 1.8 1.8v1.4a1.7 1.7 0 0 0 0 3.6v1.4c0 1-.8 1.8-1.8 1.8H4.3c-1 0-1.8-.8-1.8-1.8v-1.4a1.7 1.7 0 0 0 0-3.6z" fill="#8b5cf6"/><path d="M8.3 5v10" stroke="#0a0b14" stroke-width="1.3" stroke-dasharray="1.6 1.6" opacity=".55"/>`,
+    servers: `<rect x="2.5" y="3" width="15" height="5.2" rx="1.5" fill="#22d3ee"/><rect x="2.5" y="11.8" width="15" height="5.2" rx="1.5" fill="#8b5cf6"/><circle cx="5.3" cy="5.6" r="1" fill="#0a0b14" opacity=".6"/><circle cx="5.3" cy="14.4" r="1" fill="#0a0b14" opacity=".6"/>`,
+    premium: `<path d="M3 7.5 6.4 10l3-4.4L12.6 10 16 7.5 14.8 15H5.2z" fill="#fbbf24"/><circle cx="3" cy="6.3" r="1.3" fill="#fbbf24"/><circle cx="10" cy="4.6" r="1.3" fill="#fbbf24"/><circle cx="17" cy="6.3" r="1.3" fill="#fbbf24"/>`,
+    status: `<path d="M2.5 11h3l1.8-5.5L10 15l2-6.5 1.4 2.5h4.1" fill="none" stroke="#6ee7b7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    "ticket-tool": `<path d="M2.5 6.8c0-1 .8-1.8 1.8-1.8h11.4c1 0 1.8.8 1.8 1.8v1.4a1.7 1.7 0 0 0 0 3.6v1.4c0 1-.8 1.8-1.8 1.8H4.3c-1 0-1.8-.8-1.8-1.8v-1.4a1.7 1.7 0 0 0 0-3.6z" fill="#8b5cf6"/><path d="M8.3 5v10" stroke="#0a0b14" stroke-width="1.3" stroke-dasharray="1.6 1.6" opacity=".55"/>`,
+    "custom-commands": `<rect x="2.5" y="3.5" width="15" height="13" rx="2" fill="#14162a" stroke="#22d3ee" stroke-width="1.3"/><path d="M5.5 8l2.3 2.2-2.3 2.2" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 12.4h4.2" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round"/>`,
+    logging: `<rect x="4" y="2.5" width="12" height="15" rx="1.6" fill="#f472b6"/><rect x="6.2" y="5.3" width="7.6" height="1.4" rx=".7" fill="#0a0b14" opacity=".55"/><rect x="6.2" y="8.3" width="7.6" height="1.4" rx=".7" fill="#0a0b14" opacity=".55"/><rect x="6.2" y="11.3" width="4.6" height="1.4" rx=".7" fill="#0a0b14" opacity=".55"/>`,
+    admin: `<path d="M10 2.5 16 5v4.5c0 4-2.6 6.7-6 7.8-3.4-1.1-6-3.8-6-7.8V5z" fill="#f472b6"/><path d="M7.3 9.8l1.8 1.8 3.6-3.9" fill="none" stroke="#0a0b14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+    "theme-light": `<circle cx="10" cy="10" r="3.6" fill="#fbbf24"/><g stroke="#fbbf24" stroke-width="1.4" stroke-linecap="round"><path d="M10 2.5v2.2"/><path d="M10 15.3v2.2"/><path d="M17.5 10h-2.2"/><path d="M4.7 10H2.5"/><path d="M15.3 4.7l-1.5 1.5"/><path d="M6.2 13.8l-1.5 1.5"/><path d="M15.3 15.3l-1.5-1.5"/><path d="M6.2 6.2l-1.5-1.5"/></g>`,
+    "theme-dark": `<path d="M16.8 12.4A7 7 0 0 1 7.6 3.2 7 7 0 1 0 16.8 12.4z" fill="#8b5cf6"/>`,
+    "theme-system": `<rect x="2.5" y="3.5" width="15" height="10" rx="1.6" fill="#22d3ee"/><rect x="4" y="5" width="12" height="7" rx=".6" fill="#0a0b14"/><rect x="7" y="15.5" width="6" height="1.4" rx=".7" fill="#22d3ee"/>`,
+    "user-profile": `<circle cx="10" cy="7" r="3.4" fill="#8b5cf6"/><path d="M3.3 17c.6-3.4 3.2-5.4 6.7-5.4s6.1 2 6.7 5.4z" fill="#8b5cf6" opacity=".7"/>`,
+    language: `<circle cx="10" cy="10" r="7" fill="none" stroke="#22d3ee" stroke-width="1.6"/><path d="M3 10h14M10 3c2 2 3 4.5 3 7s-1 5-3 7M10 3c-2 2-3 4.5-3 7s1 5 3 7" fill="none" stroke="#22d3ee" stroke-width="1.2"/>`,
+    audit: `<path d="M4 3.5h12v13H4z" fill="#f472b6"/><path d="M6.5 7h7M6.5 10h7M6.5 13h4" stroke="#0a0b14" stroke-width="1.2" stroke-linecap="round"/>`,
+    general: `<circle cx="10" cy="10" r="7" fill="#8b5cf6"/><path d="M10 5.5v5l3 2" stroke="#0a0b14" stroke-width="1.5" stroke-linecap="round"/>`,
+    logout: `<path d="M8 2.8H4.6c-1 0-1.8.8-1.8 1.8v10.8c0 1 .8 1.8 1.8 1.8H8" fill="none" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/><path d="M12.3 6.5 16 10l-3.7 3.5" fill="none" stroke="#e94560" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 10H7.5" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/>`,
+    edit: `<path d="M12.9 3.3a1.6 1.6 0 0 1 2.3 0l1.5 1.5a1.6 1.6 0 0 1 0 2.3L7 16.8l-4 1 1-4z" fill="#fbbf24"/><path d="M11.3 4.9l3.8 3.8" stroke="#0a0b14" stroke-width="1.1" opacity=".4"/>`,
+    trash: `<path d="M4 6.5h12" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/><path d="M7.3 6.5V4.8c0-.6.5-1 1-1h3.4c.6 0 1 .4 1 1v1.7" fill="none" stroke="#e94560" stroke-width="1.6"/><path d="M5.6 6.5 6.3 16c.1.7.6 1.2 1.3 1.2h4.8c.7 0 1.2-.5 1.3-1.2l.7-9.5z" fill="#e94560" opacity=".7"/>`,
+    document: `<path d="M6 2.8h5.4L15 6.4V17a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.8a1 1 0 0 1 1-1z" fill="#22d3ee"/><path d="M11.2 2.8V6h3.6" fill="none" stroke="#0a0b14" stroke-width="1.1" opacity=".45"/><rect x="6.4" y="9" width="6.3" height="1.2" rx=".6" fill="#0a0b14" opacity=".4"/><rect x="6.4" y="11.6" width="6.3" height="1.2" rx=".6" fill="#0a0b14" opacity=".4"/>`,
+    kebab: `<circle cx="10" cy="4.2" r="1.6" fill="#8b8da8"/><circle cx="10" cy="10" r="1.6" fill="#8b8da8"/><circle cx="10" cy="15.8" r="1.6" fill="#8b8da8"/>`,
+    refresh: `<path d="M16.2 6.3A6.8 6.8 0 1 0 17 10" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round"/><path d="M16.2 2.7v4h-4" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    search: `<circle cx="8.6" cy="8.6" r="5" fill="none" stroke="#22d3ee" stroke-width="1.8"/><path d="M12.5 12.5 17 17" stroke="#22d3ee" stroke-width="1.8" stroke-linecap="round"/>`,
+    copy: `<rect x="7" y="7" width="9.5" height="9.5" rx="1.4" fill="#22d3ee"/><path d="M4.5 12.5V4.9c0-.8.6-1.4 1.4-1.4h7.6" fill="none" stroke="#22d3ee" stroke-width="1.6" stroke-linecap="round"/>`,
+    link: `<path d="M8.5 11.5 11.5 8.5" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round"/><path d="M6.8 12.5 4.9 14.4a2.6 2.6 0 0 0 3.7 3.7L10.5 16" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round"/><path d="M13.2 7.5 15.1 5.6a2.6 2.6 0 0 0-3.7-3.7L9.5 4" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round"/>`,
+    eye: `<path d="M2 10s2.8-5.5 8-5.5S18 10 18 10s-2.8 5.5-8 5.5S2 10 2 10z" fill="none" stroke="#6ee7b7" stroke-width="1.6" stroke-linejoin="round"/><circle cx="10" cy="10" r="2.4" fill="#6ee7b7"/>`,
+    "eye-off": `<path d="M2 10s2.8-5.5 8-5.5c1.3 0 2.5.25 3.5.65M18 10s-1 2-2.8 3.5M10 15.5c-5.2 0-8-5.5-8-5.5" fill="none" stroke="#8b8da8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 3l14 14" stroke="#8b8da8" stroke-width="1.6" stroke-linecap="round"/>`,
+    check: `<path d="M4 10.5 8 14.5 16 5.5" fill="none" stroke="#6ee7b7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`,
+    x: `<path d="M5 5l10 10M15 5 5 15" stroke="#e94560" stroke-width="2" stroke-linecap="round"/>`,
+    plus: `<path d="M10 4v12M4 10h12" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/>`,
+    lock: `<rect x="4.5" y="9" width="11" height="8" rx="1.6" fill="#fbbf24"/><path d="M6.5 9V6.5a3.5 3.5 0 0 1 7 0V9" fill="none" stroke="#fbbf24" stroke-width="1.6"/>`,
+    "arrow-left": `<path d="M16 10H4" stroke="#8b8da8" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 5.5 4 10l4.5 4.5" fill="none" stroke="#8b8da8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    "chevron-right": `<path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="#8b8da8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    "chevron-down": `<path d="M5 7.5 10 13l5-5.5" fill="none" stroke="#8b8da8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    crown: `<path d="M3 7.5 6.4 10l3-4.4L12.6 10 16 7.5 14.8 15H5.2z" fill="#fbbf24"/><circle cx="3" cy="6.3" r="1.3" fill="#fbbf24"/><circle cx="10" cy="4.6" r="1.3" fill="#fbbf24"/><circle cx="17" cy="6.3" r="1.3" fill="#fbbf24"/>`,
+    shield: `<path d="M10 2.5 16 5v4.5c0 4-2.6 6.7-6 7.8-3.4-1.1-6-3.8-6-7.8V5z" fill="#8b5cf6"/>`,
+    calendar: `<rect x="3" y="4" width="14" height="13" rx="1.6" fill="#22d3ee"/><rect x="3" y="4" width="14" height="3.4" rx="1.4" fill="#0a0b14" opacity=".35"/><path d="M6.5 2.5v3M13.5 2.5v3" stroke="#22d3ee" stroke-width="1.6" stroke-linecap="round"/>`,
+    "alert-triangle": `<path d="M10 2.8 18 16.5H2z" fill="#fbbf24"/><rect x="9.2" y="8" width="1.6" height="4.6" rx=".8" fill="#0a0b14" opacity=".55"/><circle cx="10" cy="14.3" r=".95" fill="#0a0b14" opacity=".55"/>`,
+    "link-off": `<path d="M8.5 11.5 11.5 8.5" stroke="#e94560" stroke-width="1.8" stroke-linecap="round"/><path d="M6.8 12.5 4.9 14.4a2.6 2.6 0 0 0 3.7 3.7L10.5 16" fill="none" stroke="#e94560" stroke-width="1.8" stroke-linecap="round"/><path d="M13.2 7.5 15.1 5.6a2.6 2.6 0 0 0-3.7-3.7L9.5 4" fill="none" stroke="#e94560" stroke-width="1.8" stroke-linecap="round"/><path d="M3 3l14 14" stroke="#e94560" stroke-width="1.8" stroke-linecap="round"/>`,
+    "message-off": `<path d="M3 4.5h14v9H9l-4 3v-3H3z" fill="#8b8da8" opacity=".5"/><path d="M3 3l14 14" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/>`,
+    "plug-connected-x": `<path d="M6 6 3 3M14 6l3-3M6 6l4 4M12 8l-4-4" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="12" r="4.5" fill="none" stroke="#e94560" stroke-width="1.6"/><path d="M8 10l4 4M12 10l-4 4" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/>`,
+    "folder-off": `<path d="M3 5.5h5l1.6 2H17V16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" fill="#8b8da8" opacity=".5"/><path d="M3 3l14 14" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/>`,
+    "ticket-off": `<path d="M2.5 6.8c0-1 .8-1.8 1.8-1.8h11.4c1 0 1.8.8 1.8 1.8v1.4a1.7 1.7 0 0 0 0 3.6v1.4c0 1-.8 1.8-1.8 1.8H4.3c-1 0-1.8-.8-1.8-1.8v-1.4a1.7 1.7 0 0 0 0-3.6z" fill="#8b8da8" opacity=".5"/><path d="M3 3l14 14" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/>`,
+    "circle-check": `<circle cx="10" cy="10" r="7.5" fill="#6ee7b7"/><path d="M6.5 10.2 9 12.7l4.5-5.4" fill="none" stroke="#0a0b14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`,
+    "info-circle": `<circle cx="10" cy="10" r="7.5" fill="#22d3ee"/><rect x="9.2" y="8.6" width="1.6" height="5" rx=".8" fill="#0a0b14"/><circle cx="10" cy="6" r="1" fill="#0a0b14"/>`,
+    "chevron-up": `<path d="M5 12.5 10 7l5 5.5" fill="none" stroke="#8b8da8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    "layout-grid": `<rect x="2.5" y="2.5" width="6.5" height="6.5" rx="1.4" fill="#8b5cf6"/><rect x="11" y="2.5" width="6.5" height="6.5" rx="1.4" fill="#f472b6"/><rect x="2.5" y="11" width="6.5" height="6.5" rx="1.4" fill="#22d3ee"/><rect x="11" y="11" width="6.5" height="6.5" rx="1.4" fill="#22d3ee" opacity=".55"/>`,
+    tag: `<path d="M9.5 3H4.5a1.5 1.5 0 0 0-1.5 1.5V9c0 .4.15.78.44 1.06l7 7c.6.6 1.5.6 2.1 0l4-4c.6-.6.6-1.5 0-2.1l-7-7A1.5 1.5 0 0 0 9.5 3z" fill="#8b5cf6"/><circle cx="7" cy="7" r="1.2" fill="#0a0b14"/>`,
+    adjustments: `<path d="M4 5h12M4 10h12M4 15h12" stroke="#8b8da8" stroke-width="1.6" stroke-linecap="round"/><circle cx="8" cy="5" r="1.8" fill="#8b5cf6"/><circle cx="14" cy="10" r="1.8" fill="#8b5cf6"/><circle cx="7" cy="15" r="1.8" fill="#8b5cf6"/>`,
+    apps: `<rect x="2.5" y="2.5" width="6" height="6" rx="1.3" fill="#8b5cf6"/><rect x="11.5" y="2.5" width="6" height="6" rx="1.3" fill="#f472b6"/><rect x="2.5" y="11.5" width="6" height="6" rx="1.3" fill="#22d3ee"/><rect x="11.5" y="11.5" width="6" height="6" rx="1.3" fill="#6ee7b7"/>`,
+    "arrow-right": `<path d="M4 10h12" stroke="#8b8da8" stroke-width="1.8" stroke-linecap="round"/><path d="M11.5 5.5 16 10l-4.5 4.5" fill="none" stroke="#8b8da8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    bell: `<path d="M10 2.5c-2.5 0-4 2-4 4.5v2.7L4.3 12.5h11.4L14 9.7V7c0-2.5-1.5-4.5-4-4.5z" fill="#fbbf24"/><path d="M8 15a2 2 0 0 0 4 0" fill="none" stroke="#fbbf24" stroke-width="1.4"/>`,
+    bolt: `<path d="M11 2 4.5 11.5h4L9 18l6.5-9.5h-4z" fill="#fbbf24"/>`,
+    "calendar-event": `<rect x="3" y="4" width="14" height="13" rx="1.6" fill="#22d3ee"/><rect x="3" y="4" width="14" height="3.4" rx="1.4" fill="#0a0b14" opacity=".35"/><path d="M6.5 2.5v3M13.5 2.5v3" stroke="#22d3ee" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="12.5" r="1.8" fill="#0a0b14" opacity=".5"/>`,
+    channel: `<path d="M8 3.5 6.5 16.5M13.5 3.5 12 16.5" stroke="#8b8da8" stroke-width="1.5" stroke-linecap="round"/><path d="M3.5 8h13M3.5 12.5h13" stroke="#8b8da8" stroke-width="1.5" stroke-linecap="round"/>`,
+    "chart-bar": `<rect x="3" y="11" width="3.4" height="6" rx="1" fill="#8b5cf6"/><rect x="8.3" y="6.5" width="3.4" height="10.5" rx="1" fill="#22d3ee"/><rect x="13.6" y="9" width="3.4" height="8" rx="1" fill="#f472b6"/>`,
+    click: `<path d="M6 3v3M11 9l6 2.5-2.7.7-.7 2.7z" fill="#fbbf24"/><path d="M4 8H6M8 4V6M3.5 5.5l1.4 1.4" stroke="#fbbf24" stroke-width="1.4" stroke-linecap="round"/><rect x="6" y="6" width="4" height="4" rx="1" fill="#fbbf24" opacity=".6"/>`,
+    "clipboard-list": `<rect x="4.5" y="3.5" width="11" height="14" rx="1.6" fill="#22d3ee"/><rect x="7" y="2" width="6" height="3" rx="1" fill="#0a0b14" opacity=".4"/><rect x="6.5" y="8" width="7" height="1.3" rx=".65" fill="#0a0b14" opacity=".5"/><rect x="6.5" y="11" width="7" height="1.3" rx=".65" fill="#0a0b14" opacity=".5"/><rect x="6.5" y="14" width="4.5" height="1.3" rx=".65" fill="#0a0b14" opacity=".5"/>`,
+    clock: `<circle cx="10" cy="10" r="7.5" fill="#22d3ee"/><path d="M10 6v4.3l3 2" fill="none" stroke="#0a0b14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+    "door-exit": `<path d="M8 2.8H4.6c-1 0-1.8.8-1.8 1.8v10.8c0 1 .8 1.8 1.8 1.8H8" fill="none" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/><path d="M12.3 6.5 16 10l-3.7 3.5" fill="none" stroke="#e94560" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 10H7.5" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/>`,
+    "file-text": `<path d="M6 2.8h5.4L15 6.4V17a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.8a1 1 0 0 1 1-1z" fill="#f472b6"/><path d="M11.2 2.8V6h3.6" fill="none" stroke="#0a0b14" stroke-width="1.1" opacity=".45"/><rect x="6.4" y="9" width="6.3" height="1.2" rx=".6" fill="#0a0b14" opacity=".4"/><rect x="6.4" y="11.6" width="6.3" height="1.2" rx=".6" fill="#0a0b14" opacity=".4"/>`,
+    gavel: `<rect x="9" y="10.5" width="8" height="2.6" rx="1" fill="#8b5cf6" transform="rotate(-45 9 10.5)"/><rect x="2.5" y="12.5" width="5" height="2.4" rx="1" fill="#8b5cf6" transform="rotate(-45 2.5 12.5)"/><rect x="10.5" y="2.5" width="2.4" height="6.5" rx="1" fill="#8b5cf6" transform="rotate(45 10.5 2.5)"/><rect x="3" y="16.5" width="10" height="1.6" rx=".8" fill="#8b5cf6" opacity=".6"/>`,
+    "grip-vertical": `<circle cx="7.5" cy="4.5" r="1.3" fill="#8b8da8"/><circle cx="12.5" cy="4.5" r="1.3" fill="#8b8da8"/><circle cx="7.5" cy="10" r="1.3" fill="#8b8da8"/><circle cx="12.5" cy="10" r="1.3" fill="#8b8da8"/><circle cx="7.5" cy="15.5" r="1.3" fill="#8b8da8"/><circle cx="12.5" cy="15.5" r="1.3" fill="#8b8da8"/>`,
+    hash: `<path d="M7.3 2.5 5.7 17.5M14.3 2.5l-1.6 15M2.5 7.3h15M2.5 12.7h15" stroke="#22d3ee" stroke-width="1.6" stroke-linecap="round"/>`,
+    headphones: `<path d="M4 11.5v-1a6 6 0 0 1 12 0v1" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round"/><rect x="2.5" y="11" width="3.4" height="5" rx="1.4" fill="#8b5cf6"/><rect x="14.1" y="11" width="3.4" height="5" rx="1.4" fill="#8b5cf6"/>`,
+    "help-circle": `<circle cx="10" cy="10" r="7.5" fill="#8b5cf6"/><path d="M7.8 7.7a2.2 2.2 0 1 1 3.3 1.9c-.7.4-1.1.8-1.1 1.6" fill="none" stroke="#0a0b14" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="14" r="1" fill="#0a0b14"/>`,
+    home: `<path d="M3 9.5 10 3l7 6.5" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 8.5V17h10V8.5" fill="#8b5cf6" opacity=".85"/>`,
+    "layout-board": `<rect x="2.5" y="3" width="5" height="14" rx="1.4" fill="#8b5cf6"/><rect x="8.5" y="3" width="9" height="6.5" rx="1.4" fill="#22d3ee"/><rect x="8.5" y="10.5" width="9" height="6.5" rx="1.4" fill="#f472b6"/>`,
+    list: `<circle cx="4" cy="5.5" r="1.2" fill="#8b5cf6"/><circle cx="4" cy="10" r="1.2" fill="#8b5cf6"/><circle cx="4" cy="14.5" r="1.2" fill="#8b5cf6"/><path d="M7.5 5.5h9M7.5 10h9M7.5 14.5h9" stroke="#8b5cf6" stroke-width="1.5" stroke-linecap="round"/>`,
+    mail: `<rect x="2.5" y="4.5" width="15" height="11" rx="1.6" fill="#22d3ee"/><path d="M3 5.5l7 5.5 7-5.5" fill="none" stroke="#0a0b14" stroke-width="1.3" opacity=".5"/>`,
+    message: `<path d="M3 4.5h14v9H9l-4 3v-3H3z" fill="#8b5cf6"/>`,
+    messages: `<path d="M2.5 3.5h11v7H8l-3 2.3V10.5H2.5z" fill="#8b5cf6" opacity=".55"/><path d="M6.5 9h11v7H12l-3 2.3V16H6.5z" fill="#22d3ee"/>`,
+    minus: `<path d="M4 10h12" stroke="#e94560" stroke-width="2" stroke-linecap="round"/>`,
+    "mood-smile": `<circle cx="10" cy="10" r="7.5" fill="#fbbf24"/><circle cx="7.2" cy="8.5" r="1" fill="#0a0b14"/><circle cx="12.8" cy="8.5" r="1" fill="#0a0b14"/><path d="M6.8 11.5c.7 1.4 2 2.2 3.2 2.2s2.5-.8 3.2-2.2" fill="none" stroke="#0a0b14" stroke-width="1.3" stroke-linecap="round"/>`,
+    notebook: `<rect x="4" y="2.5" width="12" height="15" rx="1.6" fill="#f472b6"/><rect x="6.2" y="5.3" width="7.6" height="1.4" rx=".7" fill="#0a0b14" opacity=".55"/><rect x="6.2" y="8.3" width="7.6" height="1.4" rx=".7" fill="#0a0b14" opacity=".55"/><rect x="6.2" y="11.3" width="4.6" height="1.4" rx=".7" fill="#0a0b14" opacity=".55"/>`,
+    palette: `<path d="M10 2.5a7.5 7.5 0 1 0 0 15c1 0 1.6-.8 1.6-1.6 0-.4-.15-.75-.4-1a1.35 1.35 0 0 1 1-2.3H14a3 3 0 0 0 3-3c0-4-3.1-7.1-7-7.1z" fill="#8b5cf6"/><circle cx="6.3" cy="8" r="1.2" fill="#f472b6"/><circle cx="6.8" cy="12.2" r="1.2" fill="#22d3ee"/><circle cx="10.5" cy="6" r="1.2" fill="#fbbf24"/><circle cx="13.5" cy="8.2" r="1.2" fill="#6ee7b7"/>`,
+    rocket: `<path d="M10 2.5c2.5 1.2 4 3.8 4 7 0 2.5-1 4.5-2.2 5.8L10 17l-1.8-1.7C7 14 6 12 6 9.5c0-3.2 1.5-5.8 4-7z" fill="#8b5cf6"/><circle cx="10" cy="8.5" r="1.6" fill="#0a0b14"/><path d="M7 14.5 5 18l3-1.2M13 14.5l2 3.5-3-1.2" fill="#fbbf24"/>`,
+    settings: `<circle cx="10" cy="10" r="2.6" fill="#8b8da8"/><path d="M10 3v2.2M10 14.8V17M17 10h-2.2M5.2 10H3M14.8 5.2l-1.5 1.5M6.7 13.3l-1.5 1.5M14.8 14.8l-1.5-1.5M6.7 6.7 5.2 5.2" stroke="#8b8da8" stroke-width="1.6" stroke-linecap="round"/>`,
+    "shield-check": `<path d="M10 2.5 16 5v4.5c0 4-2.6 6.7-6 7.8-3.4-1.1-6-3.8-6-7.8V5z" fill="#6ee7b7"/><path d="M7.3 9.8l1.8 1.8 3.6-3.9" fill="none" stroke="#0a0b14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+    "shield-lock": `<path d="M10 2.5 16 5v4.5c0 4-2.6 6.7-6 7.8-3.4-1.1-6-3.8-6-7.8V5z" fill="#f472b6"/><rect x="7.7" y="9.3" width="4.6" height="3.6" rx=".8" fill="#0a0b14"/><path d="M8.6 9.3V8a1.4 1.4 0 0 1 2.8 0v1.3" fill="none" stroke="#0a0b14" stroke-width="1.1"/>`,
+    "shield-x": `<path d="M10 2.5 16 5v4.5c0 4-2.6 6.7-6 7.8-3.4-1.1-6-3.8-6-7.8V5z" fill="#e94560"/><path d="M7.8 7.8l4.4 4.4M12.2 7.8l-4.4 4.4" stroke="#0a0b14" stroke-width="1.4" stroke-linecap="round"/>`,
+    sparkles: `<path d="M6 2.5l1 3 3 1-3 1-1 3-1-3-3-1 3-1z" fill="#fbbf24"/><path d="M14.5 7l1.3 3.6 3.6 1.3-3.6 1.3-1.3 3.6-1.3-3.6-3.6-1.3 3.6-1.3z" fill="#f472b6"/>`,
+    square: `<rect x="4" y="4" width="12" height="12" rx="2" fill="none" stroke="#8b8da8" stroke-width="1.8"/>`,
+    sticker: `<path d="M4 4.5A1.5 1.5 0 0 1 5.5 3h6.4c.9 0 1.4.3 1.9.8l2.4 2.4c.5.5.8 1 .8 1.9v6.4a1.5 1.5 0 0 1-1.5 1.5H5.5A1.5 1.5 0 0 1 4 14.5z" fill="#fbbf24"/><path d="M12.5 3.3V7a1.5 1.5 0 0 0 1.5 1.5h3.7" fill="none" stroke="#0a0b14" stroke-width="1.1" opacity=".45"/>`,
+    "toggle-left": `<rect x="2.5" y="6" width="15" height="8" rx="4" fill="#8b8da8" opacity=".4"/><circle cx="6.5" cy="10" r="3" fill="#8b8da8"/>`,
+    "toggle-right": `<rect x="2.5" y="6" width="15" height="8" rx="4" fill="#8b5cf6"/><circle cx="13.5" cy="10" r="3" fill="#fff"/>`,
+    transfer: `<path d="M3 6.5h11" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round"/><path d="M10.5 3l3.5 3.5L10.5 10" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 13.5H6" stroke="#22d3ee" stroke-width="1.8" stroke-linecap="round"/><path d="M9.5 10l-3.5 3.5L9.5 17" fill="none" stroke="#22d3ee" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    "user-off": `<circle cx="10" cy="7" r="3.4" fill="#8b8da8" opacity=".5"/><path d="M3.3 17c.6-3.4 3.2-5.4 6.7-5.4s6.1 2 6.7 5.4z" fill="#8b8da8" opacity=".35"/><path d="M3 3l14 14" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/>`,
+    users: `<circle cx="7" cy="7" r="2.8" fill="#8b5cf6"/><circle cx="14" cy="8" r="2.2" fill="#f472b6"/><path d="M2.3 17c.5-3.2 2.4-4.8 4.7-4.8s4.2 1.6 4.7 4.8z" fill="#8b5cf6" opacity=".8"/><path d="M11.5 17c.4-2.5 1.7-4 3.8-4s3.4 1.5 3.8 4z" fill="#f472b6" opacity=".8"/>`,
+    user: `<circle cx="10" cy="7" r="3.4" fill="#8b5cf6"/><path d="M3.3 17c.6-3.4 3.2-5.4 6.7-5.4s6.1 2 6.7 5.4z" fill="#8b5cf6" opacity=".8"/>`,
+    variable: `<path d="M6 4.5c-2 3.5-2 8 0 11M14 4.5c2 3.5 2 8 0 11" fill="none" stroke="#22d3ee" stroke-width="1.6" stroke-linecap="round"/><path d="M8 8.5l4 3M12 8.5l-4 3" stroke="#22d3ee" stroke-width="1.6" stroke-linecap="round"/>`,
+    volume: `<path d="M3 8v4h3l4 3V5L6 8z" fill="#22d3ee"/><path d="M13 7.5a4 4 0 0 1 0 5M15.5 5a7.5 7.5 0 0 1 0 10" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round"/>`,
+    webhook: `<circle cx="6" cy="14.5" r="2.5" fill="#8b5cf6"/><circle cx="15" cy="6.5" r="2.5" fill="#22d3ee"/><circle cx="15" cy="14.5" r="2.5" fill="#f472b6"/><path d="M8 13.5 12.5 7M8 15h4.5" stroke="#8b8da8" stroke-width="1.5" stroke-linecap="round"/>`,
+    "category-2": `<rect x="2.5" y="4" width="15" height="12" rx="1.6" fill="#8b5cf6" opacity=".2"/><path d="M2.5 6.5c0-1.4 1-2.5 2.4-2.5h3l1.6 2h5.4c1.4 0 2.6 1.1 2.6 2.5v6c0 1.4-1.2 2.5-2.6 2.5H5.1c-1.4 0-2.6-1.1-2.6-2.5z" fill="#8b5cf6"/>`,
+    storage: `<rect x="2.5" y="3" width="15" height="5.2" rx="1.5" fill="#22d3ee"/><rect x="2.5" y="11.8" width="15" height="5.2" rx="1.5" fill="#8b5cf6"/><circle cx="5.3" cy="5.6" r="1" fill="#0a0b14" opacity=".6"/><circle cx="5.3" cy="14.4" r="1" fill="#0a0b14" opacity=".6"/><path d="M14 5.6h1.8M14 14.4h1.8" stroke="#0a0b14" stroke-width="1.1" opacity=".5"/>`,
+    "search-off": `<circle cx="8.6" cy="8.6" r="5" fill="none" stroke="#8b8da8" stroke-width="1.8" opacity=".5"/><path d="M12.5 12.5 17 17" stroke="#8b8da8" stroke-width="1.8" stroke-linecap="round" opacity=".5"/><path d="M3 3l14 14" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/>`,
+    "tag-off": `<path d="M9.5 3H4.5a1.5 1.5 0 0 0-1.5 1.5V9c0 .4.15.78.44 1.06l7 7c.6.6 1.5.6 2.1 0l4-4c.6-.6.6-1.5 0-2.1l-7-7A1.5 1.5 0 0 0 9.5 3z" fill="#8b8da8" opacity=".4"/><path d="M2 2l16 16" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/>`,
+    "terminal-2": `<rect x="2.5" y="3.5" width="15" height="13" rx="2" fill="#14162a" stroke="#22d3ee" stroke-width="1.3"/><path d="M5.5 8l2.3 2.2-2.3 2.2" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 12.4h4.2" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round"/>`,
+    "history-off": `<path d="M3.5 10a6.5 6.5 0 1 1 1.9 4.6" fill="none" stroke="#8b8da8" stroke-width="1.6" stroke-linecap="round" opacity=".5"/><path d="M10 6.5V10l2.5 1.5" fill="none" stroke="#8b8da8" stroke-width="1.5" stroke-linecap="round" opacity=".5"/><path d="M3 3l14 14" stroke="#e94560" stroke-width="1.6" stroke-linecap="round"/>`,
+    "microphone-2": `<rect x="7.5" y="2.5" width="5" height="9" rx="2.5" fill="#f472b6"/><path d="M5.5 9.5v.8a4.5 4.5 0 0 0 9 0v-.8" fill="none" stroke="#f472b6" stroke-width="1.5" stroke-linecap="round"/><path d="M10 14.8v2.7M7.3 17.5h5.4" stroke="#f472b6" stroke-width="1.5" stroke-linecap="round"/>`,
+    discord: `<path d="M5 5.5c3.3-1.8 6.7-1.8 10 0 1.1 1.8 1.7 3.8 1.7 6 0 2.2-1.7 4.3-4.8 5.3l-1.2-1.6c.7-.2 1.3-.5 1.8-.9-1.5.7-3 .9-4.5.9s-3-.2-4.5-.9c.5.4 1.1.7 1.8.9l-1.2 1.6C2.7 15.8 3 13.7 3 11.5c0-2.2.6-4.2 2-6z" fill="#5865f2"/><circle cx="7.5" cy="10.8" r="1" fill="#fff"/><circle cx="12.5" cy="10.8" r="1" fill="#fff"/>`,
+};
+function icon(name, sizePx = 18) {
+    const inner = ICON_PATHS[name] || `<circle cx="10" cy="10" r="3.5" fill="#8b5cf6"/>`;
+    return `<span class="nav-svg-icon" aria-hidden="true"><svg width="${sizePx}" height="${sizePx}" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">${inner}</svg></span>`;
+}
+function navIcon(name, sizePx) { return icon(name, sizePx); }
+function autoButtonIcon(button) {
+    if (!button || button.disabled || button.dataset.noAutoIcon === "true")
+        return;
+    if (button.querySelector(".nav-svg-icon"))
+        return;
+    const text = (button.textContent || "").trim().toLowerCase();
+    if (!text || button.classList.contains("wizard-step"))
+        return;
+    let name = "sparkles";
+    if (/^(close|cancel|exit|remove|delete|deny|clear|log out|logout|stop)/.test(text))
+        name = "x";
+    else if (/^(back|previous)/.test(text))
+        name = "arrow-left";
+    else if (/^(continue|next|save|create|add|send|apply|confirm|done|enable|connect|invite|open|manage)/.test(text))
+        name = "arrow-right";
+    else if (/search|find/.test(text))
+        name = "search";
+    else if (/refresh|reload|sync/.test(text))
+        name = "refresh";
+    else if (/edit|rename/.test(text))
+        name = "edit";
+    else if (/help|documentation|docs/.test(text))
+        name = "help-circle";
+    else if (/settings|configure/.test(text))
+        name = "settings";
+    else if (/channel|log/.test(text))
+        name = "channel";
+    else if (/mass|bulk|all/.test(text))
+        name = "category-2";
+    else if (/test/.test(text))
+        name = "terminal-2";
+    else if (/theme|light|dark/.test(text))
+        name = "theme-dark";
+    const holder = document.createElement("span");
+    holder.innerHTML = icon(name, 16);
+    const svg = holder.firstElementChild;
+    if (svg)
+        button.insertBefore(svg, button.firstChild);
+    button.dataset.autoIcon = "1";
+}
+function decorateAllButtons(root = document) {
+    root.querySelectorAll("button").forEach(autoButtonIcon);
+}
+const TABLER_TO_NEXORIA = {
+    "ti-plus": "plus", "ti-minus": "minus", "ti-x": "x", "ti-arrow-left": "arrow-left", "ti-arrow-right": "arrow-right",
+    "ti-chevron-right": "chevron-right", "ti-chevron-down": "chevron-down", "ti-home": "dashboard", "ti-ticket": "tickets", "ti-crown": "premium",
+    "ti-eye": "eye", "ti-eye-off": "eye-off", "ti-server-2": "servers", "ti-alert-triangle": "alert-triangle", "ti-folder-off": "folder-off",
+    "ti-refresh": "refresh", "ti-edit": "edit", "ti-settings": "settings", "ti-search": "search", "ti-help-circle": "help-circle",
+    "ti-brand-discord": "discord", "ti-user": "user", "ti-users": "users", "ti-lock": "lock", "ti-lock-open": "lock-open",
+    "ti-lock-check": "lock-check", "ti-tag": "tag", "ti-link": "link", "ti-link-off": "link-off", "ti-copy": "copy", "ti-trash": "trash",
+    "ti-plug-connected-x": "plug-connected-x", "ti-circle-check": "check", "ti-message-off": "message-off", "ti-ticket-off": "ticket-off",
+    "ti-info-circle": "info", "ti-channel": "channel", "ti-bell": "bell", "ti-shield": "shield", "ti-activity": "activity", "ti-database": "storage",
+    "ti-code": "code", "ti-terminal-2": "terminal-2", "ti-variable": "variable", "ti-webhook": "webhook", "ti-logout": "logout", "ti-login": "login"
+};
+function replaceLegacyTablerIcons(root = document) {
+    root.querySelectorAll?.("i.ti").forEach(el => {
+        const cls = [...el.classList].find(c => c !== "ti");
+        const name = TABLER_TO_NEXORIA[cls] || (cls ? cls.replace(/^ti-/, "") : "sparkles");
+        const holder = document.createElement("span");
+        holder.innerHTML = icon(name);
+        const replacement = holder.firstElementChild;
+        if (replacement)
+            el.replaceWith(replacement);
+    });
+}
+const buttonIconObserver = new MutationObserver(mutations => {
+    for (const m of mutations)
+        for (const n of m.addedNodes) {
+            if (n.nodeType !== 1)
+                continue;
+            replaceLegacyTablerIcons(n);
+            if (n.matches?.("button"))
+                autoButtonIcon(n);
+            n.querySelectorAll?.("button").forEach(autoButtonIcon);
+        }
+});
+buttonIconObserver.observe(document.documentElement, { childList: true, subtree: true });
+const routes = {
+    parse() {
+        const path = window.location.pathname.replace(CFG.BASE_PATH, "").replace(/^\/|\/$/g, "");
+        const parts = path.split("/").filter(Boolean);
+        if (parts[0] === "dashboard")
+            return { screen: "picker", panel: "dashboard" };
+        if (parts[0] === "my-tickets") {
+            if (parts[1] === "ticket" && parts[2] && parts[3])
+                return { screen: "picker", panel: "my-tickets", myTicketGuildId: parts[2], myTicketId: parts[3] };
+            return { screen: "picker", panel: "my-tickets" };
+        }
+        if (parts[0] === "premium")
+            return { screen: "picker", panel: "premium" };
+        if (parts[0] === "leaderboards")
+            return { screen: "picker", panel: "leaderboards" };
+        if (parts[0] === "docs")
+            return { screen: "picker", panel: "docs", docsModuleId: parts[1] || null };
+        if (parts[0] === "admin")
+            return { screen: "picker", panel: "admin" };
+        if (parts[0] === "settings" || parts[0] === "profile")
+            return { screen: "picker", panel: "profile" };
+        if (parts[0] === "share" && parts[1])
+            return { screen: "share", shareId: parts[1] };
+        if (parts[0] === "servers" && parts[1]) {
+            const guildId = parts[1];
+            const moduleId = parts[2] || "ticket-tool";
+            if (parts[3] === "ticket" && parts[4])
+                return { screen: "dashboard", guildId, panel: moduleId, ticketId: parts[4] };
+            const tab = parts[3] || null;
+            return { screen: "dashboard", guildId, panel: moduleId, tab };
+        }
+        return { screen: "landing" };
+    },
+    go(url, replace = false) {
+        const full = CFG.BASE_PATH.replace(/\/$/, "") + url;
+        if (replace)
+            window.history.replaceState({}, "", full);
+        else
+            window.history.pushState({}, "", full);
+    },
+    moduleUrl(guildId, moduleId, tab) {
+        return `/servers/${guildId}/${moduleId}${tab ? `/${tab}` : ""}`;
+    },
+    ticketUrl(guildId, moduleId, ticketId) {
+        return `/servers/${guildId}/${moduleId}/ticket/${ticketId}`;
+    },
+    myTicketUrl(guildId, ticketId) {
+        return `/my-tickets/ticket/${guildId}/${ticketId}`;
+    },
+    docsUrl(moduleId) {
+        return moduleId ? `/docs/${moduleId}` : "/docs";
+    },
+};
+window.addEventListener("popstate", () => renderFromRoute());
+function escapeHtml(s) { return (s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+const DCModal = (() => {
+    const root = () => document.getElementById("dc-modal-root");
+    function close() {
+        const r = root();
+        r.innerHTML = "";
+        r.classList.remove("dc-modal-open");
+        document.removeEventListener("keydown", onEscape);
+    }
+    function onEscape(e) {
+        if (e.key === "Escape")
+            close();
+    }
+    function open(bodyHtml, { maxWidth = "440px", onMount } = {}) {
+        const r = root();
+        r.classList.add("dc-modal-open");
+        r.innerHTML = `
+      <div class="dc-modal-overlay">
+        <div class="dc-modal-panel" style="max-width:${maxWidth}">${bodyHtml}</div>
+      </div>`;
+        r.querySelector(".dc-modal-overlay").addEventListener("click", (e) => {
+            if (e.target.classList.contains("dc-modal-overlay"))
+                close();
+        });
+        document.addEventListener("keydown", onEscape);
+        if (onMount)
+            onMount(r);
+        return r;
+    }
+    function confirm(message, opts = {}) {
+        return new Promise((resolve) => {
+            const { title = "Are you sure?", confirmLabel = "Confirm", cancelLabel = "Cancel", danger = false } = opts;
+            open(`
+        <div class="dc-modal-header"><h3>${escapeHtml(title)}</h3></div>
+        <div class="dc-modal-body"><p>${escapeHtml(message)}</p></div>
+        <div class="dc-modal-footer">
+          <button class="btn btn-ghost btn-small" id="dc-modal-cancel">${escapeHtml(cancelLabel)}</button>
+          <button class="btn ${danger ? "btn-danger" : "btn-primary"} btn-small" id="dc-modal-confirm">${escapeHtml(confirmLabel)}</button>
+        </div>`, {
+                onMount: (r) => {
+                    r.querySelector("#dc-modal-cancel").addEventListener("click", () => { close(); resolve(false); });
+                    r.querySelector("#dc-modal-confirm").addEventListener("click", () => { close(); resolve(true); });
+                },
+            });
+        });
+    }
+    function alertModal(message, opts = {}) {
+        return new Promise((resolve) => {
+            const { title = "Notice", okLabel = "OK" } = opts;
+            open(`
+        <div class="dc-modal-header"><h3>${escapeHtml(title)}</h3></div>
+        <div class="dc-modal-body"><p>${escapeHtml(message)}</p></div>
+        <div class="dc-modal-footer">
+          <button class="btn btn-primary btn-small" id="dc-modal-ok">${escapeHtml(okLabel)}</button>
+        </div>`, {
+                onMount: (r) => r.querySelector("#dc-modal-ok").addEventListener("click", () => { close(); resolve(); }),
+            });
+        });
+    }
+    function promptModal(message, opts = {}) {
+        return new Promise((resolve) => {
+            const { title = "Enter a value", placeholder = "", defaultValue = "", confirmLabel = "Save" } = opts;
+            open(`
+        <div class="dc-modal-header"><h3>${escapeHtml(title)}</h3></div>
+        <div class="dc-modal-body">
+          <p style="margin-bottom:10px">${escapeHtml(message)}</p>
+          <input type="text" class="dc-modal-input" id="dc-modal-prompt-input" placeholder="${escapeHtml(placeholder)}" value="${escapeHtml(defaultValue)}">
+        </div>
+        <div class="dc-modal-footer">
+          <button class="btn btn-ghost btn-small" id="dc-modal-cancel">Cancel</button>
+          <button class="btn btn-primary btn-small" id="dc-modal-confirm">${escapeHtml(confirmLabel)}</button>
+        </div>`, {
+                onMount: (r) => {
+                    const input = r.querySelector("#dc-modal-prompt-input");
+                    input.focus();
+                    input.select();
+                    input.addEventListener("keydown", (e) => {
+                        if (e.key === "Enter") {
+                            close();
+                            resolve(input.value);
+                        }
+                    });
+                    r.querySelector("#dc-modal-cancel").addEventListener("click", () => { close(); resolve(null); });
+                    r.querySelector("#dc-modal-confirm").addEventListener("click", () => { close(); resolve(input.value); });
+                },
+            });
+        });
+    }
+    function custom(bodyHtml, opts = {}) {
+        return open(bodyHtml, opts);
+    }
+    return { confirm, alert: alertModal, prompt: promptModal, custom, close };
+})();
+function base64url(buf) {
+    return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+async function makeVerifierAndChallenge() {
+    const verifier = base64url(crypto.getRandomValues(new Uint8Array(64)));
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
+    return { verifier, challenge: base64url(digest) };
+}
+async function beginLogin() {
+    if (!CFG.DISCORD_CLIENT_ID) {
+        throw new Error("Discord login is not configured yet. Set DISCORD_CLIENT_ID in config.env and run the tunnel script again so the public site config is updated.");
+    }
+    const { verifier, challenge } = await makeVerifierAndChallenge();
+    sessionStorage.setItem(LS.verifier, verifier);
+    sessionStorage.setItem("tk_post_login_redirect", "/dashboard");
+    const params = new URLSearchParams({
+        client_id: CFG.DISCORD_CLIENT_ID,
+        redirect_uri: CFG.REDIRECT_URI,
+        response_type: "code",
+        scope: CFG.OAUTH_SCOPES.join(" "),
+        code_challenge: challenge,
+        code_challenge_method: "S256",
+    });
+    window.location.href = `https://discord.com/oauth2/authorize?${params.toString()}`;
+}
+async function exchangeCodeForToken(code) {
+    const verifier = sessionStorage.getItem(LS.verifier);
+    const body = new URLSearchParams({
+        client_id: CFG.DISCORD_CLIENT_ID, grant_type: "authorization_code",
+        code, redirect_uri: CFG.REDIRECT_URI, code_verifier: verifier,
+    });
+    try {
+        const res = await fetch("https://discord.com/api/oauth2/token", {
+            method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body,
+        });
+        if (!res.ok)
+            throw new Error("direct exchange failed");
+        return await res.json();
+    }
+    catch {
+        let res2;
+        try {
+            res2 = await fetch(`${CFG.LOCAL_BOT_URL}/oauth/exchange`, {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ code, verifier, redirect_uri: CFG.REDIRECT_URI }),
+            });
+        }
+        catch {
+            throw new Error("Could not complete login. Is your bot running?");
+        }
+        if (!res2.ok)
+            throw new Error("Could not complete login. Is your bot running?");
+        return await res2.json();
+    }
+}
+function saveSession(tokenData, user) {
+    localStorage.setItem(LS.token, tokenData.access_token);
+    localStorage.setItem(LS.tokenExpiry, String(Date.now() + tokenData.expires_in * 1000));
+    localStorage.setItem(LS.user, JSON.stringify(user));
+}
+function getSession() {
+    const token = localStorage.getItem(LS.token);
+    const expiry = Number(localStorage.getItem(LS.tokenExpiry) || 0);
+    if (!token || Date.now() > expiry)
+        return null;
+    return { token, user: JSON.parse(localStorage.getItem(LS.user) || "null") };
+}
+function clearSession() { [LS.token, LS.tokenExpiry, LS.user].forEach(k => localStorage.removeItem(k)); }
+async function fetchMe(token) {
+    let res;
+    try {
+        res = await fetch("https://discord.com/api/users/@me", { headers: { Authorization: `Bearer ${token}` } });
+    }
+    catch {
+        throw new Error("Couldn't reach Discord — check your internet connection and try again.");
+    }
+    if (!res.ok)
+        throw new Error("Failed to load Discord profile");
+    return res.json();
+}
+async function fetchMyGuilds(token) {
+    let res;
+    try {
+        res = await fetch("https://discord.com/api/users/@me/guilds", { headers: { Authorization: `Bearer ${token}` } });
+    }
+    catch {
+        throw new Error("Couldn't reach Discord — check your internet connection and try again.");
+    }
+    if (res.status === 429) {
+        const retryAfterSec = Number(res.headers.get("retry-after")) || 1.5;
+        await new Promise(resolve => setTimeout(resolve, retryAfterSec * 1000));
+        let retryRes;
+        try {
+            retryRes = await fetch("https://discord.com/api/users/@me/guilds", { headers: { Authorization: `Bearer ${token}` } });
+        }
+        catch {
+            throw new Error("Couldn't reach Discord — check your internet connection and try again.");
+        }
+        if (!retryRes.ok)
+            throw new Error(retryRes.status === 429 ? "Discord is rate-limiting this request — wait a moment and try again." : `Failed to load your servers (HTTP ${retryRes.status}).`);
+        return retryRes.json();
+    }
+    if (res.status === 401)
+        throw new Error("Your login has expired — please log in again.");
+    if (!res.ok)
+        throw new Error(`Failed to load your servers (HTTP ${res.status}).`);
+    return res.json();
+}
+function isAdmin(guild) {
+    return guild.owner || (BigInt(guild.permissions) & BigInt(ADMINISTRATOR)) === BigInt(ADMINISTRATOR);
+}
+async function pingLocalBot() {
+    const startedAt = performance.now();
+    try {
+        const data = await api("/status", { method: "GET" });
+        if (data && typeof data === "object") {
+            data.latencyMs = Math.round(performance.now() - startedAt);
+            return data;
+        }
+    }
+    catch (e) {
+        console.warn(`[status] Secure /status request failed (${e.name || "Error"}: ${e.message || e}) — treating the bot as offline.`);
+    }
+    try {
+        await fetch(`${CFG.LOCAL_BOT_URL}/health`, { signal: AbortSignal.timeout(2000) });
+    }
+    catch (e) {
+        console.warn(`[status] Health check against ${CFG.LOCAL_BOT_URL}/health failed (${e.name || "Error"}: ${e.message || e}).`);
+    }
+    return null;
+}
+let nxSecureState = null;
+function b64FromBytes(bytes) {
+    let s = "";
+    for (const b of bytes)
+        s += String.fromCharCode(b);
+    return btoa(s);
+}
+function bytesFromB64(s) { const raw = atob(s); return Uint8Array.from(raw, c => c.charCodeAt(0)); }
+async function negotiateSecureSession() {
+    if (!window.crypto?.subtle)
+        return null;
+    const kp = await crypto.subtle.generateKey({ name: "ECDH", namedCurve: "P-256" }, true, ["deriveKey"]);
+    const pub = await crypto.subtle.exportKey("jwk", kp.publicKey);
+    const r = await fetch(`${CFG.LOCAL_BOT_URL}/secure/session`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ publicKey: pub }), signal: AbortSignal.timeout(8000) });
+    if (!r.ok)
+        throw new Error("Secure session negotiation failed");
+    const d = await r.json();
+    const serverPub = await crypto.subtle.importKey("jwk", d.publicKey, { name: "ECDH", namedCurve: "P-256" }, false, []);
+    const key = await crypto.subtle.deriveKey({ name: "ECDH", public: serverPub }, kp.privateKey, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+    nxSecureState = { session: d.session, key };
+    return nxSecureState;
+}
+async function ensureSecure() {
+    if (nxSecureState)
+        return nxSecureState;
+    try {
+        return await negotiateSecureSession();
+    }
+    catch {
+        return null;
+    }
+}
+async function encryptEnvelope(value, key) { const iv = crypto.getRandomValues(new Uint8Array(12)); const plain = new TextEncoder().encode(typeof value === "string" ? value : JSON.stringify(value)); const packed = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, plain)); return { v: 1, iv: b64FromBytes(iv), data: b64FromBytes(packed) }; }
+async function decryptEnvelope(envelope, key) {
+    if (!envelope?.iv || !envelope?.data)
+        throw new Error("Invalid secure response");
+    const iv = bytesFromB64(envelope.iv);
+    const data = bytesFromB64(envelope.data);
+    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, data);
+    return JSON.parse(new TextDecoder().decode(plain));
+}
+async function reportSecureFailure(reason) {
+    try {
+        if (nxSecureState)
+            await fetch(`${CFG.LOCAL_BOT_URL}/secure/transport-failure`, { method: "POST", headers: { "Content-Type": "application/json", "X-NX-Session": nxSecureState.session }, body: JSON.stringify({ reason }), signal: AbortSignal.timeout(5000) });
+    }
+    catch { }
+    nxSecureState = null;
+}
+async function api(path, options = {}) {
+    if (!CFG?.LOCAL_BOT_URL)
+        throw new Error("NEXORIA bridge URL is not configured. Start start-tunnel.ps1 and reload the site.");
+    const method = String(options.method || "GET").toUpperCase();
+    const retryable = method === "GET" || method === "HEAD";
+    const maxAttempts = retryable ? 3 : 1;
+    let res;
+    let lastError = null;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+            const secure = await ensureSecure();
+            const requiresSecure = path === "/status" || path === "/status-history" || path === "/modules" || path === "/variables" || path === "/maintenance";
+            if (requiresSecure && !secure) {
+                if (attempt === maxAttempts)
+                    throw new Error("Could not establish the encrypted NEXORIA session. Check that the bot and tunnel are running.");
+                await new Promise(resolve => setTimeout(resolve, 250 * attempt));
+                continue;
+            }
+            let requestOptions = { ...options, headers: { "Content-Type": "application/json", ...(options.headers || {}) }, signal: AbortSignal.timeout(10000) };
+            if (secure) {
+                requestOptions.headers["X-NX-Session"] = secure.session;
+                if (options.body && typeof options.body === "string") {
+                    try {
+                        requestOptions.body = JSON.stringify(await encryptEnvelope(JSON.parse(options.body), secure.key));
+                    }
+                    catch (e) {
+                        await reportSecureFailure(`request_encryption_failed:${e.message}`);
+                        if (attempt === maxAttempts)
+                            throw new Error("Secure request encryption failed; the session was rotated. Please retry.");
+                        continue;
+                    }
+                }
+            }
+            res = await fetch(`${CFG.LOCAL_BOT_URL}${path}`, requestOptions);
+            if (secure && res.headers.get("X-NX-Secure") === "1") {
+                try {
+                    const envelope = await res.json();
+                    const decoded = await decryptEnvelope(envelope, secure.key);
+                    res = new Response(JSON.stringify(decoded), { status: res.status, statusText: res.statusText, headers: { "Content-Type": "application/json" } });
+                }
+                catch (e) {
+                    await reportSecureFailure(`response_decryption_failed:${e.message}`);
+                    if (attempt === maxAttempts)
+                        throw new Error("Secure response verification failed; the session was rotated. Please retry.");
+                    continue;
+                }
+            }
+            if (secure && (res.status === 401 || res.status === 400)) {
+                let detail = "secure_request_rejected";
+                try {
+                    detail = (await res.clone().json())?.error || detail;
+                }
+                catch { }
+                if (res.status === 400 && !String(detail).toLowerCase().includes("secure"))
+                    detail = "secure_request_rejected";
+                await reportSecureFailure(`${res.status === 401 ? "session_rejected" : "request_decryption_failed"}:${detail}`);
+                if (attempt < maxAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, 250));
+                    continue;
+                }
+            }
+            if (retryable && attempt < maxAttempts && [502, 503, 504].includes(res.status)) {
+                await new Promise(resolve => setTimeout(resolve, 700 * attempt));
+                continue;
+            }
+            break;
+        }
+        catch (e) {
+            lastError = e;
+            if (!retryable || attempt >= maxAttempts)
+                break;
+            await new Promise(resolve => setTimeout(resolve, 700 * attempt));
+        }
+    }
+    if (!res) {
+        const e = lastError || new Error("Request failed");
+        const timedOut = e?.name === "TimeoutError" || e?.name === "AbortError";
+        throw new Error(timedOut
+            ? "The bot didn't respond in time — check that it's running and your tunnel is up."
+            : "Couldn't reach the bot — check that it's running and your tunnel is up.");
+    }
+    if (!res.ok) {
+        let detail = "";
+        try {
+            const text = await res.text();
+            try {
+                detail = JSON.parse(text).error || "";
+            }
+            catch {
+                detail = "";
+            }
+        }
+        catch { }
+        throw new Error(detail || `Request failed (HTTP ${res.status}). The bot may need to be restarted — check its console output.`);
+    }
+    return res.json();
+}
+const systemThemeQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
+function resolveSystemTheme() { return systemThemeQuery && systemThemeQuery.matches ? "light" : "dark"; }
+function applyTheme(theme) {
+    const resolved = theme === "system" ? resolveSystemTheme() : theme;
+    document.body.setAttribute("data-theme", resolved);
+    localStorage.setItem(LS.theme, theme);
+    document.querySelectorAll("[id^=btn-theme]").forEach(btn => {
+        btn.innerHTML = resolved === "dark" ? `${icon("theme-dark")}` : `${icon("theme-light")}`;
+    });
+}
+function getThemePreference() { return localStorage.getItem(LS.theme) || "system"; }
+async function loadLanguagePreference() {
+    try {
+        const manifest = await fetch(`${CFG.BASE_PATH || ""}/languages/languages.json`).then(r => r.json());
+        const supported = (manifest.languages || []).map(x => x.id);
+        let id = localStorage.getItem(LS.language);
+        const detected = (navigator.language || "en").toLowerCase().split("-")[0];
+        if (!id)
+            id = supported.includes(detected) ? detected : (manifest.default || "en");
+        if (!supported.includes(id)) {
+            id = manifest.default || "en";
+        }
+        const lang = manifest.languages.find(x => x.id === id) || manifest.languages[0];
+        if (lang)
+            window.NEXORIA_I18N = await fetch(`${CFG.BASE_PATH || ""}/languages/${lang.file}`).then(r => r.json());
+        localStorage.setItem(LS.language, id);
+        if (!supported.includes(detected) && detected !== "en" && !localStorage.getItem("nexoria_language_notice")) {
+            localStorage.setItem("nexoria_language_notice", "1");
+            setTimeout(() => DCModal.alert(`NEXORIA currently supports English only. Please suggest ${escapeHtml(detected)} in the NEXORIA Discord server: ${escapeHtml(CFG.DISCORD_SUPPORT_URL || "")}`, { title: "Your language is not supported yet" }), 1000);
+        }
+    }
+    catch {
+        window.NEXORIA_I18N = { name: "English", translations: {} };
+    }
+}
+function languageLabel() { return window.NEXORIA_I18N?.name || "English"; }
+async function chooseLanguage() {
+    try {
+        const m = await fetch(`${CFG.BASE_PATH || ""}/languages/languages.json`).then(r => r.json());
+        const buttons = (m.languages || []).map(x => `<button class="btn btn-ghost btn-small" data-language="${escapeHtml(x.id)}">${icon("language")} ${escapeHtml(x.name)}</button>`).join(" ");
+        const modal = DCModal.custom(`<div class="dc-modal-header"><h3>Languages</h3></div><div class="dc-modal-body"><p>Choose the language used by this browser. Your choice is stored locally.</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">${buttons}</div></div>`, { onMount: (r) => r.querySelectorAll("[data-language]").forEach(b => b.addEventListener("click", async () => {
+                localStorage.setItem(LS.language, b.dataset.language);
+                await loadLanguagePreference();
+                DCModal.close();
+                ["picker-sidebar-bottom", "dash-sidebar-bottom"].forEach(id => {
+                    if (document.getElementById(id))
+                        renderSidebarBottom(id);
+                });
+            })) });
+    }
+    catch (e) {
+        await DCModal.alert("Could not load languages.", { title: "Languages" });
+    }
+}
+if (systemThemeQuery) {
+    systemThemeQuery.addEventListener("change", () => {
+        if (getThemePreference() === "system")
+            applyTheme("system");
+    });
+}
+function renderSidebarBottom(slotId) {
+    const slot = document.getElementById(slotId);
+    if (!slot)
+        return;
+    const session = getSession();
+    const currentPref = getThemePreference();
+    const THEME_OPTIONS = [
+        { id: "light", label: "Light", icon: "theme-light" },
+        { id: "dark", label: "Dark", icon: "theme-dark" },
+        { id: "system", label: "System", icon: "theme-system" },
+    ];
+    const currentOpt = THEME_OPTIONS.find(o => o.id === currentPref) || THEME_OPTIONS[1];
+    slot.innerHTML = `
+    <div class="sidebar-bottom">
+      <button type="button" class="nav-item sb-main-menu-link">${icon("home")} Main Menu</button>
+      <button class="nav-item" data-picker-panel="leaderboards">${icon("trophy")} Leaderboards</button>
+      <a href="${inviteUrl()}" target="_blank" rel="noopener" class="nav-item sb-invite-link">${icon("plus")} Invite Bot</a>
+      <button type="button" class="nav-item sb-docs-link">${icon("document")} Documentation</button>
+      <div class="theme-picker-anchor">
+        <div class="nav-item sidebar-theme-row theme-picker-trigger">
+          ${icon(currentOpt.icon)} <span class="sidebar-theme-label">${currentOpt.label}</span>
+          <span style="margin-left:auto">${icon("chevron-up", 14)}</span>
+        </div>
+        <div class="theme-picker-menu" style="display:none">
+          ${THEME_OPTIONS.map(o => `<button class="theme-picker-item ${o.id === currentPref ? "active" : ""}" data-theme-opt="${o.id}">${icon(o.icon)} ${o.label}</button>`).join("")}
+        </div>
+      </div>
+      <button type="button" class="nav-item sb-language-link">${icon("language")} <span>${languageLabel()}</span></button>
+      <button type="button" class="nav-item sb-status-link">${icon("status")} Status</button>
+      ${(botInfoCache?.discordServerLink || CFG.DISCORD_SERVER_LINK || CFG.DISCORD_SUPPORT_URL) ? `<a href="${botInfoCache?.discordServerLink || CFG.DISCORD_SERVER_LINK || CFG.DISCORD_SUPPORT_URL}" target="_blank" rel="noopener" class="nav-item sb-discord-link">${icon("discord")} Support Server</a>` : ""}
+      <div class="sidebar-profile sb-profile-trigger">
+        <img class="sidebar-profile-avatar" src="${avatarUrl(session.user)}" alt="">
+        <div class="sidebar-profile-name">${escapeHtml(session.user.username)}</div>
+        <span style="margin-left:auto">${icon("chevron-up", 14)}</span>
+      </div>
+      <div class="sidebar-profile-menu sb-profile-menu" style="display:none">
+        <div class="sidebar-profile-menu-header">
+          <img class="sidebar-profile-avatar" src="${avatarUrl(session.user)}" alt="">
+          <div><div class="sidebar-profile-name">${escapeHtml(session.user.username)}</div><div class="field-hint" style="margin-top:1px">@${escapeHtml(session.user.username)}</div></div>
+        </div>
+        <button class="kebab-menu-item sb-profile-btn">${icon("settings")} Settings</button>
+        <button class="kebab-menu-item sb-admin-panel-btn" style="display:none">${icon("admin")} Admin Panel</button>
+        <button class="kebab-menu-item danger sb-logout-btn">${icon("logout")} Log out</button>
+      </div>
+    </div>`;
+    maybeShowAdminPanelButton(slot);
+    const mainMenuLink = slot.querySelector(".sb-main-menu-link");
+    const languageLink = slot.querySelector(".sb-language-link");
+    const statusLink = slot.querySelector(".sb-status-link");
+    const docsLink = slot.querySelector(".sb-docs-link");
+    const themeTrigger = slot.querySelector(".theme-picker-trigger");
+    const themeMenu = slot.querySelector(".theme-picker-menu");
+    const menu = slot.querySelector(".sb-profile-menu");
+    const trigger = slot.querySelector(".sb-profile-trigger");
+    const profileBtn = slot.querySelector(".sb-profile-btn");
+    const logoutBtn = slot.querySelector(".sb-logout-btn");
+    const adminPanelBtn = slot.querySelector(".sb-admin-panel-btn");
+    mainMenuLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        closeAllFloatingDropdowns();
+        routes.go("/", true);
+        showScreen("screen-landing");
+    });
+    docsLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        pickerActivePanel = "docs";
+        routes.go("/docs");
+        enterPicker("docs");
+    });
+    languageLink.addEventListener("click", (e) => { e.preventDefault(); chooseLanguage(); });
+    statusLink.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (!currentGuild?.id) {
+            await refreshHeroStatus();
+            const fallback = (botInfoCache?.guilds || [])[0];
+            if (!fallback) {
+                await DCModal.alert("No servers to show status for yet — open a server's dashboard first.", { title: "No server selected" });
+                return;
+            }
+            currentGuild = { id: fallback.id, name: fallback.name, icon: fallback.icon };
+        }
+        routes.go(routes.moduleUrl(currentGuild.id, "status"));
+        enterDashboard("status");
+    });
+    function closeThemeMenuOnOutsideClick(e) {
+        if (!themeMenu.contains(e.target) && !themeTrigger.contains(e.target)) {
+            themeMenu.style.display = "none";
+            document.removeEventListener("click", closeThemeMenuOnOutsideClick, true);
+        }
+    }
+    themeTrigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = themeMenu.style.display !== "none";
+        if (isOpen) {
+            themeMenu.style.display = "none";
+            document.removeEventListener("click", closeThemeMenuOnOutsideClick, true);
+        }
+        else {
+            themeMenu.style.display = "block";
+            document.addEventListener("click", closeThemeMenuOnOutsideClick, true);
+        }
+    });
+    themeMenu.querySelectorAll("[data-theme-opt]").forEach(btn => btn.addEventListener("click", () => {
+        applyTheme(btn.dataset.themeOpt);
+        themeMenu.style.display = "none";
+        document.removeEventListener("click", closeThemeMenuOnOutsideClick, true);
+        ["picker-sidebar-bottom", "dash-sidebar-bottom"].forEach(id => {
+            if (document.getElementById(id))
+                renderSidebarBottom(id);
+        });
+    }));
+    function closeMenuOnOutsideClick(e) {
+        if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+            menu.style.display = "none";
+            document.removeEventListener("click", closeMenuOnOutsideClick, true);
+        }
+    }
+    trigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = menu.style.display !== "none";
+        if (isOpen) {
+            menu.style.display = "none";
+            document.removeEventListener("click", closeMenuOnOutsideClick, true);
+        }
+        else {
+            menu.style.display = "block";
+            document.addEventListener("click", closeMenuOnOutsideClick, true);
+        }
+    });
+    logoutBtn.addEventListener("click", () => { clearSession(); routes.go("/", true); showScreen("screen-landing"); });
+    profileBtn.addEventListener("click", () => { menu.style.display = "none"; pickerActivePanel = "profile"; routes.go("/settings"); enterPicker("profile"); });
+    adminPanelBtn.addEventListener("click", () => {
+        menu.style.display = "none";
+        pickerActivePanel = "admin";
+        routes.go("/admin");
+        enterPicker("admin");
+    });
+}
+let adminEligibilityCache = null;
+async function maybeShowAdminPanelButton(slot) {
+    const btn = slot.querySelector(".sb-admin-panel-btn");
+    if (!btn)
+        return;
+    const session = getSession();
+    if (!session?.user?.id)
+        return;
+    if (adminEligibilityCache === null) {
+        try {
+            const result = await api(`/admin/eligibility?discordUserId=${session.user.id}`);
+            adminEligibilityCache = Boolean(result.eligible);
+        }
+        catch {
+            adminEligibilityCache = false;
+        }
+    }
+    if (adminEligibilityCache)
+        btn.style.display = "flex";
+}
+applyTheme(getThemePreference());
+document.querySelectorAll("[data-nav-icon], [data-icon]").forEach(el => {
+    const iconName = el.dataset.navIcon || el.dataset.icon;
+    const placeholder = el.querySelector("i.ti") || (el.matches("i.ti") ? el : null);
+    if (iconName && placeholder)
+        placeholder.outerHTML = icon(iconName);
+});
+replaceLegacyTablerIcons(document);
+function showScreen(id) { document.querySelectorAll(".screen").forEach(s => s.classList.remove("active")); document.getElementById(id).classList.add("active"); }
+function initials(name) { return (name || "?").slice(0, 2).toUpperCase(); }
+function avatarUrl(user) {
+    return user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`
+        : `https://cdn.discordapp.com/embed/avatars/${Number(user.discriminator || 0) % 5}.png`;
+}
+function inviteUrl(guildId) {
+    const p = { client_id: CFG.DISCORD_CLIENT_ID, permissions: CFG.BOT_PERMISSIONS, scope: "bot applications.commands" };
+    if (guildId)
+        p.guild_id = guildId;
+    return `https://discord.com/oauth2/authorize?${new URLSearchParams(p)}`;
+}
+function formatUptime(sec) {
+    if (sec == null)
+        return "—";
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60);
+    return `${h}h ${m}m`;
+}
+function loadingBlock(msg) { return `<div class="loading-wrap"><div class="spinner"></div><div>${msg || "Loading…"}</div></div>`; }
+function renderStatusPip(el, botInfo) {
+    el.classList.remove("online", "offline", "checking");
+    if (botInfo && botInfo.online) {
+        el.classList.add("online");
+        const latency = botInfo.latencyMs != null ? `${botInfo.latencyMs}ms` : "—";
+        const uptime = formatUptime(botInfo.uptimeSeconds);
+        el.innerHTML = `<span class="status-dot"></span>Bot Servers up <span class="status-pip-sep">·</span> ${latency} <span class="status-pip-sep">·</span> up ${uptime}`;
+    }
+    else {
+        el.classList.add("offline");
+        el.innerHTML = `<span class="status-dot"></span>Bot Servers down`;
+    }
+}
+function timeAgoGlobal(iso) {
+    if (!iso)
+        return "—";
+    const diffMs = Date.now() - new Date(iso).getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 1)
+        return "just now";
+    if (mins < 60)
+        return `${mins} minute${mins === 1 ? "" : "s"} ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24)
+        return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 30)
+        return `${days} day${days === 1 ? "" : "s"} ago`;
+    const months = Math.floor(days / 30);
+    if (months < 12)
+        return `${months} month${months === 1 ? "" : "s"} ago`;
+    const years = Math.floor(months / 12);
+    return `${years} year${years === 1 ? "" : "s"} ago`;
+}
+let botInfoCache = null;
+let currentGuild = null;
+let currentGuildDisabledModules = [];
+let routeRetryTimer = null;
+let routeRetryAttempt = 0;
+function scheduleRouteRetry(reason = "temporary network failure") {
+    if (routeRetryTimer)
+        return;
+    routeRetryAttempt = Math.min(routeRetryAttempt + 1, 8);
+    const delay = Math.min(15000, 1000 * Math.pow(1.6, routeRetryAttempt - 1));
+    console.warn(`[route] ${reason}; retrying in ${Math.round(delay)}ms.`);
+    routeRetryTimer = setTimeout(async () => {
+        routeRetryTimer = null;
+        try {
+            await renderFromRoute();
+            routeRetryAttempt = 0;
+        }
+        catch (e) {
+            scheduleRouteRetry(e?.message || "screen failed to render");
+        }
+    }, delay);
+}
+function retryInBackground(fn, label = "operation", delay = 1500) {
+    let stopped = false;
+    const run = async () => {
+        if (stopped)
+            return;
+        try {
+            await fn();
+        }
+        catch (e) {
+            console.warn(`[retry] ${label} failed; retrying...`, e);
+        }
+        if (!stopped)
+            setTimeout(run, delay);
+    };
+    run();
+    return () => { stopped = true; };
+}
+async function boot() {
+    if (window.location.hash) {
+        window.history.replaceState({}, "", window.location.pathname + window.location.search);
+    }
+    const redirectPath = sessionStorage.getItem("tk_redirect_path");
+    if (redirectPath) {
+        sessionStorage.removeItem("tk_redirect_path");
+        window.history.replaceState({}, "", redirectPath);
+    }
+    const url = new URL(window.location.href);
+    const code = url.searchParams.get("code");
+    const robloxState = url.searchParams.get("state");
+    const robloxAuth = sessionStorage.getItem("nexoria_roblox_oauth");
+    if (code && robloxAuth) {
+        try {
+            const saved = JSON.parse(robloxAuth);
+            if (!robloxState || saved.state !== robloxState)
+                throw new Error("Roblox OAuth state verification failed");
+            const data = await api("/oauth/roblox/exchange", { method: "POST", body: JSON.stringify({ code, code_verifier: saved.verifier, discordUserId: saved.discordUserId, redirect_uri: window.location.origin + CFG.BASE_PATH }) });
+            sessionStorage.removeItem("nexoria_roblox_oauth");
+            url.searchParams.delete("code");
+            url.searchParams.delete("state");
+            window.history.replaceState({}, "", url.pathname + url.search);
+            await DCModal.alert(`Connected Roblox account: ${data.account?.displayName || data.account?.username || data.account?.id}`, { title: "Roblox connected" });
+            routes.go("/settings", true);
+            renderFromRoute();
+            return;
+        }
+        catch (e) {
+            sessionStorage.removeItem("nexoria_roblox_oauth");
+            url.searchParams.delete("code");
+            url.searchParams.delete("state");
+            window.history.replaceState({}, "", url.pathname + url.search);
+            await DCModal.alert(e.message || "Roblox connection failed", { title: "Roblox connection failed" });
+        }
+    }
+    const route = routes.parse();
+    if (route.screen === "share") {
+        await enterSharePage(route.shareId);
+        return;
+    }
+    void refreshHeroStatus().catch(e => console.error("[status] initial refresh failed:", e));
+    if (code) {
+        url.searchParams.delete("code");
+        window.history.replaceState({}, "", url.pathname + url.search);
+        try {
+            const tokenData = await exchangeCodeForToken(code);
+            const user = await fetchMe(tokenData.access_token);
+            saveSession(tokenData, user);
+            routes.go(sessionStorage.getItem("tk_post_login_redirect") || "/dashboard", true);
+            try {
+                await renderFromRoute();
+            }
+            catch (e) {
+                scheduleRouteRetry(e?.message || "screen failed to render after login");
+            }
+        }
+        catch (e) {
+            await DCModal.alert(e.message || "Login failed", { title: "Login failed" });
+            routes.go("/", true);
+            showScreen("screen-landing");
+        }
+        return;
+    }
+    try {
+        await renderFromRoute();
+        routeRetryAttempt = 0;
+    }
+    catch (e) {
+        scheduleRouteRetry(e?.message || "screen failed to render");
+    }
+}
+async function renderFromRoute() {
+    const route = routes.parse();
+    const session = getSession();
+    if (route.screen === "share") {
+        await enterSharePage(route.shareId);
+        return;
+    }
+    if (route.screen !== "landing" && !session) {
+        routes.go("/", true);
+        showScreen("screen-landing");
+        return;
+    }
+    if (route.screen === "landing") {
+        showScreen("screen-landing");
+        return;
+    }
+    if (route.screen === "picker") {
+        await enterPicker(route.panel, { myTicketGuildId: route.myTicketGuildId, myTicketId: route.myTicketId, docsModuleId: route.docsModuleId });
+        return;
+    }
+    if (route.screen === "dashboard") {
+        if (!currentGuild || currentGuild.id !== route.guildId) {
+            currentGuild = { id: route.guildId, name: null, icon: null };
+        }
+        await enterDashboard(route.panel || "ticket-tool", { tab: route.tab, ticketId: route.ticketId });
+    }
+}
+async function refreshHeroStatus() {
+    let info = null;
+    try {
+        info = await pingLocalBot();
+    }
+    catch (e) {
+        console.error("[status] pingLocalBot threw unexpectedly:", e);
+    }
+    if (info)
+        botInfoCache = info;
+    const displayInfo = info || botInfoCache;
+    const heroPip = document.getElementById("hero-status-pip");
+    if (heroPip)
+        renderStatusPip(heroPip, displayInfo);
+    const set = (id, val) => {
+        const el = document.getElementById(id);
+        if (el)
+            el.textContent = val;
+    };
+    set("hero-bot-url", displayInfo?.online ? "Online" : "Down");
+    set("hero-guild-count", displayInfo?.guildCount ?? "—");
+    set("hero-uptime", displayInfo ? formatUptime(displayInfo.uptimeSeconds) : "—");
+    set("hero-bot-tag", displayInfo?.botTag ?? "—");
+    ["picker-status-pip", "dash-status-pip"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el)
+            renderStatusPip(el, displayInfo);
+    });
+    try {
+        paintWatchingPanel(displayInfo);
+    }
+    catch (e) {
+        console.error("[status] paintWatchingPanel failed:", e);
+    }
+}
+function paintWatchingPanel(info) {
+    const panel = document.getElementById("watching-panel");
+    if (!panel)
+        return;
+    const guilds = info?.guilds || [];
+    if (!info?.online || guilds.length === 0) {
+        panel.style.display = "none";
+        return;
+    }
+    panel.style.display = "";
+    const totalMembers = guilds.reduce((sum, g) => sum + (g.memberCount || 0), 0);
+    document.getElementById("watching-summary").innerHTML =
+        `<span class="accent">${guilds.length}</span> server${guilds.length === 1 ? "" : "s"} · <span class="accent">${totalMembers.toLocaleString()}</span> member${totalMembers === 1 ? "" : "s"}`;
+    const top3 = [...guilds].sort((a, b) => (b.memberCount || 0) - (a.memberCount || 0)).slice(0, 3);
+    document.getElementById("watching-top-list").innerHTML = top3.map((g, i) => `
+    <div class="watching-top-row">
+      <span class="watching-top-rank">#${i + 1}</span>
+      ${g.icon
+        ? `<img class="watching-top-icon" src="https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png" alt="">`
+        : `<span class="watching-top-icon server-icon" style="display:flex;align-items:center;justify-content:center;font-size:9px">${initials(g.name)}</span>`}
+      <span class="watching-top-name">${escapeHtml(g.name)}</span>
+      <span class="watching-top-count">${(g.memberCount || 0).toLocaleString()}</span>
+    </div>`).join("");
+}
+let pickerActivePanel = "dashboard";
+async function enterPicker(panel, deepLink = {}) {
+    showScreen("screen-picker");
+    pickerActivePanel = panel || pickerActivePanel || "dashboard";
+    renderSidebarBottom("picker-sidebar-bottom");
+    wirePickerServerSwitcher();
+    await refreshHeroStatus();
+    paintPickerNav();
+    if (pickerActivePanel === "my-tickets" && deepLink.myTicketGuildId && deepLink.myTicketId) {
+        await openMyTicketDetail(deepLink.myTicketGuildId, deepLink.myTicketId, false);
+    }
+    else {
+        await renderPickerPanel(pickerActivePanel, deepLink);
+    }
+    document.querySelectorAll("#picker-sidebar [data-picker-panel]").forEach(el => {
+        el.addEventListener("click", () => {
+            pickerActivePanel = el.dataset.pickerPanel;
+            routes.go(pickerActivePanel === "dashboard" ? "/" : `/${pickerActivePanel}`);
+            paintPickerNav();
+            Promise.resolve(renderPickerPanel(pickerActivePanel)).catch(e => { console.error("[picker] panel render failed:", e); scheduleRouteRetry(e?.message || "picker render failed"); });
+        });
+    });
+}
+function paintPickerNav() {
+    document.querySelectorAll("#picker-sidebar [data-picker-panel]").forEach(el => {
+        el.classList.toggle("active", el.dataset.pickerPanel === pickerActivePanel);
+    });
+}
+async function renderPickerPanel(panel, deepLink = {}) {
+    const root = document.getElementById("picker-panel-root");
+    if (panel === "my-tickets")
+        return renderMyTicketsPanel(root);
+    if (panel === "premium")
+        return renderPremiumPanel(root);
+    if (panel === "leaderboards")
+        return renderLeaderboardsPanel(root);
+    if (panel === "admin")
+        return renderAdminPanel(root);
+    if (panel === "profile")
+        return renderProfileSettings(root);
+    if (panel === "docs")
+        return renderDocsPanel(root, deepLink.docsModuleId || null);
+    return renderDashboardPanel(root);
+}
+let docsModulesCache = null;
+async function loadDocsModuleList() {
+    if (docsModulesCache)
+        return docsModulesCache;
+    try {
+        const manifest = await api("/modules");
+        docsModulesCache = (manifest.modules || []).filter(m => m.doc);
+    }
+    catch {
+        docsModulesCache = [];
+    }
+    return docsModulesCache;
+}
+function prettifyModuleId(id) {
+    return id.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+}
+async function renderDocsPanel(root, initialModuleId) {
+    root.innerHTML = `
+    <h1 class="picker-heading">Documentation</h1>
+    <p class="picker-sub">Guides, module references, and every variable NEXORIA supports.</p>
+    <div class="docs-layout">
+      <div class="docs-sidebar">
+        <input type="text" class="search-input" id="docs-search" placeholder="Search modules…" style="margin-bottom:10px">
+        <div id="docs-module-list">${loadingBlock("Loading modules…")}</div>
+      </div>
+      <div class="docs-content" id="docs-content">${loadingBlock("Loading…")}</div>
+    </div>`;
+    const modules = await loadDocsModuleList();
+    const listEl = document.getElementById("docs-module-list");
+    let activeId = initialModuleId && modules.some(m => m.id === initialModuleId) ? initialModuleId : null;
+    function paintList(filter) {
+        const q = (filter || "").toLowerCase();
+        const items = [{ id: null, label: "Info" }, ...modules.map(m => ({ id: m.id, label: prettifyModuleId(m.id) }))]
+            .filter(it => !q || it.label.toLowerCase().includes(q));
+        listEl.innerHTML = items.map(it => `
+      <button class="docs-sidebar-item ${activeId === it.id ? "active" : ""}" data-docs-id="${it.id || ""}">
+        ${it.id ? icon("category-2", 16) : icon("help-circle", 16)} ${escapeHtml(it.label)}
+      </button>`).join("") || `<div class="field-hint" style="padding:8px">No matches.</div>`;
+        listEl.querySelectorAll("[data-docs-id]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                activeId = btn.dataset.docsId || null;
+                routes.go(routes.docsUrl(activeId), true);
+                paintList(document.getElementById("docs-search").value);
+                paintContent();
+            });
+        });
+    }
+    async function paintContent() {
+        const content = document.getElementById("docs-content");
+        if (!activeId) {
+            renderDocsInfoTab(content);
+            return;
+        }
+        const mod = modules.find(m => m.id === activeId);
+        content.innerHTML = loadingBlock("Loading documentation…");
+        try {
+            const doc = await fetch(`${CFG.LOCAL_BOT_URL}/modules-static/${mod.doc}`).then(r => r.json());
+            const varsRes = await fetch(`${CFG.LOCAL_BOT_URL}/variables`).then(r => r.json()).catch(() => ({ variables: [] }));
+            const relevantVars = (varsRes.variables || []).filter(v => !v.moduleId || v.moduleId === activeId);
+            content.innerHTML = `
+        <h2 style="margin-bottom:4px">${escapeHtml(doc.title || prettifyModuleId(activeId))}</h2>
+        <p class="picker-sub" style="margin-bottom:20px">${escapeHtml(doc.summary || "")}</p>
+        ${(doc.sections || []).map(s => `<div class="settings-section-block"><h4>${escapeHtml(s.heading || "")}</h4><p>${escapeHtml(s.body || "")}</p></div>`).join("")}
+        ${renderVariableReference(relevantVars, `Variables for ${prettifyModuleId(activeId)}`)}`;
+        }
+        catch {
+            content.innerHTML = `<div class="empty-state">${icon("document", 28)}Couldn't load this module's documentation right now.</div>`;
+        }
+    }
+    document.getElementById("docs-search").addEventListener("input", (e) => paintList(e.target.value));
+    paintList("");
+    await paintContent();
+}
+function renderVariableReference(variables, heading = "All Variables") {
+    const groups = {};
+    variables.forEach(v => { (groups[v.group] = groups[v.group] || []).push(v); });
+    const groupOrder = Object.keys(groups).sort();
+    return `
+    <div class="settings-section-block">
+      <h4>${icon("variable", 16)} ${escapeHtml(heading)}</h4>
+      <input type="text" class="search-input" id="docs-var-search" placeholder="Search variables…" style="margin:10px 0">
+      <div id="docs-var-table">${groupOrder.map(g => renderVarGroup(g, groups[g])).join("")}</div>
+    </div>`;
+}
+function renderVarGroup(group, vars) {
+    return `
+    <div class="docs-var-group" data-var-group>
+      <div class="docs-var-group-label">${escapeHtml(group)}</div>
+      ${vars.map(v => `
+        <div class="docs-var-row" data-var-row data-var-search="${escapeHtml(v.key + " " + (v.description || ""))}">
+          <code class="cc-command-trigger-chip">{${escapeHtml(v.key)}}</code>
+          <span class="docs-var-desc">${escapeHtml(v.description || "")}</span>
+        </div>`).join("")}
+    </div>`;
+}
+function renderDocsInfoTab(content) {
+    const discordUrl = CFG.DISCORD_SUPPORT_URL || "#";
+    content.innerHTML = `
+    <h2 style="margin-bottom:4px">Info</h2>
+    <p class="picker-sub" style="margin-bottom:20px">General information about NEXORIA, plus the full list of variables usable anywhere they're supported.</p>
+    <div class="settings-section-block">
+      <h4>${icon("discord")}Support &amp; Suggestions</h4>
+      <p>Join the official NEXORIA Discord server for help, updates, and to make suggestions — feature requests and feedback all happen there now.</p>
+      <a class="btn btn-primary btn-small" href="${escapeHtml(discordUrl)}" target="_blank" rel="noopener" style="margin-top:8px;display:inline-flex">${icon("discord")} Join the Discord</a>
+    </div>
+    <div class="settings-section-block">
+      <h4>${icon("shield-check", 16)} Legal</h4>
+      <p><a href="policy/terms.html">Terms of Service</a> &nbsp;·&nbsp; <a href="policy/privacy.html">Privacy Policy</a></p>
+    </div>
+    ${renderVariableReference([], "All Variables")}`;
+    fetch(`${CFG.LOCAL_BOT_URL}/variables`).then(r => r.json()).then(d => {
+        const table = document.getElementById("docs-var-table");
+        if (!table)
+            return;
+        const groups = {};
+        (d.variables || []).forEach(v => { (groups[v.group] = groups[v.group] || []).push(v); });
+        table.innerHTML = Object.keys(groups).sort().map(g => renderVarGroup(g, groups[g])).join("");
+        wireVarSearch();
+    }).catch(() => { });
+    wireVarSearch();
+}
+function wireVarSearch() {
+    const input = document.getElementById("docs-var-search");
+    if (!input)
+        return;
+    input.addEventListener("input", () => {
+        const q = input.value.toLowerCase();
+        document.querySelectorAll("[data-var-row]").forEach(row => {
+            row.style.display = !q || row.dataset.varSearch.toLowerCase().includes(q) ? "" : "none";
+        });
+        document.querySelectorAll("[data-var-group]").forEach(group => {
+            const anyVisible = Array.from(group.querySelectorAll("[data-var-row]")).some(r => r.style.display !== "none");
+            group.style.display = anyVisible ? "" : "none";
+        });
+    });
+}
+async function renderLeaderboardsPanel(root) {
+    root.innerHTML = loadingBlock("Loading leaderboards…");
+    const key = "nexoria_leaderboards_cache", at = key + "_at", ttl = 1800000;
+    let d = null;
+    try {
+        const c = localStorage.getItem(key);
+        if (c && Date.now() - Number(localStorage.getItem(at) || 0) < ttl)
+            d = JSON.parse(c);
+    }
+    catch { }
+    if (!d) {
+        try {
+            d = await api("/leaderboards");
+            localStorage.setItem(key, JSON.stringify(d));
+            localStorage.setItem(at, String(Date.now()));
+        }
+        catch (e) {
+            root.innerHTML = `<div class="empty-state">${escapeHtml(e.message)}<div style="margin-top:12px"><button class="btn btn-primary btn-small" id="lb-retry">${icon("refresh")} Retry</button></div></div>`;
+            document.getElementById("lb-retry")?.addEventListener("click", () => renderLeaderboardsPanel(root));
+            return;
+        }
+    }
+    const mods = d.modules || [];
+    root.innerHTML = `<div class="dash-header"><div><h1 class="picker-heading">Leaderboards</h1><p class="picker-sub">Top 10 by default. Choose 10, 25, 50, 75 or 100 and page through results.</p></div><button class="btn btn-ghost btn-small" id="lb-refresh">${icon("refresh")} Refresh</button></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">${mods.map((m, i) => `<button class="btn btn-ghost btn-small ${i === 0 ? "active" : ""}" data-lb-module="${m.id}">${icon("category-2")} ${escapeHtml(m.label)}</button>`).join("") || `<div class="empty-state">Coming soon — no module currently provides leaderboard data.</div>`}</div><div id="lb-content"></div>`;
+    const paint = (m) => { const state = { limit: 10, page: 0 }; const draw = () => { const all = m.servers || [], start = state.page * state.limit, rows = all.slice(start, start + state.limit); document.getElementById("lb-content").innerHTML = `<div class="config-section"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><h3>${escapeHtml(m.label)} · Servers</h3><select id="lb-limit" class="dc-select" style="width:auto"><option>10</option><option>25</option><option>50</option><option>75</option><option>100</option></select></div>${rows.map((r, i) => `<div class="config-row"><span class="config-row-label">#${start + i + 1} ${escapeHtml(r.guildName)}</span><span>${r.average.toFixed(1)}/10 · ${r.votes} votes</span></div>`).join("") || `<div class="empty-state">No rated servers yet.</div>`}<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px"><button class="btn btn-ghost btn-small" id="lb-prev" ${start === 0 ? "disabled" : ""}>${icon("arrow-left")} Previous</button><span class="field-hint">Page ${Math.floor(start / state.limit) + 1} of ${Math.max(1, Math.ceil(all.length / state.limit))}</span><button class="btn btn-ghost btn-small" id="lb-next" ${start + state.limit >= all.length ? "disabled" : ""}>Next ${icon("arrow-right")}</button></div></div><div class="config-section"><h3>Best support</h3>${(m.staff || []).map((r, i) => `<div class="config-row"><span class="config-row-label">#${i + 1} ${escapeHtml(r.guildName)} · ${escapeHtml(r.userId)}</span><span>${r.average.toFixed(1)}/10 · ${r.votes} votes</span></div>`).join("") || `<div class="empty-state">Coming soon — no rated support data yet.</div>`}</div>`; document.getElementById("lb-limit").value = String(state.limit); document.getElementById("lb-limit").onchange = e => { state.limit = Number(e.target.value); state.page = 0; draw(); }; document.getElementById("lb-prev")?.addEventListener("click", () => { state.page--; draw(); }); document.getElementById("lb-next")?.addEventListener("click", () => { state.page++; draw(); }); }; draw(); };
+    mods.forEach(m => document.querySelector(`[data-lb-module="${CSS.escape(m.id)}"]`)?.addEventListener("click", e => { document.querySelectorAll("[data-lb-module]").forEach(x => x.classList.remove("active")); e.currentTarget.classList.add("active"); paint(m); }));
+    if (mods[0])
+        paint(mods[0]);
+    document.getElementById("lb-refresh")?.addEventListener("click", () => { localStorage.removeItem(key); localStorage.removeItem(at); renderLeaderboardsPanel(root); });
+}
+async function renderDashboardPanel(root) {
+    root.innerHTML = `
+    <div class="dash-header">
+      <div><h1 class="picker-heading">Your Servers</h1><p class="picker-sub">Manage tickets and settings for your Discord servers</p></div>
+      <div class="dash-header-actions">
+        <button class="btn btn-ghost btn-small" id="ds-refresh-btn">${icon("refresh")} Refresh Servers</button>
+        <a class="btn btn-primary btn-small" href="${inviteUrl()}" target="_blank" rel="noopener">${icon("plus")} Add Bot</a>
+      </div>
+    </div>
+    <div class="servers-search-row">
+      <input type="text" class="search-input" id="ds-search" placeholder="Search servers…">
+    </div>
+    <p class="field-hint" id="ds-count" style="margin-bottom:14px">Loading…</p>
+    <div class="server-grid" id="server-grid">${loadingBlock("Loading your servers…")}</div>`;
+    const grid = document.getElementById("server-grid");
+    const countEl = document.getElementById("ds-count");
+    const session = getSession();
+    let sorted = [];
+    function cardHtml(g, hasBot) {
+        const iconHtml = g.icon ? `<img src="https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png" alt="">` : initials(g.name);
+        const roleBadge = g.owner ? `<span class="role-badge owner"><i class="ti ti-crown"></i> Owner</span>` : `<span class="role-badge admin"><i class="ti ti-shield"></i> Admin</span>`;
+        return `
+      <div class="server-card ${hasBot ? "" : "bot-absent"}" data-server-name="${escapeHtml(g.name.toLowerCase())}">
+        <div class="server-icon">${iconHtml}</div>
+        <div class="server-name">${escapeHtml(g.name)}</div>
+        <div class="server-meta">${roleBadge} ${hasBot ? "" : "· Bot not added"}</div>
+        <div class="server-card-actions">
+          ${hasBot
+            ? `<button class="btn btn-primary btn-small" data-open-dash="${g.id}" data-name="${escapeHtml(g.name)}" data-icon="${g.icon || ""}">Manage Server</button>`
+            : `<a class="btn btn-primary btn-small" target="_blank" rel="noopener" href="${inviteUrl(g.id)}">${icon("plus")} Begin setup</a>`}
+        </div>
+      </div>`;
+    }
+    function wireDashButtons() {
+        grid.querySelectorAll("[data-open-dash]").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                try {
+                    const meta = await api(`/guilds/${encodeURIComponent(btn.dataset.openDash)}/meta?userId=${encodeURIComponent(session.user.id)}`);
+                    if (!meta.canViewDashboard) {
+                        await DCModal.alert("Tell the server owner to open Manage Servers, then open General Settings and allow you to use the server dashboard.", { title: "Dashboard access required" });
+                        return;
+                    }
+                }
+                catch {
+                    await DCModal.alert("Couldn't verify your server dashboard permissions. Please retry.", { title: "Permission check failed" });
+                    return;
+                }
+                currentGuild = { id: btn.dataset.openDash, name: btn.dataset.name, icon: btn.dataset.icon };
+                routes.go(routes.moduleUrl(currentGuild.id, "ticket-tool"));
+                enterDashboard("ticket-tool");
+            });
+        });
+    }
+    async function loadAndPaint() {
+        const guilds = await fetchMyGuilds(session.token);
+        const admin = guilds.filter(isAdmin);
+        if (admin.length === 0) {
+            grid.innerHTML = `<div class="empty-state"><i class="ti ti-folder-off glyph"></i>No servers found where you have Administrator permission.</div>`;
+            countEl.textContent = "";
+            return;
+        }
+        const botGuildIds = new Set((botInfoCache?.guilds || []).map(g => g.id));
+        sorted = [...admin].sort((a, b) => {
+            const aHas = botGuildIds.has(a.id), bHas = botGuildIds.has(b.id);
+            if (aHas !== bHas)
+                return aHas ? -1 : 1;
+            return a.name.localeCompare(b.name);
+        });
+        const activeCount = sorted.filter(g => botGuildIds.has(g.id)).length;
+        countEl.textContent = `${activeCount} active · ${sorted.length} available`;
+        grid.innerHTML = sorted.map(g => cardHtml(g, botGuildIds.has(g.id))).join("");
+        wireDashButtons();
+    }
+    try {
+        await loadAndPaint();
+    }
+    catch (e) {
+        grid.innerHTML = `<div class="empty-state"><i class="ti ti-alert-triangle glyph"></i>${escapeHtml(e.message || "Couldn't load your servers.")}<div style="margin-top:12px"><button class="btn btn-primary btn-small" id="ds-retry-btn">Try again</button></div></div>`;
+        countEl.textContent = "";
+        document.getElementById("ds-retry-btn")?.addEventListener("click", () => renderDashboardPanel(root));
+        return;
+    }
+    document.getElementById("ds-search")?.addEventListener("input", (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        grid.querySelectorAll(".server-card[data-server-name]").forEach(card => {
+            card.style.display = card.dataset.serverName.includes(q) ? "" : "none";
+        });
+    });
+    const refreshBtn = document.getElementById("ds-refresh-btn");
+    refreshBtn?.addEventListener("click", async () => {
+        refreshBtn.disabled = true;
+        refreshBtn.classList.add("btn-refreshing");
+        try {
+            await refreshHeroStatus();
+            await loadAndPaint();
+        }
+        catch (e) {
+            await DCModal.alert(`Couldn't refresh servers: ${e.message}`);
+        }
+        finally {
+            refreshBtn.disabled = false;
+            refreshBtn.classList.remove("btn-refreshing");
+        }
+    });
+}
+function renderPremiumPanel(root) {
+    root.innerHTML = `
+    <h1 class="picker-heading">Premium</h1>
+    <p class="picker-sub">Unlock higher limits and advanced features across every server.</p>
+    <div class="empty-state"><i class="ti ti-crown glyph"></i>Premium plans aren't set up yet — check back soon.</div>`;
+}
+const ADMIN_TOKEN_KEY = "tk_admin_token";
+function getAdminToken() { return localStorage.getItem(ADMIN_TOKEN_KEY); }
+function setAdminToken(t) { t ? localStorage.setItem(ADMIN_TOKEN_KEY, t) : localStorage.removeItem(ADMIN_TOKEN_KEY); }
+async function adminApi(path, options = {}) {
+    let res;
+    try {
+        res = await fetch(`${CFG.LOCAL_BOT_URL}${path}`, {
+            ...options,
+            headers: { "Content-Type": "application/json", "X-Admin-Token": getAdminToken() || "", ...(options.headers || {}) },
+            signal: AbortSignal.timeout(10000),
+        });
+    }
+    catch (e) {
+        const timedOut = e?.name === "TimeoutError" || e?.name === "AbortError";
+        throw new Error(timedOut
+            ? "The bot didn't respond in time — check that it's running and your tunnel is up."
+            : "Couldn't reach the bot — check that it's running and your tunnel is up.");
+    }
+    if (res.status === 401) {
+        setAdminToken(null);
+        throw new Error("Session expired — please log in again");
+    }
+    if (!res.ok) {
+        let detail = "";
+        try {
+            detail = (await res.json()).error;
+        }
+        catch { }
+        throw new Error(detail || `Request failed (HTTP ${res.status}). The bot may need to be restarted — check its console output.`);
+    }
+    return res.json();
+}
+async function renderProfileSettings(root) {
+    const session = getSession();
+    root.innerHTML = `<div class="dash-header"><div><h1 class="picker-heading">Settings</h1><p class="picker-sub">Your Discord profile and connected Roblox accounts</p></div></div>
+  <div class="config-section"><h3>Discord account</h3><div class="config-row"><span class="config-row-label" style="display:flex;align-items:center;gap:10px"><img src="${avatarUrl(session.user)}" style="width:36px;height:36px;border-radius:50%" alt=""><span>${escapeHtml(session.user.global_name || session.user.username)}<div class="field-hint">@${escapeHtml(session.user.username)} · ${escapeHtml(session.user.id)}</div></span></span></div></div>
+  <div class="config-section" style="margin-top:18px"><div class="dash-header" style="margin-bottom:8px"><div><h3 style="margin:0">Roblox accounts</h3><div class="hint">Connect multiple Roblox accounts. Disconnecting keeps stored profile data.</div></div><button class="btn btn-primary btn-small" id="roblox-connect-btn">${icon("plus")} Connect Roblox</button></div><div id="roblox-accounts-list">${loadingBlock("Loading Roblox accounts…")}</div></div>`;
+    async function load() {
+        const slot = document.getElementById("roblox-accounts-list");
+        try {
+            const d = await api(`/profile/roblox?discordUserId=${encodeURIComponent(session.user.id)}`);
+            const accounts = d.accounts || [];
+            slot.innerHTML = accounts.length ? accounts.map(a => `<div class="config-row"><span class="config-row-label" style="display:flex;align-items:center;gap:10px"><img src="${escapeHtml(a.avatarUrl || "https://cdn.discordapp.com/embed/avatars/0.png")}" style="width:40px;height:40px;border-radius:50%" alt=""><span><strong>${escapeHtml(a.displayName || a.username || a.id)}</strong><div class="field-hint">@${escapeHtml(a.username || "unknown")} · Roblox ID ${escapeHtml(a.id)}</div></span></span><span style="display:flex;gap:6px"><button class="btn btn-ghost btn-small" data-rbx-sync="${escapeHtml(a.id)}">${icon("refresh")} Sync API data</button><button class="btn btn-ghost btn-small" data-rbx-disconnect="${escapeHtml(a.id)}">${icon("logout")} Disconnect</button></span></div>`).join("") : `<div class="empty-state">No Roblox accounts connected.</div>`;
+            slot.querySelectorAll("[data-rbx-disconnect]").forEach(b => b.addEventListener("click", async () => {
+                try {
+                    await api(`/profile/roblox/${encodeURIComponent(b.dataset.rbxDisconnect)}`, { method: "DELETE", body: JSON.stringify({ discordUserId: session.user.id }) });
+                    await load();
+                }
+                catch (e) {
+                    await DCModal.alert(e.message, { title: "Couldn't disconnect Roblox" });
+                }
+            }));
+            slot.querySelectorAll("[data-rbx-sync]").forEach(b => b.addEventListener("click", async () => {
+                b.disabled = true;
+                try {
+                    await api(`/profile/roblox/${encodeURIComponent(b.dataset.rbxSync)}/sync`, { method: "POST", body: JSON.stringify({ discordUserId: session.user.id }) });
+                    await load();
+                    await DCModal.alert("Roblox API data was refreshed and stored.", { title: "Roblox data synced" });
+                }
+                catch (e) {
+                    await DCModal.alert(e.message, { title: "Couldn't sync Roblox data" });
+                }
+                finally {
+                    b.disabled = false;
+                }
+            }));
+        }
+        catch (e) {
+            slot.innerHTML = `<div class="empty-state">Couldn't load Roblox accounts: ${escapeHtml(e.message)}</div>`;
+        }
+    }
+    document.getElementById("roblox-connect-btn").addEventListener("click", async () => {
+        try {
+            const cfg = await api("/oauth/roblox/config");
+            const bytes = crypto.getRandomValues(new Uint8Array(32));
+            const verifier = btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+            const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
+            const challenge = btoa(String.fromCharCode(...new Uint8Array(digest))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+            const state = crypto.randomUUID();
+            sessionStorage.setItem("nexoria_roblox_oauth", JSON.stringify({ verifier, state, discordUserId: session.user.id }));
+            const u = new URL(cfg.authorizationEndpoint);
+            u.searchParams.set("client_id", cfg.clientId);
+            u.searchParams.set("redirect_uri", cfg.redirectUri);
+            u.searchParams.set("scope", cfg.scopes.join(" "));
+            u.searchParams.set("response_type", "code");
+            u.searchParams.set("code_challenge", challenge);
+            u.searchParams.set("code_challenge_method", "S256");
+            u.searchParams.set("state", state);
+            u.searchParams.set("prompt", "consent");
+            window.location.href = u.toString();
+        }
+        catch (e) {
+            await DCModal.alert(e.message, { title: "Couldn't start Roblox connection" });
+        }
+    });
+    await load();
+}
+async function renderAdminPanel(root) {
+    root.innerHTML = `<h1 class="picker-heading">Admin Panel</h1><p class="picker-sub">Loading…</p>`;
+    if (!botInfoCache) {
+        root.innerHTML = `<h1 class="picker-heading">Admin Panel</h1><div class="empty-state"><i class="ti ti-plug-connected-x glyph"></i>Bot Servers down — the admin panel needs a live connection.</div>`;
+        return;
+    }
+    const token = getAdminToken();
+    if (!token) {
+        paintAdminLogin(root);
+        return;
+    }
+    try {
+        const session = await adminApi("/admin/session");
+        paintAdminDashboard(root, session);
+    }
+    catch {
+        paintAdminLogin(root);
+    }
+}
+function paintAdminLogin(root) {
+    root.innerHTML = `
+    <h1 class="picker-heading">Admin Panel</h1>
+    <p class="picker-sub">Sign in with the shared admin credentials. Your Discord account also needs to be granted access.</p>
+    <div class="config-section" style="max-width:380px">
+      <div class="field"><label>Username</label><input type="text" id="admin-username" autocomplete="username" placeholder="Username"></div>
+      <div class="field"><label>Password</label><input type="text" id="admin-password" autocomplete="username" placeholder="Password" class="admin-password-as-username"></div>
+      <div class="field-hint" id="admin-login-error" style="color:var(--red);display:none"></div>
+      <button class="btn btn-primary btn-small" id="admin-login-btn" style="margin-top:6px">Log in</button>
+    </div>`;
+    document.getElementById("admin-login-btn").addEventListener("click", async () => {
+        const username = document.getElementById("admin-username").value.trim();
+        const password = document.getElementById("admin-password").value;
+        const errEl = document.getElementById("admin-login-error");
+        errEl.style.display = "none";
+        try {
+            const session = getSession();
+            const loginResult = await adminApi("/admin/login", { method: "POST", body: JSON.stringify({ username, password, discordUserId: session.user.id }) });
+            setAdminToken(loginResult.token);
+            renderAdminPanel(document.getElementById("picker-panel-root"));
+        }
+        catch (e) {
+            errEl.textContent = e.message;
+            errEl.style.display = "block";
+        }
+    });
+}
+async function paintAdminDashboard(root, session) {
+    root.innerHTML = `
+    <div class="dash-header">
+      <div><h1 class="picker-heading">Admin Panel</h1><p class="picker-sub">${session.isOwner ? "Signed in as the bot owner." : "Signed in with granted admin access."}</p></div>
+      <button class="btn btn-ghost btn-small" id="admin-logout-btn">${icon("logout")} Log out</button>
+    </div>
+    <div class="config-section">
+      <h3>Server access</h3>
+      <div class="hint">Choose whether every server the bot is in may use it, or only servers you explicitly allow.</div>
+      <div class="config-row" style="margin-bottom:4px">
+        <span class="config-row-label">Restrict to an allow-list</span>
+        <button class="toggle" id="admin-allowmode-toggle" aria-label="Toggle allow-list mode"></button>
+      </div>
+      <div id="admin-guilds-section"></div>
+    </div>
+    <div class="config-section" style="margin-top:18px">
+      <div class="dash-header" style="margin-bottom:4px">
+        <h3 style="margin:0">Ticket search</h3>
+        <button class="btn btn-ghost btn-small" id="admin-ticket-refresh-btn">${icon("refresh")} Refresh Tickets</button>
+      </div>
+      <div class="hint">Find any ticket across every server by its number, subject, or who opened/claimed/closed it.</div>
+      <input type="text" class="search-input" id="admin-ticket-search" placeholder="Search by ticket number, subject, or user…" style="width:100%;margin-bottom:10px">
+      <div id="admin-ticket-search-results"></div>
+    </div>
+    <div class="config-section" style="margin-top:18px"><h3>User restrictions</h3><div class="hint">Block a user, or block all servers owned by that user. Choose the scope from the dropdown.</div><div class="field-row-inline" style="margin-bottom:10px;gap:8px;flex-wrap:wrap"><input type="text" id="admin-restrict-userid" placeholder="Discord user id" inputmode="numeric" style="flex:1;min-width:180px"><select id="admin-restrict-scope" class="dc-select"><option value="user">Block user</option><option value="owner">Block all servers they own</option></select><input type="text" id="admin-restrict-reason" placeholder="Reason (optional)" style="flex:1;min-width:180px"><button class="btn btn-primary btn-small" id="admin-restrict-add">${icon("shield")} Block</button></div><div id="admin-restrictions-list">${loadingBlock()}</div></div>
+    ${session.isOwner ? `
+    <div class="config-section" style="margin-top:18px">
+      <h3>Granted admins</h3>
+      <div class="hint">Discord user ids that can log into this panel, in addition to you as the owner. Numbers only.</div>
+      <div class="field-row-inline" style="margin-bottom:10px">
+        <input type="text" id="admin-add-userid" placeholder="Discord user id (numbers only)" inputmode="numeric" style="flex:1">
+        <button class="btn btn-primary btn-small" id="admin-add-btn">Grant access</button>
+      </div>
+      <div class="field-hint" id="admin-add-error" style="display:none;color:var(--red);margin-bottom:8px"></div>
+      <div id="admin-admins-list">${loadingBlock()}</div>
+    </div>` : ""}`;
+    document.getElementById("admin-logout-btn").addEventListener("click", async () => {
+        try {
+            await adminApi("/admin/logout", { method: "POST" });
+        }
+        catch { }
+        setAdminToken(null);
+        renderAdminPanel(root);
+    });
+    await paintAdminGuildsSection();
+    wireAdminRestrictions();
+    wireAdminTicketSearch();
+    if (session.isOwner)
+        await paintAdminAdminsList();
+}
+async function wireAdminRestrictions() {
+    const add = document.getElementById("admin-restrict-add");
+    if (!add)
+        return;
+    add.addEventListener("click", async () => {
+        const userId = document.getElementById("admin-restrict-userid").value.trim();
+        const scope = document.getElementById("admin-restrict-scope").value;
+        const reason = document.getElementById("admin-restrict-reason").value.trim();
+        try {
+            await adminApi("/admin/restrictions", { method: "POST", body: JSON.stringify({ userId, scope, reason }) });
+            document.getElementById("admin-restrict-userid").value = "";
+            document.getElementById("admin-restrict-reason").value = "";
+            await paintAdminRestrictions();
+        }
+        catch (e) {
+            await DCModal.alert(e.message, { title: "Couldn't add restriction" });
+        }
+    });
+    await paintAdminRestrictions();
+}
+async function paintAdminRestrictions() {
+    const slot = document.getElementById("admin-restrictions-list");
+    if (!slot)
+        return;
+    try {
+        const d = await adminApi("/admin/restrictions");
+        const rows = [...Object.entries(d.users || {}).map(([id, x]) => ["user", id, x]), ...Object.entries(d.owners || {}).map(([id, x]) => ["owner", id, x])];
+        if (!rows.length) {
+            slot.innerHTML = `<div class="empty-state">No blocked users or owners.</div>`;
+            return;
+        }
+        slot.innerHTML = rows.map(([scope, id, x]) => { const p = d.profiles?.[id] || {}; return `<div class="config-row"><span class="config-row-label" style="display:flex;align-items:center;gap:8px"><img src="${escapeHtml(p.avatarUrl || "https://cdn.discordapp.com/embed/avatars/0.png")}" style="width:26px;height:26px;border-radius:50%" alt=""><span>${escapeHtml(p.displayName || id)}<div class="field-hint">${escapeHtml(id)} · ${scope === "owner" ? "All owned servers" : "This user"}${x.reason ? ` · ${escapeHtml(x.reason)}` : ""}</div></span></span><button class="btn btn-ghost btn-small" data-unblock-scope="${scope}" data-unblock-id="${id}">${icon("x")} Unblock</button></div>`; }).join("");
+        slot.querySelectorAll("[data-unblock-id]").forEach(b => b.addEventListener("click", async () => {
+            try {
+                await adminApi(`/admin/restrictions/${b.dataset.unblockScope}/${b.dataset.unblockId}`, { method: "DELETE" });
+                await paintAdminRestrictions();
+            }
+            catch (e) {
+                await DCModal.alert(e.message, { title: "Couldn't remove restriction" });
+            }
+        }));
+    }
+    catch (e) {
+        slot.innerHTML = `<div class="empty-state">Couldn't load restrictions: ${escapeHtml(e.message)}</div>`;
+    }
+}
+async function paintAdminGuildsSection() {
+    const section = document.getElementById("admin-guilds-section");
+    const toggle = document.getElementById("admin-allowmode-toggle");
+    try {
+        const result = await adminApi("/admin/guilds");
+        const isAllowlist = result.allowMode === "allowlist";
+        toggle.classList.toggle("on", isAllowlist);
+        if (!isAllowlist) {
+            section.innerHTML = `<div class="field-hint" style="margin-top:10px"><i class="ti ti-info-circle"></i> Every server the bot is in may currently use it. Turn the toggle on to restrict access to specific servers.</div>`;
+        }
+        else {
+            section.innerHTML = `
+        <div style="margin-top:10px">
+          <div class="field-row-inline" style="margin-bottom:10px">
+            <input type="text" id="admin-add-guildid" placeholder="Server id (numbers only)" inputmode="numeric" style="flex:1">
+            <button class="btn btn-primary btn-small" id="admin-add-guild-btn">Grant server</button>
+          </div>
+          <div class="field-hint" id="admin-add-guild-error" style="display:none;color:var(--red);margin-bottom:8px"></div>
+          <div id="admin-guilds-list">${loadingBlock()}</div>
+        </div>`;
+            await paintAdminGuildsList(result);
+            document.getElementById("admin-add-guild-btn").addEventListener("click", async () => {
+                const input = document.getElementById("admin-add-guildid");
+                const errEl = document.getElementById("admin-add-guild-error");
+                errEl.style.display = "none";
+                const guildId = input.value.trim();
+                try {
+                    await adminApi("/admin/guilds", { method: "POST", body: JSON.stringify({ guildId }) });
+                    input.value = "";
+                    await paintAdminGuildsSection();
+                }
+                catch (e) {
+                    errEl.textContent = e.message;
+                    errEl.style.display = "block";
+                }
+            });
+        }
+        toggle.addEventListener("click", async () => {
+            const newMode = isAllowlist ? "all" : "allowlist";
+            try {
+                await adminApi("/admin/guilds-mode", { method: "PUT", body: JSON.stringify({ allowMode: newMode }) });
+                await paintAdminGuildsSection();
+            }
+            catch (e) {
+                await DCModal.alert(`Couldn't update: ${e.message}`);
+            }
+        }, { once: true });
+    }
+    catch (e) {
+        section.innerHTML = `<div class="empty-state">Couldn't load servers: ${escapeHtml(e.message)}</div>`;
+    }
+}
+async function paintAdminGuildsList(guildsResult) {
+    const slot = document.getElementById("admin-guilds-list");
+    const allowedGuildIds = guildsResult.allowedGuildIds;
+    const knownGuilds = guildsResult.knownGuilds;
+    if (knownGuilds.length === 0) {
+        slot.innerHTML = `<div class="empty-state">The bot isn't in any servers yet.</div>`;
+        return;
+    }
+    const allowedKnown = knownGuilds.filter(g => allowedGuildIds.includes(g.id));
+    const allowedUnknownIds = allowedGuildIds.filter(id => !knownGuilds.some(g => g.id === id));
+    slot.innerHTML = `
+    ${allowedKnown.map(g => `
+    <div class="config-row">
+      <span class="config-row-label" style="display:flex;align-items:center;gap:8px">
+        ${g.icon ? `<img src="https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png" style="width:22px;height:22px;border-radius:6px" alt="">` : `<span class="server-icon" style="width:22px;height:22px;font-size:9px;margin:0">${initials(g.name)}</span>`}
+        ${escapeHtml(g.name)}
+      </span>
+      <button class="btn btn-ghost btn-small" data-guild-revoke="${g.id}">${icon("x")} Remove</button>
+    </div>`).join("")}
+    ${allowedUnknownIds.map(id => `
+    <div class="config-row">
+      <span class="config-row-label" style="display:flex;align-items:center;gap:8px"><span class="server-icon" style="width:22px;height:22px;font-size:9px;margin:0">?</span>${escapeHtml(id)} <span class="field-hint">(bot not in this server)</span></span>
+      <button class="btn btn-ghost btn-small" data-guild-revoke="${id}">${icon("x")} Remove</button>
+    </div>`).join("")}
+    ${allowedKnown.length === 0 && allowedUnknownIds.length === 0 ? `<div class="empty-state">No servers granted yet — every server is currently blocked until you add one.</div>` : ""}`;
+    slot.querySelectorAll("[data-guild-revoke]").forEach(btn => btn.addEventListener("click", async () => {
+        try {
+            await adminApi(`/admin/guilds/${btn.dataset.guildRevoke}`, { method: "DELETE" });
+            await paintAdminGuildsSection();
+        }
+        catch (e) {
+            await DCModal.alert(`Couldn't update: ${e.message}`);
+        }
+    }));
+}
+async function paintAdminAdminsList() {
+    const slot = document.getElementById("admin-admins-list");
+    const addBtn = document.getElementById("admin-add-btn");
+    const errEl = document.getElementById("admin-add-error");
+    if (addBtn)
+        addBtn.addEventListener("click", async () => {
+            const input = document.getElementById("admin-add-userid");
+            const userId = input.value.trim();
+            errEl.style.display = "none";
+            if (!userId)
+                return;
+            try {
+                await adminApi("/admin/admins", { method: "POST", body: JSON.stringify({ userId }) });
+                input.value = "";
+                await paintAdminAdminsList();
+            }
+            catch (e) {
+                errEl.textContent = e.message;
+                errEl.style.display = "block";
+            }
+        });
+    try {
+        const adminsResult = await adminApi("/admin/admins");
+        const ownerUserId = adminsResult.ownerUserId;
+        const grantedUserIds = adminsResult.grantedUserIds;
+        const profiles = adminsResult.profiles || {};
+        const rowHtml = (id, isOwner) => {
+            const p = profiles[id] || { displayName: id, avatarUrl: null };
+            return `
+        <div class="config-row">
+          <span class="config-row-label" style="display:flex;align-items:center;gap:8px">
+            <img src="${p.avatarUrl || `https://cdn.discordapp.com/embed/avatars/0.png`}" alt="" style="width:26px;height:26px;border-radius:50%;border:1px solid var(--panel-border)">
+            <span>${escapeHtml(p.displayName)}<div class="field-hint" style="margin-top:1px">${escapeHtml(id)}</div></span>
+          </span>
+          ${isOwner ? `<span class="badge badge-open">Owner</span>` : `<button class="btn btn-ghost btn-small" data-revoke-admin="${id}">${icon("x")} Revoke</button>`}
+        </div>`;
+        };
+        slot.innerHTML = rowHtml(ownerUserId, true) + grantedUserIds.map(id => rowHtml(id, false)).join("");
+        slot.querySelectorAll("[data-revoke-admin]").forEach(btn => btn.addEventListener("click", async () => {
+            const ok = await DCModal.confirm("Revoke this admin's access to the panel?", { title: "Revoke access", confirmLabel: "Revoke", danger: true });
+            if (!ok)
+                return;
+            try {
+                await adminApi(`/admin/admins/${btn.dataset.revokeAdmin}`, { method: "DELETE" });
+                await paintAdminAdminsList();
+            }
+            catch (e) {
+                await DCModal.alert(`Couldn't revoke: ${e.message}`);
+            }
+        }));
+    }
+    catch (e) {
+        slot.innerHTML = `<div class="empty-state">Couldn't load admins: ${escapeHtml(e.message)}</div>`;
+    }
+}
+async function openAdminTicketDetail(guildId, ticketId) {
+    const root = document.getElementById("picker-panel-root");
+    root.innerHTML = `
+    <button class="btn btn-ghost btn-small" id="admin-ticket-back">${icon("arrow-left")} Back to Admin Panel</button>
+    <div id="admin-ticket-detail-body" style="margin-top:16px">${loadingBlock("Loading ticket…")}</div>`;
+    document.getElementById("admin-ticket-back").addEventListener("click", () => renderAdminPanel(root));
+    const body = document.getElementById("admin-ticket-detail-body");
+    try {
+        const data = await adminApi(`/admin/guilds/${guildId}/tickets/${ticketId}`);
+        paintAdminTicketDetail(body, guildId, ticketId, data);
+    }
+    catch (e) {
+        body.innerHTML = `<div class="empty-state"><i class="ti ti-alert-triangle glyph"></i>Couldn't load this ticket: ${escapeHtml(e.message)}</div>`;
+    }
+}
+function userDisplayHtml(profile, fallbackId) {
+    const name = profile?.displayName || profile?.username || fallbackId || "Unknown";
+    const avatar = profile?.avatarUrl || "https://cdn.discordapp.com/embed/avatars/0.png";
+    return `<span class="user-display"><img class="user-display-avatar" src="${escapeHtml(avatar)}" alt=""><span class="user-display-name">${escapeHtml(name)}</span></span>`;
+}
+function paintAdminTicketDetail(body, guildId, ticketId, data) {
+    const { ticket, messages, viewers, opener } = data;
+    body.innerHTML = `
+    <div class="ticket-panel-card">
+      <div class="ticket-panel-card-header">
+        <span class="ticket-panel-card-title">${escapeHtml(ticket.subject || "No subject")} <span class="field-hint" style="font-weight:400">#${escapeHtml(String(ticket.number ?? ticket.id))}</span></span>
+        <span class="badge badge-${ticket.status}">${ticket.status}</span>
+      </div>
+      <div class="ticket-panel-card-body">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="ticket-info-label" style="margin-bottom:0">Author</span> ${userDisplayHtml(opener, ticket.openedById)}</div>
+        ${messages.length === 0
+        ? `<div class="empty-state"><i class="ti ti-message-off glyph"></i>No messages were sent in this ticket.</div>`
+        : messages.map(m => `
+            <div class="msg-container">
+              <img class="msg-container-avatar" src="${m.authorAvatar ? escapeHtml(m.authorAvatar) : "https://cdn.discordapp.com/embed/avatars/0.png"}" alt="">
+              <div class="msg-container-body">
+                <div class="msg-container-meta">
+                  <span class="msg-container-author">${escapeHtml(m.authorName)}</span>
+                  ${m.authorIsStaff ? `<span class="staff-tag">STAFF</span>` : ""}
+                  <span class="msg-container-time">${new Date(m.createdAt).toLocaleString()}</span>
+                </div>
+                <div class="msg-container-content">${escapeHtml(m.content) || `<span class="field-hint">(no text content)</span>`}</div>
+              </div>
+            </div>`).join("")}
+      </div>
+    </div>
+    <div class="ticket-panel-card">
+      <div class="ticket-panel-card-header"><span class="ticket-panel-card-title"><i class="ti ti-eye"></i> Viewers</span></div>
+      <div class="ticket-panel-card-body">
+        ${viewers.length === 0 ? `<div class="empty-state">No one has viewed this ticket yet.</div>` : `
+          <div class="ticket-viewers-list">
+            ${viewers.map(v => `
+              <div class="ticket-viewer-row">
+                ${userDisplayHtml(v, v.userId)}
+                <span class="ticket-viewer-time">${new Date(v.viewedAt).toLocaleString()}</span>
+              </div>`).join("")}
+          </div>`}
+      </div>
+    </div>`;
+}
+function wireAdminTicketSearch() {
+    const input = document.getElementById("admin-ticket-search");
+    const resultsSlot = document.getElementById("admin-ticket-search-results");
+    let debounceTimer = null;
+    async function runSearch() {
+        resultsSlot.innerHTML = loadingBlock("Searching…");
+        try {
+            const d = await api(`/admin/tickets/search?q=${encodeURIComponent(input.value.trim())}`);
+            paintAdminTicketSearchResults(d.tickets || []);
+        }
+        catch (e) {
+            resultsSlot.innerHTML = `<div class="empty-state">Couldn't search: ${escapeHtml(e.message)}</div>`;
+        }
+    }
+    function paintAdminTicketSearchResults(tickets) {
+        if (tickets.length === 0) {
+            resultsSlot.innerHTML = `<div class="empty-state">No tickets found.</div>`;
+            return;
+        }
+        resultsSlot.innerHTML = `
+      <div class="ticket-table">
+        <div class="ticket-row head" style="grid-template-columns:70px 1fr 1fr 100px 120px"><span>#</span><span>Server</span><span>Subject</span><span>Status</span><span>Created</span></div>
+        ${tickets.slice(0, 50).map(t => `
+          <div class="ticket-row ticket-row-clickable" style="grid-template-columns:70px 1fr 1fr 100px 120px" data-admin-ticket="${t.guildId}:${t.id}">
+            <span>${escapeHtml(String(t.number ?? t.id))}</span>
+            <span>${escapeHtml(t.guildName || "Unknown")}</span>
+            <span>${escapeHtml(t.subject || "—")}</span>
+            <span class="badge badge-${t.status}">${t.status}</span>
+            <span>${timeAgoGlobal(t.createdAt)}</span>
+          </div>`).join("")}
+      </div>`;
+        resultsSlot.querySelectorAll("[data-admin-ticket]").forEach(row => row.addEventListener("click", () => {
+            const [guildId, ticketId] = row.dataset.adminTicket.split(":");
+            openAdminTicketDetail(guildId, ticketId);
+        }));
+    }
+    input.addEventListener("input", () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(runSearch, 300); });
+    const refreshBtn = document.getElementById("admin-ticket-refresh-btn");
+    if (refreshBtn)
+        refreshBtn.addEventListener("click", async () => {
+            refreshBtn.disabled = true;
+            refreshBtn.classList.add("btn-refreshing");
+            try {
+                await runSearch();
+            }
+            finally {
+                refreshBtn.disabled = false;
+                refreshBtn.classList.remove("btn-refreshing");
+            }
+        });
+    runSearch();
+}
+const MY_TICKETS_COLUMNS = ["server", "subject", "content", "status", "created"];
+const MY_TICKETS_COLUMN_LABELS = { server: "Server", subject: "Subject", content: "Content", status: "Status", created: "Created" };
+async function renderMyTicketsPanel(root) {
+    root.innerHTML = `
+    <div class="dash-header">
+      <div><h1 class="picker-heading">My Tickets</h1><p class="picker-sub" id="my-tickets-count">Loading…</p></div>
+      <div class="dash-header-actions">
+        <button class="btn btn-ghost btn-small" id="mt-refresh-btn">${icon("refresh")} Refresh Tickets</button>
+      </div>
+    </div>
+    <p class="field-hint" style="margin-bottom:10px">Use filters below to refine results</p>
+    <div class="ticket-toolbar">
+      <input type="text" class="search-input" id="mt-search" placeholder="Search tickets…">
+      <div class="dropdown-anchor">
+        <button class="btn btn-ghost btn-small" id="mt-status-btn">All Status ${icon("chevron-down")}</button>
+        <div class="dropdown-panel-floating" id="mt-status-panel" style="display:none">
+          <div class="dropdown-panel-item" data-mt-status="">All Status</div>
+          <div class="dropdown-panel-item" data-mt-status="open">Active</div>
+          <div class="dropdown-panel-item" data-mt-status="closed">Closed</div>
+        </div>
+      </div>
+      <div class="dropdown-anchor">
+        <button class="btn btn-ghost btn-small" id="mt-server-btn">Server ${icon("chevron-down")}</button>
+        <div class="dropdown-panel-floating" id="mt-server-panel" style="display:none">
+          <input type="text" class="dropdown-panel-search" id="mt-server-search" placeholder="Search tickets...">
+          <div id="mt-server-options"></div>
+        </div>
+      </div>
+      <div class="dropdown-anchor">
+        <button class="btn btn-ghost btn-small" id="mt-subject-btn">Subject ${icon("chevron-down")}</button>
+        <div class="dropdown-panel-floating" id="mt-subject-panel" style="display:none">
+          <input type="text" class="dropdown-panel-search" id="mt-subject-search" placeholder="Search subjects...">
+          <div id="mt-subject-options"></div>
+        </div>
+      </div>
+      <div class="dropdown-anchor">
+        <button class="btn btn-ghost btn-small" id="mt-date-btn">${icon("calendar")} Date range</button>
+        <div class="dropdown-panel-floating" id="mt-date-panel" style="display:none"></div>
+      </div>
+    </div>
+    <div id="my-tickets-list">${loadingBlock()}</div>`;
+    const session = getSession();
+    let tickets = [];
+    async function loadTickets() {
+        tickets = (await api(`/tickets?userId=${session.user.id}`)).tickets || [];
+    }
+    try {
+        await loadTickets();
+    }
+    catch (e) {
+        document.getElementById("my-tickets-list").innerHTML = `<div class="empty-state"><i class="ti ti-alert-triangle glyph"></i>Couldn't load your tickets: ${escapeHtml(e.message)}</div>`;
+        document.getElementById("my-tickets-count").textContent = "";
+        return;
+    }
+    document.getElementById("my-tickets-count").textContent = `~${tickets.length} ticket${tickets.length === 1 ? "" : "s"} found`;
+    const filters = { query: "", status: "", server: "", subject: "", dateFrom: null, dateTo: null };
+    function applyFiltersAndPaint() {
+        let rows = tickets;
+        if (filters.query) {
+            const q = filters.query.toLowerCase();
+            rows = rows.filter(t => (t.subject || "").toLowerCase().includes(q) || (t.guildName || "").toLowerCase().includes(q));
+        }
+        if (filters.status)
+            rows = rows.filter(t => (filters.status === "open" ? t.status !== "closed" : t.status === "closed"));
+        if (filters.server)
+            rows = rows.filter(t => t.guildName === filters.server);
+        if (filters.subject)
+            rows = rows.filter(t => t.subject === filters.subject);
+        if (filters.dateFrom)
+            rows = rows.filter(t => new Date(t.createdAt) >= filters.dateFrom);
+        if (filters.dateTo)
+            rows = rows.filter(t => new Date(t.createdAt) <= filters.dateTo);
+        paintMyTicketsList(rows, tickets);
+    }
+    document.getElementById("mt-search").addEventListener("input", (e) => { filters.query = e.target.value; applyFiltersAndPaint(); });
+    wireFloatingDropdown("mt-status-btn", "mt-status-panel");
+    document.querySelectorAll("[data-mt-status]").forEach(item => item.addEventListener("click", () => {
+        filters.status = item.dataset.mtStatus;
+        document.getElementById("mt-status-btn").innerHTML = `${item.textContent} ${icon("chevron-down")}`;
+        closeAllFloatingDropdowns();
+        applyFiltersAndPaint();
+    }));
+    wireFloatingDropdown("mt-server-btn", "mt-server-panel");
+    function uniqueServersNow() { return [...new Set(tickets.map(t => t.guildName).filter(Boolean))]; }
+    function paintServerOptions(query) {
+        const q = (query || "").toLowerCase();
+        const opts = uniqueServersNow().filter(s => s.toLowerCase().includes(q));
+        document.getElementById("mt-server-options").innerHTML = opts.map(s => `<div class="dropdown-panel-item" data-mt-server-opt="${escapeHtml(s)}">${escapeHtml(s)}</div>`).join("") || `<div class="dropdown-panel-empty">No matches</div>`;
+        document.querySelectorAll("[data-mt-server-opt]").forEach(item => item.addEventListener("click", () => {
+            filters.server = item.dataset.mtServerOpt;
+            document.getElementById("mt-server-btn").innerHTML = `${escapeHtml(filters.server)} ${icon("chevron-down")}`;
+            closeAllFloatingDropdowns();
+            applyFiltersAndPaint();
+        }));
+    }
+    paintServerOptions("");
+    document.getElementById("mt-server-search").addEventListener("input", (e) => paintServerOptions(e.target.value));
+    wireFloatingDropdown("mt-subject-btn", "mt-subject-panel");
+    function uniqueSubjectsNow() { return [...new Set(tickets.map(t => t.subject).filter(Boolean))]; }
+    function paintSubjectOptions(query) {
+        const q = (query || "").toLowerCase();
+        const opts = uniqueSubjectsNow().filter(s => s.toLowerCase().includes(q));
+        document.getElementById("mt-subject-options").innerHTML = opts.map(s => `<div class="dropdown-panel-item" data-mt-subject-opt="${escapeHtml(s)}">${escapeHtml(s)}</div>`).join("") || `<div class="dropdown-panel-empty">No matches</div>`;
+        document.querySelectorAll("[data-mt-subject-opt]").forEach(item => item.addEventListener("click", () => {
+            filters.subject = item.dataset.mtSubjectOpt;
+            document.getElementById("mt-subject-btn").innerHTML = `${escapeHtml(filters.subject)} ${icon("chevron-down")}`;
+            closeAllFloatingDropdowns();
+            applyFiltersAndPaint();
+        }));
+    }
+    paintSubjectOptions("");
+    document.getElementById("mt-subject-search").addEventListener("input", (e) => paintSubjectOptions(e.target.value));
+    wireFloatingDropdown("mt-date-btn", "mt-date-panel");
+    paintDateRangePicker(document.getElementById("mt-date-panel"), (from, to) => {
+        filters.dateFrom = from;
+        filters.dateTo = to;
+        closeAllFloatingDropdowns();
+        applyFiltersAndPaint();
+    });
+    const refreshBtn = document.getElementById("mt-refresh-btn");
+    refreshBtn.addEventListener("click", async () => {
+        refreshBtn.disabled = true;
+        refreshBtn.classList.add("btn-refreshing");
+        try {
+            await loadTickets();
+            document.getElementById("my-tickets-count").textContent = `~${tickets.length} ticket${tickets.length === 1 ? "" : "s"} found`;
+            applyFiltersAndPaint();
+        }
+        catch (e) {
+            await DCModal.alert(`Couldn't refresh tickets: ${e.message}`);
+        }
+        finally {
+            refreshBtn.disabled = false;
+            refreshBtn.classList.remove("btn-refreshing");
+        }
+    });
+    applyFiltersAndPaint();
+}
+function closeAllFloatingDropdowns() {
+    document.querySelectorAll(".dropdown-panel-floating").forEach(p => { p.style.display = "none"; });
+}
+function wireFloatingDropdown(btnId, panelId) {
+    const btn = document.getElementById(btnId);
+    const panel = document.getElementById(panelId);
+    if (!btn || !panel)
+        return;
+    btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = panel.style.display !== "none";
+        closeAllFloatingDropdowns();
+        panel.style.display = isOpen ? "none" : "block";
+    });
+    panel.addEventListener("click", (e) => e.stopPropagation());
+}
+document.addEventListener("click", () => closeAllFloatingDropdowns());
+function paintDateRangePicker(panel, onPick) {
+    const now = new Date();
+    let viewMonth = now.getMonth();
+    let viewYear = now.getFullYear();
+    let rangeStart = null, rangeEnd = null;
+    function render() {
+        const first = new Date(viewYear, viewMonth, 1);
+        const startWeekday = first.getDay();
+        const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        let cells = "";
+        for (let i = 0; i < startWeekday; i++)
+            cells += `<span class="dc-cal-cell dc-cal-empty"></span>`;
+        for (let d = 1; d <= daysInMonth; d++) {
+            const thisDate = new Date(viewYear, viewMonth, d);
+            const isSelected = (rangeStart && thisDate.getTime() === rangeStart.getTime()) || (rangeEnd && thisDate.getTime() === rangeEnd.getTime());
+            const inRange = rangeStart && rangeEnd && thisDate > rangeStart && thisDate < rangeEnd;
+            cells += `<span class="dc-cal-cell ${isSelected ? "selected" : ""} ${inRange ? "in-range" : ""}" data-cal-day="${d}">${d}</span>`;
+        }
+        panel.innerHTML = `
+      <div class="dc-cal-header">
+        <button class="icon-btn" id="dc-cal-prev">${icon("arrow-left")}</button>
+        <span>${monthNames[viewMonth]} ${viewYear}</span>
+        <button class="icon-btn" id="dc-cal-next">${icon("chevron-right")}</button>
+      </div>
+      <div class="dc-cal-grid">${["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(d => `<span class="dc-cal-dow">${d}</span>`).join("")}${cells}</div>
+      <div class="dc-cal-footer">
+        <button class="btn btn-ghost btn-small" id="dc-cal-clear">Clear</button>
+        <button class="btn btn-primary btn-small" id="dc-cal-apply">Apply</button>
+      </div>`;
+        panel.querySelector("#dc-cal-prev").addEventListener("click", () => {
+            viewMonth--;
+            if (viewMonth < 0) {
+                viewMonth = 11;
+                viewYear--;
+            }
+            render();
+        });
+        panel.querySelector("#dc-cal-next").addEventListener("click", () => {
+            viewMonth++;
+            if (viewMonth > 11) {
+                viewMonth = 0;
+                viewYear++;
+            }
+            render();
+        });
+        panel.querySelectorAll("[data-cal-day]").forEach(cell => cell.addEventListener("click", () => {
+            const d = new Date(viewYear, viewMonth, Number(cell.dataset.calDay));
+            if (!rangeStart || (rangeStart && rangeEnd)) {
+                rangeStart = d;
+                rangeEnd = null;
+            }
+            else if (d < rangeStart) {
+                rangeEnd = rangeStart;
+                rangeStart = d;
+            }
+            else {
+                rangeEnd = d;
+            }
+            render();
+        }));
+        panel.querySelector("#dc-cal-clear").addEventListener("click", () => { rangeStart = null; rangeEnd = null; onPick(null, null); });
+        panel.querySelector("#dc-cal-apply").addEventListener("click", () => onPick(rangeStart, rangeEnd || rangeStart));
+    }
+    render();
+}
+function openerPreviewHtml(t) {
+    const opener = t.opener;
+    const displayName = opener?.displayName || t.openedBy || "Unknown";
+    const userId = opener?.id || t.openedById || "";
+    const avatar = opener?.avatarUrl || "https://cdn.discordapp.com/embed/avatars/0.png";
+    return `
+    <span class="opener-preview">
+      <img class="opener-preview-avatar" src="${escapeHtml(avatar)}" alt="">
+      <span class="opener-preview-text">
+        <span class="opener-preview-name">${escapeHtml(displayName)}</span>
+        ${userId ? `<span class="opener-preview-id">${escapeHtml(userId)}</span>` : ""}
+      </span>
+    </span>`;
+}
+function paintMyTicketsList(rows, allTickets) {
+    const list = document.getElementById("my-tickets-list");
+    if (rows.length === 0) {
+        list.innerHTML = `<div class="empty-state"><i class="ti ti-ticket-off glyph"></i>${allTickets.length === 0 ? "You haven't opened any tickets yet." : "No tickets match."}</div>`;
+        return;
+    }
+    const cols = MY_TICKETS_COLUMNS;
+    const colWidths = { server: "1fr", subject: "1fr", content: "1.6fr", status: "100px", created: "120px" };
+    const gridTemplate = cols.map(c => colWidths[c]).join(" ");
+    const colLabel = MY_TICKETS_COLUMN_LABELS;
+    const cellHtml = {
+        server: (t) => `<span style="display:flex;align-items:center;gap:8px">${t.guildIcon ? `<img src="https://cdn.discordapp.com/icons/${t.guildId}/${t.guildIcon}.png" style="width:20px;height:20px;border-radius:6px" alt="">` : `<span class="server-icon" style="width:20px;height:20px;font-size:9px;margin:0">${initials(t.guildName || "?")}</span>`} ${escapeHtml(t.guildName || "Unknown server")}</span>`,
+        subject: (t) => `<span class="cc-trigger-chip" style="background:rgba(139,92,246,.14);color:var(--violet);border-color:rgba(139,92,246,.3)">${escapeHtml(t.subject || "No subject")}</span>`,
+        content: (t) => escapeHtml((t.messages && t.messages[0]?.content) || "—").slice(0, 80),
+        status: (t) => `<span class="badge badge-${t.status}">${t.status}</span>`,
+        created: (t) => timeAgoGlobal(t.createdAt),
+    };
+    list.innerHTML = `
+    <div class="ticket-table">
+      <div class="ticket-row head" style="grid-template-columns:${gridTemplate}">${cols.map(c => `<span>${colLabel[c]}</span>`).join("")}</div>
+      ${rows.map(t => `
+        <div class="ticket-row ticket-row-clickable" style="grid-template-columns:${gridTemplate}" data-my-ticket="${t.guildId}:${t.id}">
+          ${cols.map(c => `<span>${cellHtml[c](t)}</span>`).join("")}
+        </div>`).join("")}
+    </div>`;
+    list.querySelectorAll("[data-my-ticket]").forEach(row => row.addEventListener("click", () => {
+        const [guildId, ticketId] = row.dataset.myTicket.split(":");
+        openMyTicketDetail(guildId, ticketId);
+    }));
+}
+async function openMyTicketDetail(guildId, ticketId, updateUrl = true) {
+    if (updateUrl)
+        routes.go(routes.myTicketUrl(guildId, ticketId));
+    const root = document.getElementById("picker-panel-root");
+    root.innerHTML = `
+    <button class="btn btn-ghost btn-small" id="mt-back">${icon("arrow-left")} Back to Tickets</button>
+    <div id="mt-detail-body" style="margin-top:16px">${loadingBlock("Loading ticket…")}</div>`;
+    document.getElementById("mt-back").addEventListener("click", () => { routes.go("/my-tickets"); renderMyTicketsPanel(root); });
+    await paintTicketDetailBody(document.getElementById("mt-detail-body"), guildId, ticketId);
+}
+async function paintTicketDetailBody(body, guildId, ticketId) {
+    const session = getSession();
+    let data;
+    try {
+        data = await api(`/guilds/${guildId}/tickets/${ticketId}/transcript?requesterId=${session?.user?.id || ""}`);
+    }
+    catch (e) {
+        body.innerHTML = `<div class="empty-state"><i class="ti ti-lock-off glyph"></i>${escapeHtml(e.message || "Couldn't load this ticket.")}</div>`;
+        return;
+    }
+    const { ticket, messages, hasLog, opener, claimer, closer } = data;
+    body.innerHTML = `
+    <div class="ticket-detail-layout">
+      <div class="ticket-detail-main">
+        <h3 style="font-size:16px;font-weight:700">${escapeHtml(ticket.subject || "No subject")} <span class="field-hint" style="font-weight:400">#${escapeHtml(String(ticket.number ?? ticket.id))}</span></h3>
+        <div class="field-hint" style="margin:6px 0 14px"><span class="badge badge-${ticket.status}">${ticket.status}</span> · ${escapeHtml(ticket.subject || "General")} · Created ${timeAgoGlobal(ticket.createdAt)}</div>
+        <div class="transcript-body" style="max-height:60vh">
+          ${!hasLog
+        ? `<div class="empty-state"><i class="ti ti-message-off glyph"></i>No message log available for this ticket.</div>`
+        : messages.length === 0
+            ? `<div class="empty-state"><i class="ti ti-message-off glyph"></i>No messages were sent in this ticket.</div>`
+            : messages.map(m => `
+                <div class="msg-container ${m.deleted ? "deleted" : ""}">
+                  <img class="msg-container-avatar" src="${m.authorAvatar ? escapeHtml(m.authorAvatar) : "https://cdn.discordapp.com/embed/avatars/0.png"}" alt="">
+                  <div class="msg-container-body">
+                    <div class="msg-container-meta">
+                      <span class="msg-container-author">${escapeHtml(m.authorName)}</span>
+                      ${m.authorIsBot ? `<span class="staff-tag" style="background:rgba(125,211,252,.14);color:var(--sky, #7dd3fc)">APP</span>` : ""}
+                      ${m.authorIsStaff ? `<span class="staff-tag">STAFF</span>` : ""}
+                      <span class="msg-container-time">${new Date(m.createdAt).toLocaleString()}</span>
+                      ${m.deleted ? `<span class="transcript-msg-deleted-tag"><i class="ti ti-trash"></i> deleted</span>` : ""}
+                    </div>
+                    <div class="msg-container-content">${escapeHtml(m.content) || `<span class="field-hint">(no text content)</span>`}</div>
+                  </div>
+                </div>`).join("")}
+        </div>
+      </div>
+      <div class="ticket-detail-sidebar">
+        <h4>Ticket Information</h4>
+        <div class="ticket-info-row"><i class="ti ti-user"></i><div><div class="ticket-info-label">Author</div><div class="ticket-info-val">${userDisplayHtml(opener, ticket.openedById || ticket.openedBy)}</div></div></div>
+        <div class="ticket-info-row">${icon("calendar")}<div><div class="ticket-info-label">Created</div><div class="ticket-info-val">${timeAgoGlobal(ticket.createdAt)}</div></div></div>
+        <div class="ticket-info-row"><i class="ti ti-tag"></i><div><div class="ticket-info-label">Subject</div><div class="ticket-info-val"><span class="cc-trigger-chip" style="background:rgba(139,92,246,.14);color:var(--violet);border-color:rgba(139,92,246,.3)">${escapeHtml(ticket.subject || "—")}</span></div></div></div>
+        <div class="ticket-info-row"><i class="ti ti-lock"></i><div><div class="ticket-info-label">Claimed By</div><div class="ticket-info-val">${ticket.claimedBy ? userDisplayHtml(claimer, ticket.claimedById || ticket.claimedBy) : `<span class="field-hint">Not claimed yet</span>`}</div></div></div>
+        ${ticket.status === "closed" ? `
+        <div class="ticket-info-row"><i class="ti ti-lock-check"></i><div><div class="ticket-info-label">Closed By</div><div class="ticket-info-val">${userDisplayHtml(closer, ticket.closedById || ticket.closedBy)}</div><div class="field-hint">${timeAgoGlobal(ticket.closedAt)}</div></div></div>`
+        : `<div class="field-hint" style="margin-top:8px"><i class="ti ti-lock-open"></i> This ticket hasn't been closed yet.</div>`}
+        <div class="ticket-share-block" id="ticket-share-block-wrap">
+          <div id="ticket-share-controls">${loadingBlock("")}</div>
+        </div>
+        ${ticket.status === "closed" ? `<div class="ticket-share-block" id="ticket-review-block"><div id="ticket-review-controls">${loadingBlock("")}</div></div>` : ""}
+      </div>
+    </div>`;
+    paintTicketShareControls(document.getElementById("ticket-share-controls"), guildId, ticketId, ticket);
+    if (ticket.status === "closed" && document.getElementById("ticket-review-controls"))
+        paintTicketReviewControls(document.getElementById("ticket-review-controls"), guildId, ticketId, ticket);
+}
+async function paintTicketReviewControls(slot, guildId, ticketId, ticket) {
+    const session = getSession();
+    try {
+        const d = await api(`/guilds/${guildId}/tickets/${ticketId}/review?requesterId=${encodeURIComponent(session?.user?.id || "")}`);
+        let selected = d.review?.rating || 0;
+        const vals = Array.from({ length: 19 }, (_, i) => (i + 2) / 2);
+        slot.innerHTML = `<div class="config-row-label">Private support review</div><div class="field-hint" style="margin:6px 0 10px">The server owner cannot see your individual review. You can change it whenever you want.</div><div style="display:flex;gap:4px;flex-wrap:wrap">${vals.map(v => `<button class="btn btn-ghost btn-small review-star-btn ${selected === v ? "active" : ""}" data-review-rating="${v}">${v}</button>`).join("")}</div><div class="field-row-inline" style="margin-top:8px"><button class="btn btn-primary btn-small" id="ticket-review-save">${icon("star")} ${selected ? `Update ${selected}/10` : `Submit rating`}</button>${selected ? `<button class="btn btn-ghost btn-small" id="ticket-review-remove">Remove review</button>` : ""}</div>`;
+        slot.querySelectorAll("[data-review-rating]").forEach(b => b.addEventListener("click", () => { selected = Number(b.dataset.reviewRating); slot.querySelectorAll("[data-review-rating]").forEach(x => x.classList.toggle("active", Number(x.dataset.reviewRating) === selected)); document.getElementById("ticket-review-save").textContent = `Update ${selected}/10`; }));
+        document.getElementById("ticket-review-save").addEventListener("click", async () => {
+            try {
+                await api(`/guilds/${guildId}/tickets/${ticketId}/review`, { method: "PUT", body: JSON.stringify({ requesterId: session.user.id, rating: selected }) });
+                await DCModal.alert("Thanks for voting on your support experience. You can change it whenever you want.", { title: "Review saved" });
+                paintTicketReviewControls(slot, guildId, ticketId, ticket);
+            }
+            catch (e) {
+                DCModal.alert(e.message, { title: "Couldn't save review" });
+            }
+        });
+        document.getElementById("ticket-review-remove")?.addEventListener("click", async () => {
+            try {
+                await api(`/guilds/${guildId}/tickets/${ticketId}/review?requesterId=${encodeURIComponent(session.user.id)}`, { method: "DELETE" });
+                paintTicketReviewControls(slot, guildId, ticketId, ticket);
+            }
+            catch (e) {
+                DCModal.alert(e.message, { title: "Couldn't remove review" });
+            }
+        });
+    }
+    catch (e) {
+        slot.innerHTML = `<div class="field-hint">${escapeHtml(e.message || "Review unavailable")}</div>`;
+    }
+}
+async function paintTicketShareControls(slot, guildId, ticketId, ticket) {
+    let sharingEnabled = false;
+    try {
+        sharingEnabled = (await api(`/guilds/${guildId}/sharing-settings`)).sharingEnabled;
+    }
+    catch { }
+    const wrap = document.getElementById("ticket-share-block-wrap");
+    if (!sharingEnabled) {
+        if (wrap)
+            wrap.style.display = "none";
+        return;
+    }
+    if (wrap)
+        wrap.style.display = "";
+    const session = getSession();
+    const shareUrl = ticket.currentShareId ? `${window.location.origin}${CFG.BASE_PATH.replace(/\/$/, "")}/share/${ticket.currentShareId}` : null;
+    slot.innerHTML = `<div class="config-row-label" style="margin-bottom:8px">Share link</div>` + (shareUrl
+        ? `<div class="dc-share-link"><input type="text" readonly value="${escapeHtml(shareUrl)}" id="ticket-share-url"></div>
+       <div class="field-row-inline" style="margin-top:8px">
+         <button class="btn btn-ghost btn-small" id="ticket-share-copy">${icon("copy")} Copy</button>
+         <button class="btn btn-ghost btn-small" id="ticket-share-regen">${icon("refresh")} Regenerate</button>
+       </div>`
+        : `<button class="btn btn-primary btn-small" id="ticket-share-create">${icon("link")} Create share link</button>`);
+    const createBtn = document.getElementById("ticket-share-create");
+    if (createBtn)
+        createBtn.addEventListener("click", async () => {
+            try {
+                await api(`/guilds/${guildId}/tickets/${ticketId}/share`, { method: "POST", body: JSON.stringify({ requesterId: session?.user?.id }) });
+                await refreshShareControls();
+            }
+            catch (e) {
+                await DCModal.alert(`Couldn't create share link: ${e.message}`);
+            }
+        });
+    const copyBtn = document.getElementById("ticket-share-copy");
+    if (copyBtn)
+        copyBtn.addEventListener("click", () => {
+            document.getElementById("ticket-share-url").select();
+            navigator.clipboard?.writeText(shareUrl).catch(() => { });
+        });
+    const regenBtn = document.getElementById("ticket-share-regen");
+    if (regenBtn)
+        regenBtn.addEventListener("click", async () => {
+            const ok = await DCModal.confirm("The old link will stop working immediately. Continue?", { title: "Regenerate share link", confirmLabel: "Regenerate" });
+            if (!ok)
+                return;
+            try {
+                await api(`/guilds/${guildId}/tickets/${ticketId}/share`, { method: "POST", body: JSON.stringify({ requesterId: session?.user?.id }) });
+                await refreshShareControls();
+            }
+            catch (e) {
+                await DCModal.alert(`Couldn't regenerate: ${e.message}`);
+            }
+        });
+    async function refreshShareControls() {
+        try {
+            const fresh = await api(`/guilds/${guildId}/tickets/${ticketId}/transcript?requesterId=${session?.user?.id || ""}`);
+            paintTicketShareControls(slot, guildId, ticketId, fresh.ticket);
+        }
+        catch { }
+    }
+}
+async function enterSharePage(shareId) {
+    showScreen("screen-share");
+    const root = document.getElementById("share-root");
+    root.innerHTML = loadingBlock("Loading ticket…");
+    try {
+        const data = await api(`/share/tickets/${shareId}`);
+        const { ticket, guildName, messages } = data;
+        root.innerHTML = `
+      <div class="brand-row" style="margin-bottom:18px"><div class="brand-glyph"><img src="images/logo.png" alt="NEXORIA logo"></div>NEXORIA</div>
+      <div class="modal-panel" style="max-width:800px;max-height:none;margin:0 auto">
+        <div class="transcript-header">
+          <div>
+            <h3 style="font-size:16px;font-weight:700">${escapeHtml(ticket.subject || "No subject")} <span class="field-hint" style="font-weight:400">#${escapeHtml(String(ticket.number ?? ticket.id))}</span></h3>
+            <div class="field-hint" style="margin-top:2px">${escapeHtml(guildName)} · <span class="badge badge-${ticket.status}">${ticket.status}</span> · Created ${timeAgoGlobal(ticket.createdAt)}</div>
+          </div>
+        </div>
+        <div class="transcript-body" style="max-height:70vh">
+          ${messages.length === 0
+            ? `<div class="empty-state"><i class="ti ti-message-off glyph"></i>No messages were sent in this ticket.</div>`
+            : messages.map(m => `
+              <div class="transcript-msg ${m.deleted ? "deleted" : ""}">
+                <img class="transcript-msg-avatar" src="${m.authorAvatar ? escapeHtml(m.authorAvatar) : "https://cdn.discordapp.com/embed/avatars/0.png"}" alt="">
+                <div class="transcript-msg-body">
+                  <div class="transcript-msg-meta">
+                    <span class="transcript-msg-author">${escapeHtml(m.authorName)}</span>
+                    ${m.authorIsStaff ? `<span class="staff-tag">STAFF</span>` : ""}
+                    <span class="transcript-msg-time">${new Date(m.createdAt).toLocaleString()}</span>
+                  </div>
+                  <div class="transcript-msg-content">${escapeHtml(m.content) || `<span class="field-hint">(no text content)</span>`}</div>
+                </div>
+              </div>`).join("")}
+        </div>
+      </div>`;
+    }
+    catch (e) {
+        root.innerHTML = `
+      <div class="brand-row" style="margin-bottom:18px"><div class="brand-glyph"><img src="images/logo.png" alt="NEXORIA logo"></div>NEXORIA</div>
+      <div class="empty-state"><i class="ti ti-link-off glyph"></i>${escapeHtml(e.message || "This share link is invalid.")}</div>`;
+    }
+}
+const CORE_PANELS = [];
+let modulesLoaded = false;
+let modulesLoadingPromise = null;
+let modulesRetryTimer = null;
+let modulesRetryAttempt = 0;
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        const existing = [...document.scripts].find(s => s.src === src);
+        if (existing) {
+            resolve();
+            return;
+        }
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error(`Failed to load ${src}`));
+        document.body.appendChild(s);
+    });
+}
+function loadStyle(href) {
+    if (document.querySelector(`link[href="${href}"]`))
+        return;
+    const l = document.createElement("link");
+    l.rel = "stylesheet";
+    l.href = href;
+    l.dataset.nexoriaModuleStyle = "1";
+    l.onerror = () => {
+        console.warn(`[modules] Failed to load stylesheet ${href}; the rest of the dashboard will continue rendering.`);
+        l.remove();
+        scheduleModulesRetry(`stylesheet failed: ${href}`);
+    };
+    document.head.appendChild(l);
+}
+function scheduleModulesRetry(reason = "temporary module/network failure") {
+    if (modulesLoaded || modulesRetryTimer)
+        return;
+    modulesRetryAttempt = Math.min(modulesRetryAttempt + 1, 8);
+    const delay = Math.min(15000, 1000 * Math.pow(1.6, modulesRetryAttempt - 1));
+    console.warn(`[modules] ${reason}; retrying in ${Math.round(delay)}ms.`);
+    modulesRetryTimer = setTimeout(async () => {
+        modulesRetryTimer = null;
+        try {
+            await ensureModulesLoaded();
+            if (modulesLoaded) {
+                modulesRetryAttempt = 0;
+                if (document.getElementById("screen-dashboard")?.classList.contains("active")) {
+                    buildSidebar(currentGuildDisabledModules);
+                    try {
+                        switchPanel(currentPanelId, false, currentTab);
+                    }
+                    catch (e) {
+                        console.warn("[modules] recovered module render failed:", e);
+                    }
+                }
+            }
+        }
+        catch (e) {
+            scheduleModulesRetry(e?.message || "module retry failed");
+        }
+    }, delay);
+}
+async function ensureModulesLoaded() {
+    if (modulesLoaded)
+        return true;
+    if (modulesLoadingPromise)
+        return modulesLoadingPromise;
+    modulesLoadingPromise = (async () => {
+        try {
+            const manifest = await api("/modules");
+            const failures = [];
+            for (const file of manifest.shared || []) {
+                try {
+                    await loadScript(`${CFG.LOCAL_BOT_URL}/modules-static/${file}`);
+                }
+                catch (e) {
+                    failures.push({ file, error: e });
+                    console.warn(`[modules] Shared file ${file} failed to load; continuing.`, e);
+                }
+            }
+            for (const mod of manifest.modules || []) {
+                if (mod.css)
+                    loadStyle(`${CFG.LOCAL_BOT_URL}/modules-static/${mod.css}`);
+                if (mod.js) {
+                    try {
+                        await loadScript(`${CFG.LOCAL_BOT_URL}/modules-static/${mod.js}`);
+                    }
+                    catch (e) {
+                        failures.push({ file: mod.js, error: e });
+                        console.warn(`[modules] ${mod.id || mod.js} failed to load; skipping it without breaking the dashboard.`, e);
+                    }
+                }
+            }
+            modulesLoaded = failures.length === 0;
+            if (failures.length)
+                scheduleModulesRetry(`${failures.length} module asset(s) failed`);
+            return modulesLoaded;
+        }
+        catch (e) {
+            modulesLoaded = false;
+            scheduleModulesRetry(e?.message || "module manifest failed");
+            return false;
+        }
+        finally {
+            modulesLoadingPromise = null;
+        }
+    })();
+    return modulesLoadingPromise;
+}
+function buildContext(extra = {}) {
+    const session = getSession();
+    return {
+        guildId: currentGuild.id,
+        userId: session?.user?.id,
+        api: (path, options) => api(path, options),
+        modal: DCModal,
+        routes,
+        renderTicketDetail: (container, guildId, ticketId) => paintTicketDetailBody(container, guildId, ticketId),
+        openerPreviewHtml,
+        userDisplayHtml,
+        navigateToTab: (tab) => { routes.go(routes.moduleUrl(currentGuild.id, currentPanelId, tab)); switchTab(tab); },
+        navigateToTicket: (ticketId) => { routes.go(routes.ticketUrl(currentGuild.id, currentPanelId, ticketId)); switchToTicketView(ticketId); },
+        ...extra,
+    };
+}
+function switchToTicketView(ticketId) {
+    document.querySelectorAll(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.panel === currentPanelId));
+    const root = document.getElementById("module-root");
+    root.innerHTML = `<button class="btn btn-ghost btn-small" id="dash-ticket-back">${icon("arrow-left")} Back</button><div id="dash-ticket-body" style="margin-top:16px">${loadingBlock("Loading ticket…")}</div>`;
+    document.getElementById("dash-ticket-back").addEventListener("click", () => { routes.go(routes.moduleUrl(currentGuild.id, currentPanelId)); switchPanel(currentPanelId, false); });
+    paintTicketDetailBody(document.getElementById("dash-ticket-body"), currentGuild.id, ticketId);
+}
+function navItemHtml(id, tablerIconUnused, label, toggleable, isEnabled) {
+    const disabledClass = toggleable && !isEnabled ? "module-disabled" : "";
+    const iconHtml = icon(id);
+    return `<div class="nav-item ${disabledClass}" data-panel="${id}" title="${escapeHtml(label)}">
+    ${iconHtml}<span class="nav-item-label">${escapeHtml(label)}</span>
+    ${toggleable ? `<button class="toggle nav-item-toggle ${isEnabled ? "on" : ""}" data-module-toggle="${id}" aria-label="Toggle ${escapeHtml(label)}"></button>` : ""}
+  </div>`;
+}
+function buildSidebar(disabledModules) {
+    disabledModules = disabledModules || [];
+    const wrap = document.getElementById("dash-nav-items");
+    const modules = (window.DC?.modules || []).filter(m => m.id !== "status");
+    const activePanel = wrap.querySelector(".nav-item.active")?.dataset.panel || null;
+    const modulesHtml = modules.length
+        ? `<div class="nav-section-label">Modules</div>${modules.map(m => navItemHtml(m.id, m.icon, m.label, true, !disabledModules.includes(m.id))).join("")}`
+        : "";
+    const generalHtml = `<div class="nav-section-label">General</div>${navItemHtml("general-settings", "", "General Settings", false)}${navItemHtml("audit-log", "", "Audit Log", false)}`;
+    wrap.innerHTML = modulesHtml + generalHtml;
+    if (activePanel)
+        wrap.querySelectorAll(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.panel === activePanel));
+    wrap.querySelectorAll(".nav-item").forEach(n => n.addEventListener("click", (e) => {
+        if (e.target.closest("[data-module-toggle]"))
+            return;
+        routes.go(routes.moduleUrl(currentGuild.id, n.dataset.panel));
+        switchPanel(n.dataset.panel, false);
+    }));
+    wrap.querySelectorAll("[data-module-toggle]").forEach(btn => btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const moduleId = btn.dataset.moduleToggle;
+        const turningOn = !btn.classList.contains("on");
+        openModuleToggleConfirm(moduleId, turningOn, btn, disabledModules);
+    }));
+}
+async function openModuleToggleConfirm(moduleId, turningOn, btn, disabledModules) {
+    const label = (window.DC?.modules || []).find(m => m.id === moduleId)?.label || moduleId;
+    const ok = await DCModal.confirm(`${label} keeps working normally either way — this only changes how it looks in your sidebar.`, { title: `${turningOn ? "Turn on" : "Turn off"} ${label}?`, confirmLabel: turningOn ? "Turn on" : "Turn off" });
+    if (!ok)
+        return;
+    try {
+        await api(`/guilds/${currentGuild.id}/modules/${moduleId}`, { method: "PUT", body: JSON.stringify({ enabled: turningOn }) });
+        currentGuildDisabledModules = turningOn ? disabledModules.filter(id => id !== moduleId) : [...disabledModules, moduleId];
+        buildSidebar(currentGuildDisabledModules);
+        if (currentPanelId === moduleId)
+            setModuleDisabledOverlay(!turningOn);
+    }
+    catch (e2) {
+        await DCModal.alert(`Couldn't update module: ${e2.message}`);
+    }
+}
+function setModuleDisabledOverlay(isDisabled) {
+    const wrap = document.getElementById("module-root-wrap");
+    const overlay = document.getElementById("module-disabled-overlay");
+    if (!wrap || !overlay)
+        return;
+    wrap.classList.toggle("disabled-active", isDisabled);
+    overlay.style.display = isDisabled ? "flex" : "none";
+}
+let currentPanelId = "ticket-tool";
+let currentTab = null;
+let serverSwitcherWired = false;
+function wireServerSwitcher() {
+    if (serverSwitcherWired)
+        return;
+    serverSwitcherWired = true;
+    wireFloatingDropdown("dash-nav-server", "dash-crumb-panel");
+    document.getElementById("dash-nav-server").addEventListener("click", () => {
+        const panel = document.getElementById("dash-crumb-panel");
+        if (panel.style.display !== "none")
+            paintServerSwitcherPanel(panel);
+    });
+}
+let pickerServerSwitcherWired = false;
+function wirePickerServerSwitcher() {
+    if (pickerServerSwitcherWired)
+        return;
+    pickerServerSwitcherWired = true;
+    wireFloatingDropdown("picker-server-switch", "picker-server-switch-panel");
+    document.getElementById("picker-server-switch").addEventListener("click", () => {
+        const panel = document.getElementById("picker-server-switch-panel");
+        if (panel.style.display !== "none")
+            paintServerSwitcherPanel(panel);
+    });
+}
+async function paintServerSwitcherPanel(panel) {
+    panel.innerHTML = loadingBlock("Loading servers…");
+    const session = getSession();
+    let manageable = [];
+    try {
+        const guilds = await fetchMyGuilds(session.token);
+        manageable = guilds.filter(isAdmin).sort((a, b) => a.name.localeCompare(b.name));
+    }
+    catch (e) {
+        panel.innerHTML = `<div class="dropdown-panel-empty">Couldn't load servers: ${escapeHtml(e.message)}</div>`;
+        return;
+    }
+    const botGuildIds = new Set((botInfoCache?.guilds || []).map(g => g.id));
+    const withBot = manageable.filter(g => botGuildIds.has(g.id));
+    const dashSub = document.getElementById("dash-server-sub");
+    if (dashSub)
+        dashSub.textContent = `${withBot.length} server${withBot.length === 1 ? "" : "s"}`;
+    function rowHtml(g) {
+        const isActive = g.id === currentGuild?.id;
+        const iconHtml = g.icon ? `<img src="https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png" alt="">` : initials(g.name);
+        return `
+      <div class="dropdown-panel-item server-switch-item ${isActive ? "selected" : ""}" data-switch-guild="${g.id}" data-switch-name="${escapeHtml(g.name)}" data-switch-icon="${g.icon || ""}">
+        <span class="server-switch-icon">${iconHtml}</span>
+        <span class="server-switch-name">${escapeHtml(g.name)}</span>
+        ${isActive ? icon("check", 15) : ""}
+      </div>`;
+    }
+    panel.innerHTML = `
+    <div class="dropdown-panel-title">Staff Servers</div>
+    <input type="text" class="dropdown-panel-search" id="dash-crumb-search" placeholder="Search servers…">
+    <div id="dash-crumb-list">
+      ${withBot.length ? withBot.map(rowHtml).join("") : `<div class="dropdown-panel-empty">NEXORIA isn't on any server you manage yet.</div>`}
+    </div>
+    <div class="dropdown-panel-footer-action">
+      <button class="btn btn-ghost btn-small" id="dash-crumb-view-all" style="width:100%">${icon("servers")} View All Servers</button>
+    </div>`;
+    function wireRows() {
+        panel.querySelectorAll("[data-switch-guild]").forEach(row => row.addEventListener("click", () => {
+            const guildId = row.dataset.switchGuild;
+            if (guildId === currentGuild?.id) {
+                closeAllFloatingDropdowns();
+                return;
+            }
+            currentGuild = { id: guildId, name: row.dataset.switchName, icon: row.dataset.switchIcon };
+            closeAllFloatingDropdowns();
+            routes.go(routes.moduleUrl(currentGuild.id, "ticket-tool"));
+            enterDashboard("ticket-tool");
+        }));
+    }
+    wireRows();
+    document.getElementById("dash-crumb-search").addEventListener("input", (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        const list = document.getElementById("dash-crumb-list");
+        const filtered = withBot.filter(g => g.name.toLowerCase().includes(q));
+        list.innerHTML = filtered.length ? filtered.map(rowHtml).join("") : `<div class="dropdown-panel-empty">No matches</div>`;
+        wireRows();
+    });
+    document.getElementById("dash-crumb-view-all").addEventListener("click", () => {
+        closeAllFloatingDropdowns();
+        routes.go("/dashboard");
+        enterPicker("dashboard");
+    });
+}
+async function enterDashboard(panel, { tab, ticketId } = {}) {
+    showScreen("screen-dashboard");
+    renderSidebarBottom("dash-sidebar-bottom");
+    const session = getSession();
+    buildSidebar(currentGuildDisabledModules);
+    document.getElementById("module-root").innerHTML = loadingBlock("Loading dashboard…");
+    await refreshHeroStatus();
+    if (botInfoCache) {
+        void ensureModulesLoaded().then(() => {
+            if (modulesLoaded) {
+                buildSidebar(currentGuildDisabledModules);
+                if (currentPanelId && document.getElementById("screen-dashboard")?.classList.contains("active")) {
+                    try {
+                        switchPanel(currentPanelId, false, currentTab);
+                    }
+                    catch (e) {
+                        console.warn("[modules] post-load render failed:", e);
+                    }
+                }
+            }
+        });
+    }
+    if (!currentGuild.name && botInfoCache) {
+        const found = (botInfoCache.guilds || []).find(g => g.id === currentGuild.id);
+        if (found)
+            currentGuild = { id: found.id, name: found.name, icon: found.icon };
+    }
+    document.getElementById("dash-server-name").textContent = currentGuild.name || "Server";
+    document.getElementById("dash-server-icon").innerHTML = currentGuild.icon
+        ? `<img src="https://cdn.discordapp.com/icons/${currentGuild.id}/${currentGuild.icon}.png" alt="">`
+        : initials(currentGuild.name || "S");
+    document.getElementById("dash-crumb").innerHTML = `Servers ${icon("chevron-right", 12)} <b>${escapeHtml(currentGuild.name || "…")}</b>`;
+    wireServerSwitcher();
+    const crumbPanel = document.getElementById("dash-crumb-panel");
+    if (crumbPanel)
+        paintServerSwitcherPanel(crumbPanel).then(() => { crumbPanel.style.display = "none"; }).catch(e => { console.warn("[server-switcher] initial load failed; retrying on next open:", e); crumbPanel.style.display = "none"; });
+    const sub = document.getElementById("dash-server-sub");
+    let guildDisabledModules = [];
+    if (botInfoCache) {
+        const meta = await api(`/guilds/${currentGuild.id}/meta?userId=${session.user.id}`).catch(() => null);
+        guildDisabledModules = meta?.disabledModules || [];
+        currentGuildDisabledModules = guildDisabledModules;
+        if (sub.textContent === "—")
+            sub.textContent = "…";
+        if (meta && meta.allowed === false) {
+            buildSidebar(guildDisabledModules);
+            document.getElementById("module-root").innerHTML = `
+        <div class="empty-state" style="max-width:520px;margin:40px auto"><i class="ti ti-lock-off glyph"></i>${escapeHtml(meta.notAllowedMessage || "This server isn't authorized to use this tool.")}</div>`;
+            return;
+        }
+    }
+    else {
+        sub.textContent = "Bot Servers down";
+    }
+    buildSidebar(guildDisabledModules);
+    currentPanelId = panel;
+    currentTab = tab || null;
+    if (ticketId) {
+        document.querySelectorAll(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.panel === panel));
+        const root = document.getElementById("module-root");
+        root.innerHTML = `<button class="btn btn-ghost btn-small" id="dash-ticket-back">${icon("arrow-left")} Back</button><div id="dash-ticket-body" style="margin-top:16px">${loadingBlock("Loading ticket…")}</div>`;
+        document.getElementById("dash-ticket-back").addEventListener("click", () => { routes.go(routes.moduleUrl(currentGuild.id, panel)); switchPanel(panel, false); });
+        await paintTicketDetailBody(document.getElementById("dash-ticket-body"), currentGuild.id, ticketId);
+        return;
+    }
+    switchPanel(panel, false, tab);
+}
+function switchPanel(name, updateUrl = true, tab = null) {
+    currentPanelId = name;
+    currentTab = tab;
+    document.querySelectorAll(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.panel === name));
+    if (updateUrl)
+        routes.go(routes.moduleUrl(currentGuild.id, name, tab));
+    setModuleDisabledOverlay(currentGuildDisabledModules.includes(name));
+    const root = document.getElementById("module-root");
+    root.innerHTML = loadingBlock();
+    const mod = window.DC?.getModule(name);
+    const renderers = { status: renderStatusModule, "general-settings": renderGeneralSettings, "audit-log": renderAuditLog };
+    const renderer = mod ? (() => mod.render(root, buildContext(), tab)) : (renderers[name] || renderStatusModule);
+    try {
+        Promise.resolve(renderer()).catch(e => {
+            console.error(`[render] ${name} failed; keeping the dashboard usable:`, e);
+            root.innerHTML = `<div class="empty-state render-error"><div class="render-error-title">This section couldn't finish loading.</div><div class="field-hint">${escapeHtml(e?.message || "Temporary loading error")}</div><button class="btn btn-primary btn-small" id="render-retry">Retry</button></div>`;
+            root.querySelector("#render-retry")?.addEventListener("click", () => switchPanel(name, false, tab));
+            scheduleRouteRetry(`render failed for ${name}`);
+        });
+    }
+    catch (e) {
+        console.error(`[render] ${name} failed; keeping the dashboard usable:`, e);
+        root.innerHTML = `<div class="empty-state render-error"><div class="render-error-title">This section couldn't finish loading.</div><div class="field-hint">${escapeHtml(e?.message || "Temporary loading error")}</div><button class="btn btn-primary btn-small" id="render-retry">Retry</button></div>`;
+        root.querySelector("#render-retry")?.addEventListener("click", () => switchPanel(name, false, tab));
+    }
+}
+function switchTab(tab) {
+    currentTab = tab;
+    routes.go(routes.moduleUrl(currentGuild.id, currentPanelId, tab));
+}
+async function renderGeneralSettings(root) {
+    root.innerHTML = loadingBlock("Loading General Settings…");
+    try {
+        const d = await api(`/guilds/${currentGuild.id}/general-settings?userId=${encodeURIComponent(getSession().user.id)}`);
+        const s = d.settings || {};
+        root.innerHTML = `<div class="dash-header"><div><h1>General Settings</h1><p>Dashboard access and Audit Log visibility. Only the server owner can change these settings.</p></div></div>
+      <div class="config-section"><h3>Audit Log access</h3><p class="hint">Choose who can open the Audit Log for this server.</p><select id="audit-log-mode" class="dc-select" ${d.editable ? "" : "disabled"}><option value="owner">Owner only</option><option value="everyone">Everyone with dashboard access</option><option value="administrators">Administrators</option><option value="roles">Selected roles</option></select><div id="audit-log-roles-wrap" style="margin-top:10px;display:${s.auditLogMode === "roles" ? "block" : "none"}"><input id="audit-log-roles" class="search-input" placeholder="Role IDs, comma separated" value="${escapeHtml((s.auditLogRoles || []).join(","))}" ${d.editable ? "" : "disabled"}></div></div>
+      <div class="config-section"><h3>Leaderboards</h3><p class="hint">Only rated reviews count. Choose whether this server is shown publicly.</p><select id="leaderboard-mode" class="dc-select" ${d.editable ? "" : "disabled"}><option value="all">Show on all supported leaderboards</option><option value="ticket-reviews">Ticket Tool only</option><option value="none">Do not show this server</option></select><div class="field-hint" style="margin-top:8px">Public leaderboard cache refreshes every 30 minutes.</div></div>
+      <div class="config-section"><h3>Dashboard access</h3><p class="hint">${d.editable ? "Dashboard access controls can be managed here." : "You can view these settings, but only the server owner can change them."}</p></div>
+      <div style="margin-top:14px">${d.editable ? `<button class="btn btn-primary" id="save-general-settings">${icon("check")} Save Settings</button>` : `<div class="field-hint">Owner-only editing is enabled for this server.</div>`}</div>`;
+        const mode = document.getElementById("audit-log-mode");
+        const rolesWrap = document.getElementById("audit-log-roles-wrap");
+        const lbMode = document.getElementById("leaderboard-mode");
+        if (lbMode)
+            lbMode.value = s.leaderboardMode || "all";
+        mode.addEventListener("change", () => rolesWrap.style.display = mode.value === "roles" ? "block" : "none");
+        if (d.editable)
+            document.getElementById("save-general-settings").addEventListener("click", async () => {
+                try {
+                    await api(`/guilds/${currentGuild.id}/general-settings`, { method: "PUT", body: JSON.stringify({ userId: getSession().user.id, auditLogMode: mode.value, auditLogRoles: (document.getElementById("audit-log-roles")?.value || "").split(",").map(x => x.trim()).filter(Boolean), leaderboardMode: lbMode?.value || "all" }) });
+                    await DCModal.alert("General Settings saved.", { title: "Saved" });
+                }
+                catch (e) {
+                    await DCModal.alert(e.message, { title: "Couldn't save settings" });
+                }
+            });
+    }
+    catch (e) {
+        root.innerHTML = `<div class="empty-state">${escapeHtml(e.message)}</div>`;
+    }
+}
+async function renderAuditLog(root) {
+    root.innerHTML = loadingBlock("Loading Audit Log…");
+    try {
+        const base = `/guilds/${currentGuild.id}/audit-log?userId=${encodeURIComponent(getSession().user.id)}&limit=1000`;
+        const d = await api(base);
+        const entries = Array.isArray(d.entries) ? d.entries : [];
+        const userIds = Array.isArray(d.users) ? d.users : [];
+        const actions = Array.isArray(d.actions) ? d.actions : [];
+        const userLabel = (id) => id === getSession().user.id ? "You" : (id ? id : "Unknown user");
+        const actionLabel = (action) => String(action || "change").replace(/[_-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+        const actionIcon = (action) => {
+            const x = String(action || "").toLowerCase();
+            if (x.includes("delete") || x.includes("remove") || x.includes("kick"))
+                return icon("trash");
+            if (x.includes("create") || x.includes("add") || x.includes("invite"))
+                return icon("plus");
+            if (x.includes("channel"))
+                return icon("channel");
+            if (x.includes("role"))
+                return icon("roles");
+            if (x.includes("integration"))
+                return icon("link");
+            if (x.includes("general") || x.includes("setting") || x.includes("update"))
+                return icon("settings");
+            return icon("audit");
+        };
+        const avatarFor = (x) => x.avatarUrl || x.userAvatar || x.avatar || "";
+        const dateLabel = (iso) => { const d = new Date(iso); return Number.isNaN(d.getTime()) ? "Unknown time" : d.toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }); };
+        const dayStart = (offset) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - offset); return d; };
+        root.innerHTML = `
+      <div class="audit-page">
+        <div class="dash-header audit-header">
+          <div><h1>Audit Log</h1><p>Track server changes, dashboard actions, and administrative activity.</p></div>
+        </div>
+        <div class="audit-filters">
+          <label><span>Filter by User</span><select id="audit-user" class="dc-select"><option value="">All Users</option>${userIds.map(id => `<option value="${escapeHtml(id)}">${escapeHtml(userLabel(id))}</option>`).join("")}</select></label>
+          <label><span>Filter by Action</span><select id="audit-action" class="dc-select"><option value="">All Actions</option>${actions.map(x => `<option value="${escapeHtml(x)}">${escapeHtml(actionLabel(x))}</option>`).join("")}</select></label>
+          <label><span>Filter by Date</span><select id="audit-date" class="dc-select"><option value="">All Dates</option><option value="today">Today</option><option value="yesterday">Yesterday</option><option value="7">Last 7 Days</option><option value="30">Last 30 Days</option><option value="custom">Custom Range</option></select></label>
+          <button class="btn btn-ghost audit-refresh" id="audit-refresh" title="Refresh">${icon("refresh")}<span>Refresh</span></button>
+        </div>
+        <div class="audit-custom-date" id="audit-custom-date" hidden>
+          <label><span>From</span><input id="audit-date-from" type="date" class="search-input"></label>
+          <label><span>To</span><input id="audit-date-to" type="date" class="search-input"></label>
+        </div>
+        <div class="audit-list" id="audit-list"></div>
+      </div>`;
+        const list = root.querySelector("#audit-list");
+        function paint() {
+            let rows = entries.slice();
+            const u = root.querySelector("#audit-user").value;
+            const act = root.querySelector("#audit-action").value;
+            const date = root.querySelector("#audit-date").value;
+            if (u)
+                rows = rows.filter(x => String(x.userId || "") === u);
+            if (act)
+                rows = rows.filter(x => String(x.action || "") === act);
+            if (date && date !== "custom") {
+                const now = new Date();
+                if (date === "today") {
+                    const s = dayStart(0);
+                    const e = new Date(s);
+                    e.setDate(e.getDate() + 1);
+                    rows = rows.filter(x => new Date(x.createdAt) >= s && new Date(x.createdAt) < e);
+                }
+                else if (date === "yesterday") {
+                    const e = dayStart(0);
+                    const s = dayStart(1);
+                    rows = rows.filter(x => new Date(x.createdAt) >= s && new Date(x.createdAt) < e);
+                }
+                else {
+                    const s = dayStart(Number(date) - 1);
+                    rows = rows.filter(x => new Date(x.createdAt) >= s && new Date(x.createdAt) <= now);
+                }
+            }
+            if (date === "custom") {
+                const f = root.querySelector("#audit-date-from").value, t = root.querySelector("#audit-date-to").value;
+                if (f) {
+                    const d = new Date(`${f}T00:00:00`);
+                    rows = rows.filter(x => new Date(x.createdAt) >= d);
+                }
+                if (t) {
+                    const d = new Date(`${t}T23:59:59.999`);
+                    rows = rows.filter(x => new Date(x.createdAt) <= d);
+                }
+            }
+            list.innerHTML = rows.length ? rows.map(x => {
+                const avatar = avatarFor(x);
+                const user = userLabel(x.userId);
+                const action = actionLabel(x.action);
+                return `<button class="audit-entry" type="button" data-audit-id="${escapeHtml(x.id || "")}">
+          <span class="audit-entry-icon">${actionIcon(x.action)}</span>
+          <span class="audit-avatar">${avatar ? `<img src="${escapeHtml(avatar)}" alt="">` : icon("profile")}</span>
+          <span class="audit-entry-main"><strong>${escapeHtml(user)} <span class="audit-action-text">${escapeHtml(String(x.summary || x.message || action).replace(/_/g, " "))}</span></strong><small>${escapeHtml(dateLabel(x.createdAt))}</small></span>
+          ${x.details ? `<span class="audit-chevron">${icon("chevron-right")}</span>` : ""}
+        </button>`;
+            }).join("") : `<div class="empty-state audit-empty">No audit entries match these filters.</div>`;
+            list.querySelectorAll(".audit-entry").forEach(btn => btn.addEventListener("click", () => {
+                const item = entries.find(x => String(x.id) === btn.dataset.auditId);
+                if (!item || !item.details)
+                    return;
+                const detail = typeof item.details === "string" ? item.details : JSON.stringify(item.details, null, 2);
+                DCModal.alert(`<pre style="white-space:pre-wrap;text-align:left;max-height:50vh;overflow:auto">${escapeHtml(detail)}</pre>`, { title: actionLabel(item.action) });
+            }));
+        }
+        ["audit-user", "audit-action", "audit-date", "audit-date-from", "audit-date-to"].forEach(id => root.querySelector(`#${id}`)?.addEventListener("change", () => {
+            root.querySelector("#audit-custom-date").hidden = root.querySelector("#audit-date").value !== "custom";
+            paint();
+        }));
+        root.querySelector("#audit-refresh").addEventListener("click", () => renderAuditLog(root));
+        paint();
+    }
+    catch (e) {
+        root.innerHTML = `<div class="empty-state">${escapeHtml(e.message)}</div>`;
+    }
+}
+async function renderStatusModule(root) {
+    await refreshHeroStatus();
+    root.innerHTML = `<div class="dash-header"><div><h1>Status</h1><p>Uptime history for your bot.</p></div></div><div id="status-body">${loadingBlock()}</div>`;
+    const body = document.getElementById("status-body");
+    if (!botInfoCache) {
+        body.innerHTML = `
+      <div class="status-banner down"><i class="ti ti-alert-triangle"></i> Bot is currently offline</div>
+      <div class="empty-state"><i class="ti ti-plug-connected-x glyph"></i>Can't reach the bot right now — history will still be here once it's back online.</div>`;
+        return;
+    }
+    let history;
+    try {
+        history = await api("/status-history");
+    }
+    catch {
+        history = null;
+    }
+    if (!history) {
+        body.innerHTML = `<div class="empty-state"><i class="ti ti-alert-triangle glyph"></i>Bot is online, but its history couldn't be loaded.</div>`;
+        return;
+    }
+    const days = history.days || [];
+    body.innerHTML = `
+    <div class="status-banner ${history.online ? "up" : "down"}"><i class="ti ${history.online ? "ti-circle-check" : "ti-alert-triangle"}"></i> ${history.online ? "All Systems Operational" : "Bot Offline"}</div>
+    <div class="status-uptime-card">
+      <div class="status-uptime-header">
+        <span>Bot process</span>
+        <span class="status-pip ${history.online ? "online" : "offline"}"><span class="status-dot"></span>${history.online ? "Operational" : "Down"}</span>
+      </div>
+      <div class="status-daybar" id="status-daybar">
+        ${days.map((d, i) => `<div class="status-day status-day-${d.severity}" data-day-idx="${i}"></div>`).join("")}
+      </div>
+      <div class="status-daybar-footer">
+        <span>90 days ago</span>
+        <span>${history.uptimePercent}% uptime over 90 days</span>
+        <span>Today</span>
+      </div>
+    </div>
+    <div class="overview-grid" style="grid-template-columns:repeat(3,1fr);margin-top:18px">
+      <div class="overview-card"><div class="num">${formatUptime(history.currentUptimeSeconds)}</div><div class="lbl">Current uptime</div></div>
+      <div class="overview-card"><div class="num">${history.uptimePercent}%</div><div class="lbl">Uptime (90 days)</div></div>
+      <div class="overview-card"><div class="num">${history.incidents.length}</div><div class="lbl">Recorded incidents</div></div>
+    </div>
+    <div class="config-section" style="margin-top:18px">
+      <h3>Installed modules</h3>
+      <div class="hint">Turn modules on or off for this server. Disabling a module hides it from the sidebar without deleting its data.</div>
+      <div id="status-modules-list">${loadingBlock()}</div>
+    </div>
+    <div class="config-section" style="margin-top:18px">
+      <h3>Incident history</h3>
+      <div class="hint">Unplanned downtime the bot detected on its own restart — a clean shutdown (Ctrl+C) is never logged as an incident.</div>
+      ${history.incidents.length === 0
+        ? `<div class="empty-state">No downtime recorded.</div>`
+        : history.incidents.slice(0, 25).map(i => `
+          <div class="config-row" style="align-items:flex-start">
+            <span class="config-row-label"><span class="severity-dot severity-${i.severity}"></span>${new Date(i.startedAt).toLocaleString()}${i.note ? `<div class="field-hint" style="margin-top:2px;font-weight:400">${escapeHtml(i.note)}</div>` : ""}</span>
+            <span class="config-row-label" style="font-weight:400;color:var(--text-dim)">${formatDuration(i.durationSeconds)} downtime</span>
+          </div>`).join("")}
+    </div>`;
+    wireStatusDayHoverTooltip(days, history.incidents);
+    paintStatusModulesList();
+}
+async function paintStatusModulesList() {
+    const slot = document.getElementById("status-modules-list");
+    if (!slot)
+        return;
+    try {
+        const meta = await api(`/guilds/${currentGuild.id}/meta?userId=${getSession().user.id}`);
+        const disabled = meta.disabledModules || [];
+        const modules = (window.DC?.modules || []).filter(m => m.id !== "status");
+        if (modules.length === 0) {
+            slot.innerHTML = `<div class="empty-state">No modules loaded.</div>`;
+            return;
+        }
+        slot.innerHTML = modules.map(m => `
+      <div class="config-row">
+        <span class="config-row-label"><i class="ti ${m.icon}" style="margin-right:8px;color:var(--text-dim)"></i>${escapeHtml(m.label)}</span>
+        <span class="badge badge-${disabled.includes(m.id) ? "closed" : "open"}">${disabled.includes(m.id) ? "Off" : "On"}</span>
+      </div>`).join("");
+    }
+    catch {
+        slot.innerHTML = `<div class="empty-state">Couldn't load module list.</div>`;
+    }
+}
+function wireStatusDayHoverTooltip(days, incidents) {
+    const bar = document.getElementById("status-daybar");
+    if (!bar)
+        return;
+    let tooltip = document.getElementById("status-day-tooltip");
+    if (!tooltip) {
+        tooltip = document.createElement("div");
+        tooltip.id = "status-day-tooltip";
+        tooltip.className = "status-day-tooltip";
+        document.body.appendChild(tooltip);
+    }
+    function positionTooltip(target) {
+        const rect = target.getBoundingClientRect();
+        const tipRect = tooltip.getBoundingClientRect();
+        let left = rect.left + rect.width / 2 - tipRect.width / 2;
+        left = Math.max(8, Math.min(left, window.innerWidth - tipRect.width - 8));
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${rect.top - tipRect.height - 10}px`;
+    }
+    bar.querySelectorAll("[data-day-idx]").forEach(el => {
+        el.addEventListener("mouseenter", () => {
+            const d = days[+el.dataset.dayIdx];
+            const dayIncidents = incidents.filter(i => new Date(i.startedAt).toISOString().slice(0, 10) === d.date);
+            const dateLabel = new Date(d.date).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
+            tooltip.innerHTML = `
+        <div class="status-day-tooltip-date">${dateLabel}</div>
+        ${dayIncidents.length === 0
+                ? `<div class="status-day-tooltip-none"><i class="ti ti-check"></i> No incidents.</div>`
+                : dayIncidents.map(i => `
+            <div class="status-day-tooltip-row">
+              <span class="severity-dot severity-${i.severity}" style="margin-top:3px"></span>
+              <span>Incident:<br>${escapeHtml(i.note || `${formatDuration(i.durationSeconds)} downtime`)}</span>
+            </div>`).join("")}`;
+            tooltip.classList.add("visible");
+            positionTooltip(el);
+        });
+        el.addEventListener("mousemove", () => positionTooltip(el));
+        el.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
+    });
+}
+function formatDuration(totalSeconds) {
+    if (totalSeconds < 60)
+        return `${totalSeconds}s`;
+    const mins = Math.floor(totalSeconds / 60);
+    if (mins < 60)
+        return `${mins}m`;
+    const hours = Math.floor(mins / 60);
+    const remMins = mins % 60;
+    if (hours < 24)
+        return `${hours}h ${remMins}m`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ${hours % 24}h`;
+}
+const TOS_AGREEMENT_KEY = "tk_tos_agreed_v1";
+function initTosGate() {
+    const overlay = document.getElementById("tos-gate-overlay");
+    if (!overlay)
+        return;
+    const termsLink = document.getElementById("tos-gate-terms-link");
+    const privacyLink = document.getElementById("tos-gate-privacy-link");
+    const siteRoot = window.location.origin + CFG.BASE_PATH;
+    if (termsLink)
+        termsLink.href = `${siteRoot}policy/terms.html`;
+    if (privacyLink)
+        privacyLink.href = `${siteRoot}policy/privacy.html`;
+    if (localStorage.getItem(TOS_AGREEMENT_KEY) === "1")
+        return;
+    overlay.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    const checkbox = document.getElementById("tos-gate-checkbox");
+    const continueBtn = document.getElementById("tos-gate-continue");
+    checkbox.addEventListener("change", () => { continueBtn.disabled = !checkbox.checked; });
+    continueBtn.addEventListener("click", () => {
+        if (!checkbox.checked)
+            return;
+        try {
+            localStorage.setItem(TOS_AGREEMENT_KEY, "1");
+        }
+        catch { }
+        overlay.style.display = "none";
+        document.body.style.overflow = "";
+    });
+}
+function showMaintenanceToast(message) {
+    let el = document.getElementById("nexoria-maintenance-toast");
+    if (!el) {
+        el = document.createElement("div");
+        el.id = "nexoria-maintenance-toast";
+        el.className = "nexoria-maintenance-toast";
+        el.innerHTML = '<span class="nexoria-maintenance-toast-text"></span><button type="button" aria-label="Close">×</button>';
+        document.body.appendChild(el);
+        el.querySelector("button").addEventListener("click", () => el.remove());
+    }
+    el.querySelector(".nexoria-maintenance-toast-text").textContent = message;
+    el.style.display = "flex";
+    clearTimeout(el._hideTimer);
+    el._hideTimer = setTimeout(() => el.remove(), 15000);
+}
+async function pollMaintenanceState() {
+    try {
+        const state = await api("/maintenance", { method: "GET" });
+        const last = localStorage.getItem("nexoria_last_maintenance_cancel");
+        if (state.status === "cancelled" && state.cancelledAt && state.cancelledAt !== last) {
+            localStorage.setItem("nexoria_last_maintenance_cancel", state.cancelledAt);
+            showMaintenanceToast("The scheduled " + (state.action || "maintenance") + " has been cancelled.");
+        }
+    }
+    catch { }
+}
+document.addEventListener("DOMContentLoaded", () => {
+    replaceLegacyTablerIcons(document);
+    decorateAllButtons(document);
+    function on(id, event, handler) {
+        const el = document.getElementById(id);
+        if (el)
+            el.addEventListener(event, handler);
+        else
+            console.debug(`[wiring] Optional element #${id} is not present on this screen; skipping listener.`);
+    }
+    initTosGate();
+    const discordBtn = document.getElementById("btn-discord-support");
+    if (discordBtn && CFG.DISCORD_SUPPORT_URL) {
+        discordBtn.href = CFG.DISCORD_SUPPORT_URL;
+        discordBtn.style.display = "";
+    }
+    on("btn-login", "click", async (e) => {
+        e.preventDefault();
+        try {
+            await beginLogin();
+        }
+        catch (err) {
+            await DCModal.alert(err?.message || "Could not start Discord login.", { title: "Discord login unavailable" });
+        }
+    });
+    on("btn-invite", "click", (e) => { e.preventDefault(); window.open(inviteUrl(), "_blank"); });
+    on("btn-logout", "click", () => { clearSession(); routes.go("/", true); showScreen("screen-landing"); });
+    on("btn-back", "click", () => {
+        if (window.location.pathname.includes("/servers/")) {
+            routes.go("/dashboard");
+            enterPicker();
+        }
+        else
+            window.history.back();
+    });
+    void boot().catch(e => {
+        console.error("[boot] initial boot failed; the app will retry automatically:", e);
+        try {
+            showScreen("screen-landing");
+        }
+        catch { }
+        scheduleRouteRetry(e?.message || "initial boot failed");
+    });
+    pollMaintenanceState();
+    setInterval(pollMaintenanceState, 1000);
+    let polling = false;
+    setInterval(async () => {
+        if (polling)
+            return;
+        polling = true;
+        try {
+            const wasOnline = botInfoCache?.online;
+            await refreshHeroStatus();
+            if (!wasOnline && botInfoCache?.online) {
+                routeRetryAttempt = 0;
+                if (document.getElementById("screen-dashboard")?.classList.contains("active")) {
+                    await ensureModulesLoaded();
+                    buildSidebar(currentGuildDisabledModules);
+                }
+                if (routeRetryTimer) {
+                    clearTimeout(routeRetryTimer);
+                    routeRetryTimer = null;
+                }
+                try {
+                    await renderFromRoute();
+                }
+                catch (e) {
+                    scheduleRouteRetry(e?.message || "screen recovery failed");
+                }
+            }
+        }
+        catch (e) {
+            console.error("[status poll] refreshHeroStatus failed:", e);
+        }
+        finally {
+            polling = false;
+        }
+    }, 1000);
+});
+window.DC = window.DC || {};
+window.DC.modal = DCModal;
+window.DC.icon = icon;
+window.DC.go = (url, replace = false) => routes.go(url, replace);
+window.DC.decorateButtons = decorateAllButtons;
