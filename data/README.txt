@@ -1,0 +1,1 @@
+Public site data/config files live here. config.js contains only public browser configuration such as the GitHub Pages base path and Discord client ID. Never put bot tokens, Discord client secrets, Roblox client secrets, API keys, or config.env values here.
