@@ -122,7 +122,19 @@ html { scrollbar-width: thin; scrollbar-color: var(--panel-border) transparent; 
    crops it to the circle rather than squashing its aspect ratio; the
    gradient background above still shows through as a fallback for the
    instant before the image loads, or if it 404s. */
-.brand-glyph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.brand-glyph img {
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  flex: 0 0 auto;
+}
 .brand-glyph-lg { width: 46px; height: 46px; border-radius: 50%; }
 .landing-title { font-family: var(--font-display); font-weight: 700; font-size: 50px; line-height: 1.12; }
 .landing-title .accent { background: linear-gradient(120deg, var(--violet), var(--pink)); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -213,29 +225,7 @@ textarea.dc-var-textarea {
 .watching-top-list { display: flex; flex-direction: column; gap: 8px; }
 .watching-top-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 600; }
 .watching-top-rank { width: 18px; flex-shrink: 0; color: var(--text-dim); font-weight: 800; }
-.watching-top-icon {
-  width: 26px;
-  height: 26px;
-  min-width: 26px;
-  min-height: 26px;
-  max-width: 26px;
-  max-height: 26px;
-  aspect-ratio: 1 / 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center;
-  overflow: hidden;
-  flex: 0 0 26px;
-  padding: 0;
-  margin: 0;
-  background: var(--input-bg);
-  line-height: 1;
-  vertical-align: middle;
-}
+.watching-top-icon { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: var(--input-bg); }
 .watching-top-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .watching-top-count { color: var(--text-dim); flex-shrink: 0; }
 /* Same translucent-panel-over-backdrop recipe as .hud-panel, sized for
@@ -849,3 +839,20 @@ textarea.embed-inline-input.embed-card-desc { font-size: 13px; color: var(--text
 .ticket-viewer-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0; border-top: 1px solid var(--panel-border); }
 .ticket-viewer-row:first-child { border-top: none; }
 .ticket-viewer-time { font-size: 11.5px; color: var(--text-dim); flex-shrink: 0; }
+
+/* Discord custom emojis: keep every emoji visually aligned with surrounding text. */
+.discord-custom-emoji {
+  width: 1.35em;
+  height: 1.35em;
+  min-width: 1.35em;
+  min-height: 1.35em;
+  max-width: 1.35em;
+  max-height: 1.35em;
+  display: inline-block;
+  vertical-align: -0.22em;
+  object-fit: contain;
+  object-position: center;
+  margin: 0 .06em;
+  border: 0;
+  padding: 0;
+}
