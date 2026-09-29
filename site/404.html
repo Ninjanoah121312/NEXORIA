@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NEXORIA — Page Not Found</title>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#090a12;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}.card{text-align:center;padding:36px 44px;border:1px solid #2b2d43;border-radius:18px;background:#10121d;box-shadow:0 20px 70px #0008}.brand{font-weight:850;font-size:22px}.muted{color:#9498ab;margin-top:8px}</style>
+</head>
+<body><main class="card"><div class="brand">NEXORIA</div><div class="muted">Restoring page…</div></main>
+<script>
+(function(){
+  try {
+    const path=location.pathname||'/';
+    const parts=path.split('/').filter(Boolean);
+    const repo=/github\.io$/i.test(location.hostname)&&parts.length?`/${parts[0]}/`:"/";
+    const websiteBase=`${repo}website/`;
+    const rootBase=repo;
+    const base=path.includes('/website/')?websiteBase:rootBase;
+    sessionStorage.setItem('tk_redirect_path',path+location.search+location.hash);
+    location.replace(location.origin+base);
+  } catch(e) { location.replace('/'); }
+})();
+</script></body></html>
