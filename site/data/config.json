@@ -1,5 +1,0 @@
-{
-    "LOCAL_BOT_URL":  "https://initiated-aggregate-promising-fraction.trycloudflare.com",
-    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets."
-}
