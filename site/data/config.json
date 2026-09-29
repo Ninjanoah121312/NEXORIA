@@ -1,0 +1,20 @@
+{
+  "BASE_PATH": "/NEXORIA/site/",
+  "LOCAL_BOT_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com",
+  "DISCORD_CLIENT_ID": "1545012669113827488",
+  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
+  "OAUTH_SCOPES": [
+    "identify",
+    "guilds"
+  ],
+  "ASSET_VERSION": "20260929.3",
+  "ROBLOX_OAUTH_SCOPES": [
+    "openid",
+    "profile"
+  ],
+  "BOT_PERMISSIONS": "8",
+  "DISCORD_SUPPORT_URL": "https://discord.gg/QJSvzR9VHC",
+  "DISCORD_SERVER_LINK": "https://discord.gg/QJSvzR9VHC",
+  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/"
+}
