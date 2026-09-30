@@ -1,14 +1,14 @@
 {
-    "LOCAL_BOT_URL":  "https://freedom-legislative-revisions-inquiry.trycloudflare.com",
+    "LOCAL_BOT_URL":  "https://foo-rochester-carb-editors.trycloudflare.com",
     "LOCAL_BOT_URLS":  [
-                           "https://freedom-legislative-revisions-inquiry.trycloudflare.com"
+                           "https://foo-rochester-carb-editors.trycloudflare.com"
                        ],
     "HOSTS":  [
                   {
                       "id":  "1",
-                      "url":  "https://freedom-legislative-revisions-inquiry.trycloudflare.com",
+                      "url":  "https://foo-rochester-carb-editors.trycloudflare.com",
                       "status":  "online",
-                      "lastSeen":  "2026-09-30T12:00:29.7760736Z"
+                      "lastSeen":  "2026-09-30T12:47:05.8077995Z"
                   }
               ],
     "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/website/",
