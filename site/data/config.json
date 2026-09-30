@@ -1,14 +1,14 @@
 {
-    "LOCAL_BOT_URL":  "https://foo-rochester-carb-editors.trycloudflare.com",
+    "LOCAL_BOT_URL":  "https://compiler-organization-sometimes-produces.trycloudflare.com",
     "LOCAL_BOT_URLS":  [
-                           "https://foo-rochester-carb-editors.trycloudflare.com"
+                           "https://compiler-organization-sometimes-produces.trycloudflare.com"
                        ],
     "HOSTS":  [
                   {
                       "id":  "1",
-                      "url":  "https://foo-rochester-carb-editors.trycloudflare.com",
+                      "url":  "https://compiler-organization-sometimes-produces.trycloudflare.com",
                       "status":  "online",
-                      "lastSeen":  "2026-09-30T12:47:05.8077995Z"
+                      "lastSeen":  "2026-09-30T12:52:56.5466484Z"
                   }
               ],
     "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/website/",
