@@ -1,14 +1,14 @@
 {
-    "LOCAL_BOT_URL":  "https://wrapped-told-vertical-employed.trycloudflare.com",
+    "LOCAL_BOT_URL":  "https://freedom-legislative-revisions-inquiry.trycloudflare.com",
     "LOCAL_BOT_URLS":  [
-                           "https://wrapped-told-vertical-employed.trycloudflare.com"
+                           "https://freedom-legislative-revisions-inquiry.trycloudflare.com"
                        ],
     "HOSTS":  [
                   {
                       "id":  "1",
-                      "url":  "https://wrapped-told-vertical-employed.trycloudflare.com",
+                      "url":  "https://freedom-legislative-revisions-inquiry.trycloudflare.com",
                       "status":  "online",
-                      "lastSeen":  "2026-09-30T11:34:39.0181919Z"
+                      "lastSeen":  "2026-09-30T12:00:29.7760736Z"
                   }
               ],
     "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/website/",
@@ -18,7 +18,7 @@
     "DISCORD_SUPPORT_URL":  "https://discord.gg/QJSvzR9VHC",
     "DISCORD_SERVER_LINK":  "https://discord.gg/QJSvzR9VHC",
     "BOT_PERMISSIONS":  "8",
-    "ASSET_VERSION":  "20260929.5",
+    "ASSET_VERSION":  "20260930.2",
     "BASE_PATH":  "/NEXORIA/website/",
     "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/website/site/invite.html",
     "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/website/"
