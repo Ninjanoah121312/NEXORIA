@@ -1,14 +1,14 @@
 {
-    "LOCAL_BOT_URL":  "https://april-travels-respect-again.trycloudflare.com",
+    "LOCAL_BOT_URL":  "https://vintage-weddings-dry-husband.trycloudflare.com",
     "LOCAL_BOT_URLS":  [
-                           "https://april-travels-respect-again.trycloudflare.com"
+                           "https://vintage-weddings-dry-husband.trycloudflare.com"
                        ],
     "HOSTS":  [
                   {
                       "id":  "1",
-                      "url":  "https://april-travels-respect-again.trycloudflare.com",
+                      "url":  "https://vintage-weddings-dry-husband.trycloudflare.com",
                       "status":  "online",
-                      "lastSeen":  "2026-09-30T13:51:46.2726660Z"
+                      "lastSeen":  "2026-09-30T13:57:39.2190938Z"
                   }
               ],
     "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
