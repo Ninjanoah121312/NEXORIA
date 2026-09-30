@@ -1,14 +1,14 @@
 {
-    "LOCAL_BOT_URL":  "https://compiler-organization-sometimes-produces.trycloudflare.com",
+    "LOCAL_BOT_URL":  "https://milwaukee-office-addresses-covered.trycloudflare.com",
     "LOCAL_BOT_URLS":  [
-                           "https://compiler-organization-sometimes-produces.trycloudflare.com"
+                           "https://milwaukee-office-addresses-covered.trycloudflare.com"
                        ],
     "HOSTS":  [
                   {
                       "id":  "1",
-                      "url":  "https://compiler-organization-sometimes-produces.trycloudflare.com",
+                      "url":  "https://milwaukee-office-addresses-covered.trycloudflare.com",
                       "status":  "online",
-                      "lastSeen":  "2026-09-30T12:52:56.5466484Z"
+                      "lastSeen":  "2026-09-30T12:58:02.3697824Z"
                   }
               ],
     "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/website/",
