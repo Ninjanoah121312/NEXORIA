@@ -1,14 +1,14 @@
 {
-    "LOCAL_BOT_URL":  "https://works-graphs-statewide-permits.trycloudflare.com",
+    "LOCAL_BOT_URL":  "https://est-respondents-lambda-revenues.trycloudflare.com",
     "LOCAL_BOT_URLS":  [
-                           "https://works-graphs-statewide-permits.trycloudflare.com"
+                           "https://est-respondents-lambda-revenues.trycloudflare.com"
                        ],
     "HOSTS":  [
                   {
                       "id":  "1",
-                      "url":  "https://works-graphs-statewide-permits.trycloudflare.com",
+                      "url":  "https://est-respondents-lambda-revenues.trycloudflare.com",
                       "status":  "online",
-                      "lastSeen":  "2026-09-30T14:32:23.0546673Z"
+                      "lastSeen":  "2026-09-30T15:01:46.1588760Z"
                   }
               ],
     "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
