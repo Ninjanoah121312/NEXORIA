@@ -1,0 +1,15 @@
+NEXORIA GitHub Pages publishing layout
+
+Copy the contents of this website folder into the ROOT of the Ninjanoah121312/NEXORIA repository.
+
+Root (ONLY):
+  index.html
+  404.html
+  site/
+
+Everything else belongs inside site/.
+
+The public site URL is:
+  https://ninjanoah121312.github.io/NEXORIA/
+
+The client-side router keeps clean URLs such as /dashboard, /leaderboards, /docs, /servers/... and /terms or /privacy, and restores them through the root 404.html when GitHub Pages serves a deep-link refresh.
