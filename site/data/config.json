@@ -1,12 +1,12 @@
 {
-    "LOCAL_BOT_URL":  "https://african-saver-prisoners-seven.trycloudflare.com",
+    "LOCAL_BOT_URL":  "https://occurring-relying-cheese-lambda.trycloudflare.com",
     "LOCAL_BOT_URLS":  [
-                           "https://african-saver-prisoners-seven.trycloudflare.com"
+                           "https://occurring-relying-cheese-lambda.trycloudflare.com"
                        ],
     "HOSTS":  [
                   {
                       "id":  "1",
-                      "url":  "https://african-saver-prisoners-seven.trycloudflare.com"
+                      "url":  "https://occurring-relying-cheese-lambda.trycloudflare.com"
                   }
               ],
     "NEXORIA_HOST_ID":  "1",
@@ -17,8 +17,8 @@
     "DISCORD_SUPPORT_URL":  "https://discord.gg/QJSvzR9VHC",
     "DISCORD_SERVER_LINK":  "https://discord.gg/QJSvzR9VHC",
     "BOT_PERMISSIONS":  "8",
-    "ASSET_VERSION":  "20261001.18",
+    "ASSET_VERSION":  "20261002.07",
     "BASE_PATH":  "/NEXORIA/",
-    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/site/invite.html",
+    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
     "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/"
 }
