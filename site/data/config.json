@@ -1,12 +1,17 @@
 {
-    "LOCAL_BOT_URL":  "https://sie-nano-san-ips.trycloudflare.com",
+    "LOCAL_BOT_URL":  "https://conditional-beaches-indicated-royalty.trycloudflare.com",
     "LOCAL_BOT_URLS":  [
-                           "https://sie-nano-san-ips.trycloudflare.com"
+                           "https://sie-nano-san-ips.trycloudflare.com",
+                           "https://conditional-beaches-indicated-royalty.trycloudflare.com"
                        ],
     "HOSTS":  [
                   {
                       "id":  "1",
                       "url":  "https://sie-nano-san-ips.trycloudflare.com"
+                  },
+                  {
+                      "id":  "1",
+                      "url":  "https://conditional-beaches-indicated-royalty.trycloudflare.com"
                   }
               ],
     "NEXORIA_HOST_ID":  "1",
