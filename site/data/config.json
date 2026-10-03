@@ -1,12 +1,17 @@
 {
-    "LOCAL_BOT_URL":  "https://sie-nano-san-ips.trycloudflare.com",
+    "LOCAL_BOT_URL":  "https://configuration-bookmark-controls-owned.trycloudflare.com",
     "LOCAL_BOT_URLS":  [
-                           "https://sie-nano-san-ips.trycloudflare.com"
+                           "https://sie-nano-san-ips.trycloudflare.com",
+                           "https://configuration-bookmark-controls-owned.trycloudflare.com"
                        ],
     "HOSTS":  [
                   {
                       "id":  "1",
                       "url":  "https://sie-nano-san-ips.trycloudflare.com"
+                  },
+                  {
+                      "id":  "1",
+                      "url":  "https://configuration-bookmark-controls-owned.trycloudflare.com"
                   }
               ],
     "NEXORIA_HOST_ID":  "1",
