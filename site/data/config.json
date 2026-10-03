@@ -1,8 +1,9 @@
 {
-    "LOCAL_BOT_URL":  "https://superior-ash-bra-webpage.trycloudflare.com",
+    "LOCAL_BOT_URL":  "https://libraries-none-aids-womens.trycloudflare.com",
     "LOCAL_BOT_URLS":  [
                            "https://sie-nano-san-ips.trycloudflare.com",
-                           "https://superior-ash-bra-webpage.trycloudflare.com"
+                           "https://superior-ash-bra-webpage.trycloudflare.com",
+                           "https://libraries-none-aids-womens.trycloudflare.com"
                        ],
     "HOSTS":  [
                   {
@@ -12,6 +13,10 @@
                   {
                       "id":  "1",
                       "url":  "https://superior-ash-bra-webpage.trycloudflare.com"
+                  },
+                  {
+                      "id":  "1",
+                      "url":  "https://libraries-none-aids-womens.trycloudflare.com"
                   }
               ],
     "NEXORIA_HOST_ID":  "1",
