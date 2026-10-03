@@ -1,16 +1,12 @@
 {
-    "LOCAL_BOT_URL":  "https://nano-also-pittsburgh-techrepublic.trycloudflare.com",
+    "LOCAL_BOT_URL":  "https://being-positive-tire-surveillance.trycloudflare.com",
     "LOCAL_BOT_URLS":  [
-                           "https://sie-nano-san-ips.trycloudflare.com",
                            "https://roots-athens-dresses-relaxation.trycloudflare.com",
                            "https://brick-counter-oldest-often.trycloudflare.com",
-                           "https://nano-also-pittsburgh-techrepublic.trycloudflare.com"
+                           "https://nano-also-pittsburgh-techrepublic.trycloudflare.com",
+                           "https://being-positive-tire-surveillance.trycloudflare.com"
                        ],
     "HOSTS":  [
-                  {
-                      "id":  "1",
-                      "url":  "https://sie-nano-san-ips.trycloudflare.com"
-                  },
                   {
                       "id":  "1",
                       "url":  "https://roots-athens-dresses-relaxation.trycloudflare.com"
@@ -22,9 +18,13 @@
                   {
                       "id":  "1",
                       "url":  "https://nano-also-pittsburgh-techrepublic.trycloudflare.com"
+                  },
+                  {
+                      "id":  "2",
+                      "url":  "https://being-positive-tire-surveillance.trycloudflare.com"
                   }
               ],
-    "NEXORIA_HOST_ID":  "1",
+    "NEXORIA_HOST_ID":  "2",
     "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
     "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
     "DISCORD_CLIENT_ID":  "1545012669113827488",
