@@ -1,41 +1,38 @@
 {
-  "LOCAL_BOT_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com",
-  "LOCAL_BOT_URLS": [
-    "https://packaging-treasures-going-wyoming.trycloudflare.com"
-  ],
-  "HOSTS": [
-    {
-      "id": "1",
-      "url": "https://packaging-treasures-going-wyoming.trycloudflare.com",
-      "instanceId": "1:55048:1791049833907:7scr6yd7",
-      "lastSeenAt": "2026-10-03T17:50:43.984Z",
-      "priority": 999999,
-      "online": false
-    }
-  ],
-  "NEXORIA_HOST_ID": "2",
-  "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
-  "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
-  "DISCORD_CLIENT_ID": "1545012669113827488",
-  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
-  "DISCORD_SUPPORT_URL": "https://discord.gg/QJSvzR9VHC",
-  "DISCORD_SERVER_LINK": "https://discord.gg/QJSvzR9VHC",
-  "BOT_PERMISSIONS": "8",
-  "ASSET_VERSION": "20261002.16",
-  "BASE_PATH": "/NEXORIA/",
-  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite.html",
-  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
-  "ROBLOX_CLIENT_ID": "3562926819934711864",
-  "RUNTIME_REFRESH": {
-    "statusSeconds": 1,
-    "leaderboardSeconds": 1800,
-    "serversSeconds": 30,
-    "dashboardSeconds": 30
-  },
-  "ROBLOX_OAUTH_SCOPES": [
-    "openid",
-    "profile"
-  ],
-  "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com"
+    "LOCAL_BOT_URL":  "https://greene-simulations-landscape-decent.trycloudflare.com",
+    "LOCAL_BOT_URLS":  [
+                           "https://greene-simulations-landscape-decent.trycloudflare.com"
+                       ],
+    "HOSTS":  [
+                  {
+                      "id":  "1",
+                      "url":  "https://greene-simulations-landscape-decent.trycloudflare.com",
+                      "instanceId":  ""
+                  }
+              ],
+    "NEXORIA_HOST_ID":  "1",
+    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+    "DISCORD_CLIENT_ID":  "1545012669113827488",
+    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "DISCORD_SUPPORT_URL":  "https://discord.gg/QJSvzR9VHC",
+    "DISCORD_SERVER_LINK":  "https://discord.gg/QJSvzR9VHC",
+    "BOT_PERMISSIONS":  "8",
+    "ASSET_VERSION":  "20261002.16",
+    "BASE_PATH":  "/NEXORIA/",
+    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "ROBLOX_CLIENT_ID":  "3562926819934711864",
+    "RUNTIME_REFRESH":  {
+                            "statusSeconds":  1,
+                            "leaderboardSeconds":  1800,
+                            "serversSeconds":  30,
+                            "dashboardSeconds":  30
+                        },
+    "ROBLOX_OAUTH_SCOPES":  [
+                                "openid",
+                                "profile"
+                            ],
+    "PRIMARY_HOST_ID":  "1",
+    "PRIMARY_HOST_URL":  "https://greene-simulations-landscape-decent.trycloudflare.com"
 }
