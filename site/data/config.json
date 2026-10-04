@@ -1,5 +1,5 @@
 {
-  "LOCAL_BOT_URL": "https://basketball-hay-digest-sector.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com",
   "LOCAL_BOT_URLS": [
     "https://packaging-treasures-going-wyoming.trycloudflare.com"
   ],
@@ -7,11 +7,11 @@
     {
       "id": "1",
       "url": "https://packaging-treasures-going-wyoming.trycloudflare.com",
-      "instanceId": "1:22452:1791151172395:xudssvq7",
+      "instanceId": "1:63688:1791151341074:i2setagw",
       "online": true,
-      "heartbeatAt": "2026-10-04T21:59:42.709Z",
-      "lastSeenAt": "2026-10-04T21:59:42.741Z",
-      "dataUpdatedAt": "2026-10-04T21:59:42.561Z",
+      "heartbeatAt": "2026-10-04T22:02:21.465Z",
+      "lastSeenAt": "2026-10-04T22:02:21.509Z",
+      "dataUpdatedAt": "2026-10-04T22:02:21.234Z",
       "priority": 999999
     }
   ],
