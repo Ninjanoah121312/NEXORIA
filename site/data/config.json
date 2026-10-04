@@ -1,12 +1,18 @@
 {
-  "LOCAL_BOT_URL": "https://sie-nano-san-ips.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com",
   "LOCAL_BOT_URLS": [
-    "https://sie-nano-san-ips.trycloudflare.com"
+    "https://packaging-treasures-going-wyoming.trycloudflare.com"
   ],
   "HOSTS": [
     {
       "id": "1",
-      "url": "https://sie-nano-san-ips.trycloudflare.com"
+      "url": "https://packaging-treasures-going-wyoming.trycloudflare.com",
+      "instanceId": "1:57012:1791151408892:wa88g5o6",
+      "online": true,
+      "heartbeatAt": "2026-10-04T22:03:29.367Z",
+      "lastSeenAt": "2026-10-04T22:03:29.404Z",
+      "dataUpdatedAt": "2026-10-04T22:03:29.019Z",
+      "priority": 999999
     }
   ],
   "NEXORIA_HOST_ID": "1",
@@ -31,5 +37,7 @@
   "ROBLOX_OAUTH_SCOPES": [
     "openid",
     "profile"
-  ]
+  ],
+  "PRIMARY_HOST_ID": "1",
+  "PRIMARY_HOST_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com"
 }
