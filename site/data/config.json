@@ -1,22 +1,22 @@
 {
   "LOCAL_BOT_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com",
   "LOCAL_BOT_URLS": [
-    "https://drawn-shareholders-functions-streams.trycloudflare.com"
+    "https://sie-nano-san-ips.trycloudflare.com"
   ],
   "HOSTS": [
     {
       "id": "1",
-      "url": "https://drawn-shareholders-functions-streams.trycloudflare.com",
-      "instanceId": "1:62208:1791152410445:erdaif62",
+      "url": "https://sie-nano-san-ips.trycloudflare.com",
+      "instanceId": "1:35388:1791152707740:yyu2j79j",
       "online": true,
-      "heartbeatAt": "2026-10-04T22:24:30.636Z",
-      "lastSeenAt": "2026-10-04T22:24:31.023Z",
-      "dataUpdatedAt": "2026-10-04T22:24:20.817Z",
+      "heartbeatAt": "2026-10-04T22:25:08.205Z",
+      "lastSeenAt": "2026-10-04T22:25:08.231Z",
+      "dataUpdatedAt": "2026-10-04T22:25:07.939Z",
       "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://drawn-shareholders-functions-streams.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://sie-nano-san-ips.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
