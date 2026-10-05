@@ -1,43 +1,38 @@
 {
-  "LOCAL_BOT_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com",
-  "LOCAL_BOT_URLS": [
-    "https://packaging-treasures-going-wyoming.trycloudflare.com"
-  ],
-  "HOSTS": [
-    {
-      "id": "1",
-      "url": "https://packaging-treasures-going-wyoming.trycloudflare.com",
-      "instanceId": "1:49072:1791240557897:ogdy63ag",
-      "online": true,
-      "heartbeatAt": "2026-10-05T22:49:18.264Z",
-      "lastSeenAt": "2026-10-05T22:49:18.305Z",
-      "dataUpdatedAt": "2026-10-05T22:49:18.062Z",
-      "priority": 999999
-    }
-  ],
-  "NEXORIA_HOST_ID": "1",
-  "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
-  "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
-  "DISCORD_CLIENT_ID": "1545012669113827488",
-  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
-  "DISCORD_SUPPORT_URL": "https://discord.gg/qrMmetkGvk",
-  "DISCORD_SERVER_LINK": "https://discord.gg/qrMmetkGvk",
-  "BOT_PERMISSIONS": "8",
-  "ASSET_VERSION": "20261006.02",
-  "BASE_PATH": "/NEXORIA/",
-  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite",
-  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
-  "ROBLOX_CLIENT_ID": "3562926819934711864",
-  "RUNTIME_REFRESH": {
-    "statusSeconds": 1,
-    "leaderboardSeconds": 1800,
-    "serversSeconds": 30,
-    "dashboardSeconds": 30
-  },
-  "ROBLOX_OAUTH_SCOPES": [
-    "openid",
-    "profile"
-  ],
-  "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com"
+    "LOCAL_BOT_URL":  "https://skilled-theatre-needs-acc.trycloudflare.com",
+    "LOCAL_BOT_URLS":  [
+                           "https://skilled-theatre-needs-acc.trycloudflare.com"
+                       ],
+    "HOSTS":  [
+                  {
+                      "id":  "1",
+                      "url":  "https://skilled-theatre-needs-acc.trycloudflare.com",
+                      "instanceId":  ""
+                  }
+              ],
+    "PRIMARY_HOST_ID":  "1",
+    "PRIMARY_HOST_URL":  "https://skilled-theatre-needs-acc.trycloudflare.com",
+    "NEXORIA_HOST_ID":  "1",
+    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+    "DISCORD_CLIENT_ID":  "1545012669113827488",
+    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "DISCORD_SUPPORT_URL":  "https://discord.gg/qrMmetkGvk",
+    "DISCORD_SERVER_LINK":  "https://discord.gg/qrMmetkGvk",
+    "BOT_PERMISSIONS":  "8",
+    "ASSET_VERSION":  "20261006.01",
+    "BASE_PATH":  "/NEXORIA/",
+    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite",
+    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "ROBLOX_CLIENT_ID":  "3562926819934711864",
+    "RUNTIME_REFRESH":  {
+                            "statusSeconds":  1,
+                            "leaderboardSeconds":  1800,
+                            "serversSeconds":  30,
+                            "dashboardSeconds":  30
+                        },
+    "ROBLOX_OAUTH_SCOPES":  [
+                                "openid",
+                                "profile"
+                            ]
 }
