@@ -9,14 +9,14 @@
       "url": "https://livecam-builder-intervals-holds.trycloudflare.com",
       "instanceId": "1:69536:1791152982306:tl1vc94i",
       "online": true,
-      "heartbeatAt": "2026-10-05T00:38:38.721Z",
-      "lastSeenAt": "2026-10-05T00:38:39.032Z",
-      "dataUpdatedAt": "2026-10-05T00:38:28.918Z",
+      "heartbeatAt": "2026-10-05T00:38:58.743Z",
+      "lastSeenAt": "2026-10-05T00:38:59.101Z",
+      "dataUpdatedAt": "2026-10-05T00:38:48.904Z",
       "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://leading-hazardous-binary-dollar.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://livecam-builder-intervals-holds.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
