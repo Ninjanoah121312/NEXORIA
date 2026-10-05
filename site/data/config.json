@@ -1,7 +1,15 @@
 {
-  "LOCAL_BOT_URL": "",
-  "LOCAL_BOT_URLS": [],
-  "HOSTS": [],
+  "LOCAL_BOT_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com",
+  "LOCAL_BOT_URLS": [
+    "https://packaging-treasures-going-wyoming.trycloudflare.com"
+  ],
+  "HOSTS": [
+    {
+      "id": "1",
+      "url": "https://packaging-treasures-going-wyoming.trycloudflare.com",
+      "instanceId": "1:56108:1791240841264:6z6k7trr"
+    }
+  ],
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
@@ -25,6 +33,6 @@
     "openid",
     "profile"
   ],
-  "PRIMARY_HOST_ID": "",
-  "PRIMARY_HOST_URL": ""
+  "PRIMARY_HOST_ID": "1",
+  "PRIMARY_HOST_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com"
 }
