@@ -1145,6 +1145,15 @@ function guildIconUrl(guild, size = 128) {
     // tolerant of browser/CDN caching than the raw CDN host.
     return `https://media.discordapp.net/icons/${id}/${hash}.${format}?size=${px}&quality=lossless`;
 }
+function guildInitials(name) {
+  const text = String(name || "Server").trim();
+  if (!text) return "SV";
+  const parts = text.split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  const compact = text.replace(/[^A-Za-z0-9]/g, "");
+  return (compact.slice(0, 2) || "SV").toUpperCase();
+}
+
 function guildIconHtml(guild, className = "server-icon", size = 128) {
     const safeClass = escapeHtml(className);
     const fallbackClass = safeClass.endsWith("-image") ? safeClass.slice(0, -6) : safeClass;
