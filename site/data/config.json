@@ -1,43 +1,44 @@
 {
-  "LOCAL_BOT_URL": "https://harbor-ate-dedicated-scholarships.trycloudflare.com",
-  "LOCAL_BOT_URLS": [
-    "https://harbor-ate-dedicated-scholarships.trycloudflare.com"
-  ],
-  "HOSTS": [
-    {
-      "id": "1",
-      "url": "https://harbor-ate-dedicated-scholarships.trycloudflare.com",
-      "instanceId": "1:57844:1791239256140:fk3f4huv",
-      "online": true,
-      "heartbeatAt": "2026-10-05T22:27:36.140Z",
-      "lastSeenAt": "2026-10-05T22:27:37.162Z",
-      "dataUpdatedAt": "2026-10-05T22:27:36.767Z",
-      "priority": 999999
-    }
-  ],
-  "NEXORIA_HOST_ID": "1",
-  "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
-  "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
-  "DISCORD_CLIENT_ID": "1545012669113827488",
-  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
-  "DISCORD_SUPPORT_URL": "https://discord.gg/qrMmetkGvk",
-  "DISCORD_SERVER_LINK": "https://discord.gg/qrMmetkGvk",
-  "BOT_PERMISSIONS": "8",
-  "ASSET_VERSION": "20261005.06",
-  "BASE_PATH": "/NEXORIA/",
-  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite",
-  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
-  "ROBLOX_CLIENT_ID": "3562926819934711864",
-  "RUNTIME_REFRESH": {
-    "statusSeconds": 1,
-    "leaderboardSeconds": 1800,
-    "serversSeconds": 30,
-    "dashboardSeconds": 30
-  },
-  "ROBLOX_OAUTH_SCOPES": [
-    "openid",
-    "profile"
-  ],
-  "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://harbor-ate-dedicated-scholarships.trycloudflare.com"
+    "LOCAL_BOT_URL":  "https://harbor-ate-dedicated-scholarships.trycloudflare.com",
+    "LOCAL_BOT_URLS":  [
+                           "https://harbor-ate-dedicated-scholarships.trycloudflare.com",
+                           "https://cuisine-asthma-seller-studying.trycloudflare.com"
+                       ],
+    "HOSTS":  [
+                  {
+                      "id":  "1",
+                      "url":  "https://harbor-ate-dedicated-scholarships.trycloudflare.com",
+                      "instanceId":  "1:57844:1791239256140:fk3f4huv"
+                  },
+                  {
+                      "id":  "1",
+                      "url":  "https://cuisine-asthma-seller-studying.trycloudflare.com",
+                      "instanceId":  ""
+                  }
+              ],
+    "PRIMARY_HOST_ID":  "1",
+    "PRIMARY_HOST_URL":  "https://harbor-ate-dedicated-scholarships.trycloudflare.com",
+    "NEXORIA_HOST_ID":  "1",
+    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+    "DISCORD_CLIENT_ID":  "1545012669113827488",
+    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "DISCORD_SUPPORT_URL":  "https://discord.gg/qrMmetkGvk",
+    "DISCORD_SERVER_LINK":  "https://discord.gg/qrMmetkGvk",
+    "BOT_PERMISSIONS":  "8",
+    "ASSET_VERSION":  "20261003.21",
+    "BASE_PATH":  "/NEXORIA/",
+    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "ROBLOX_CLIENT_ID":  "3562926819934711864",
+    "RUNTIME_REFRESH":  {
+                            "statusSeconds":  1,
+                            "leaderboardSeconds":  1800,
+                            "serversSeconds":  30,
+                            "dashboardSeconds":  30
+                        },
+    "ROBLOX_OAUTH_SCOPES":  [
+                                "openid",
+                                "profile"
+                            ]
 }
