@@ -9,14 +9,14 @@
       "url": "https://suspected-cruises-duo-homepage.trycloudflare.com",
       "instanceId": "1:12800:1791239632294:oo2s038q",
       "online": true,
-      "heartbeatAt": "2026-10-05T22:37:52.471Z",
-      "lastSeenAt": "2026-10-05T22:37:52.804Z",
-      "dataUpdatedAt": "2026-10-05T22:37:52.631Z",
+      "heartbeatAt": "2026-10-05T22:38:02.484Z",
+      "lastSeenAt": "2026-10-05T22:38:02.843Z",
+      "dataUpdatedAt": "2026-10-05T22:38:02.626Z",
       "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://cuisine-asthma-seller-studying.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://suspected-cruises-duo-homepage.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
