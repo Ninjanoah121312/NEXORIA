@@ -9,14 +9,14 @@
       "url": "https://affair-coastal-paper-fairy.trycloudflare.com",
       "instanceId": "1:66988:1791237048136:5djkgcsi",
       "online": true,
-      "heartbeatAt": "2026-10-05T21:52:48.244Z",
-      "lastSeenAt": "2026-10-05T21:52:48.599Z",
-      "dataUpdatedAt": "2026-10-05T21:52:38.501Z",
+      "heartbeatAt": "2026-10-05T21:53:08.254Z",
+      "lastSeenAt": "2026-10-05T21:53:08.719Z",
+      "dataUpdatedAt": "2026-10-05T21:53:08.504Z",
       "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://livecam-builder-intervals-holds.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://affair-coastal-paper-fairy.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
