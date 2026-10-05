@@ -1,5 +1,5 @@
 {
-  "LOCAL_BOT_URL": "https://livecam-builder-intervals-holds.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://leading-hazardous-binary-dollar.trycloudflare.com",
   "LOCAL_BOT_URLS": [
     "https://livecam-builder-intervals-holds.trycloudflare.com"
   ],
@@ -9,9 +9,9 @@
       "url": "https://livecam-builder-intervals-holds.trycloudflare.com",
       "instanceId": "1:69536:1791152982306:tl1vc94i",
       "online": true,
-      "heartbeatAt": "2026-10-05T17:10:46.649Z",
-      "lastSeenAt": "2026-10-05T17:10:46.963Z",
-      "dataUpdatedAt": "2026-10-05T17:10:36.825Z",
+      "heartbeatAt": "2026-10-05T17:10:56.650Z",
+      "lastSeenAt": "2026-10-05T17:10:57.036Z",
+      "dataUpdatedAt": "2026-10-05T17:10:56.814Z",
       "priority": 999999
     }
   ],
