@@ -1,40 +1,45 @@
 {
-    "LOCAL_BOT_URL":  "https://repairs-chief-pockets-always.trycloudflare.com",
-    "LOCAL_BOT_URLS":  [
-                           "https://repairs-chief-pockets-always.trycloudflare.com"
-                       ],
-    "HOSTS":  [
-                  {
-                      "id":  "1",
-                      "url":  "https://repairs-chief-pockets-always.trycloudflare.com",
-                      "instanceId":  ""
-                  }
-              ],
-    "PRIMARY_HOST_ID":  "1",
-    "PRIMARY_HOST_URL":  "https://repairs-chief-pockets-always.trycloudflare.com",
-    "NEXORIA_HOST_ID":  "1",
-    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
-    "DISCORD_CLIENT_ID":  "1545012669113827488",
-    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "DISCORD_SUPPORT_URL":  "https://discord.gg/qrMmetkGvk",
-    "DISCORD_SERVER_LINK":  "https://discord.gg/qrMmetkGvk",
-    "BOT_PERMISSIONS":  "8",
-    "ASSET_VERSION":  "20261003.21",
-    "BASE_PATH":  "/NEXORIA/",
-    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
-    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "ROBLOX_CLIENT_ID":  "3562926819934711864",
-    "RUNTIME_REFRESH":  {
-                            "statusSeconds":  1,
-                            "leaderboardSeconds":  1800,
-                            "serversSeconds":  30,
-                            "dashboardSeconds":  30
-                        },
-    "ROBLOX_OAUTH_SCOPES":  [
-                                "openid",
-                                "profile",
-                                "user.inventory-item:read",
-                                "game-pass:read"
-                            ]
+  "LOCAL_BOT_URL": "https://repairs-chief-pockets-always.trycloudflare.com",
+  "LOCAL_BOT_URLS": [
+    "https://repairs-chief-pockets-always.trycloudflare.com"
+  ],
+  "HOSTS": [
+    {
+      "id": "1",
+      "url": "https://repairs-chief-pockets-always.trycloudflare.com",
+      "instanceId": "1:38204:1791333671133:wyfopvq7",
+      "online": true,
+      "heartbeatAt": "2026-10-07T00:41:21.133Z",
+      "lastSeenAt": "2026-10-07T00:41:21.406Z",
+      "dataUpdatedAt": "2026-10-07T00:41:15.592Z",
+      "priority": 999999
+    }
+  ],
+  "PRIMARY_HOST_ID": "1",
+  "PRIMARY_HOST_URL": "https://repairs-chief-pockets-always.trycloudflare.com",
+  "NEXORIA_HOST_ID": "1",
+  "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
+  "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+  "DISCORD_CLIENT_ID": "1545012669113827488",
+  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
+  "DISCORD_SUPPORT_URL": "https://discord.gg/qrMmetkGvk",
+  "DISCORD_SERVER_LINK": "https://discord.gg/qrMmetkGvk",
+  "BOT_PERMISSIONS": "8",
+  "ASSET_VERSION": "20261003.21",
+  "BASE_PATH": "/NEXORIA/",
+  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
+  "ROBLOX_CLIENT_ID": "3562926819934711864",
+  "RUNTIME_REFRESH": {
+    "statusSeconds": 1,
+    "leaderboardSeconds": 1800,
+    "serversSeconds": 30,
+    "dashboardSeconds": 30
+  },
+  "ROBLOX_OAUTH_SCOPES": [
+    "openid",
+    "profile",
+    "user.inventory-item:read",
+    "game-pass:read"
+  ]
 }
