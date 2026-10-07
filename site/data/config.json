@@ -9,14 +9,14 @@
       "url": "https://davis-owners-stud-icq.trycloudflare.com",
       "instanceId": "1:24252:1791333907291:gjn1ulg7",
       "online": true,
-      "heartbeatAt": "2026-10-07T01:42:09.828Z",
-      "lastSeenAt": "2026-10-07T01:42:10.143Z",
-      "dataUpdatedAt": "2026-10-07T01:42:00.077Z",
+      "heartbeatAt": "2026-10-07T01:42:29.847Z",
+      "lastSeenAt": "2026-10-07T01:42:30.164Z",
+      "dataUpdatedAt": "2026-10-07T01:42:20.046Z",
       "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://repairs-chief-pockets-always.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://davis-owners-stud-icq.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
