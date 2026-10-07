@@ -1,17 +1,18 @@
 {
   "LOCAL_BOT_URL": "https://arch-spell-resume-seed.trycloudflare.com",
   "LOCAL_BOT_URLS": [
-    "https://responsibilities-actress-desperate-dpi.trycloudflare.com",
     "https://arch-spell-resume-seed.trycloudflare.com"
   ],
   "HOSTS": [
     {
       "id": "1",
-      "url": "https://responsibilities-actress-desperate-dpi.trycloudflare.com"
-    },
-    {
-      "id": "1",
-      "url": "https://arch-spell-resume-seed.trycloudflare.com"
+      "url": "https://arch-spell-resume-seed.trycloudflare.com",
+      "instanceId": "1:22372:1791411177326:kvkjmaof",
+      "online": true,
+      "heartbeatAt": "2026-10-07T22:13:17.356Z",
+      "lastSeenAt": "2026-10-07T22:13:17.705Z",
+      "dataUpdatedAt": "2026-10-07T22:13:17.543Z",
+      "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
