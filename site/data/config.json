@@ -1,5 +1,5 @@
 {
-  "LOCAL_BOT_URL": "https://repairs-chief-pockets-always.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://davis-owners-stud-icq.trycloudflare.com",
   "LOCAL_BOT_URLS": [
     "https://davis-owners-stud-icq.trycloudflare.com"
   ],
@@ -16,7 +16,7 @@
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://repairs-chief-pockets-always.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://davis-owners-stud-icq.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
