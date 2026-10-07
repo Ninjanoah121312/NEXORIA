@@ -1,0 +1,31 @@
+{
+    "LOCAL_BOT_URL":  "https://loving-scuba-managed-frontier.trycloudflare.com",
+    "LOCAL_BOT_URLS":  [
+                           "https://responsibilities-actress-desperate-dpi.trycloudflare.com",
+                           "https://loving-scuba-managed-frontier.trycloudflare.com"
+                       ],
+    "HOSTS":  [
+                  {
+                      "id":  "1",
+                      "url":  "https://responsibilities-actress-desperate-dpi.trycloudflare.com"
+                  },
+                  {
+                      "id":  "1",
+                      "url":  "https://loving-scuba-managed-frontier.trycloudflare.com"
+                  }
+              ],
+    "PRIMARY_HOST_ID":  "1",
+    "PRIMARY_HOST_URL":  "https://responsibilities-actress-desperate-dpi.trycloudflare.com",
+    "NEXORIA_HOST_ID":  "1",
+    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+    "DISCORD_CLIENT_ID":  "1545012669113827488",
+    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "DISCORD_SUPPORT_URL":  "https://discord.gg/qrMmetkGvk",
+    "DISCORD_SERVER_LINK":  "https://discord.gg/qrMmetkGvk",
+    "BOT_PERMISSIONS":  "8",
+    "ASSET_VERSION":  "20261003.21",
+    "BASE_PATH":  "/NEXORIA/",
+    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/"
+}
