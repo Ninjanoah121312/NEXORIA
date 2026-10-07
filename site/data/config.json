@@ -1,5 +1,5 @@
 {
-  "LOCAL_BOT_URL": "https://arch-spell-resume-seed.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://peninsula-language-surrounded-seo.trycloudflare.com",
   "LOCAL_BOT_URLS": [
     "https://peninsula-language-surrounded-seo.trycloudflare.com"
   ],
@@ -7,11 +7,11 @@
     {
       "id": "1",
       "url": "https://peninsula-language-surrounded-seo.trycloudflare.com",
-      "instanceId": "1:45608:1791411451897:q31b34ut",
+      "instanceId": "1:75920:1791412251603:zolex6o0",
       "online": true,
-      "heartbeatAt": "2026-10-07T22:19:11.961Z",
-      "lastSeenAt": "2026-10-07T22:19:12.207Z",
-      "dataUpdatedAt": "2026-10-07T22:19:12.141Z",
+      "heartbeatAt": "2026-10-07T22:30:53.045Z",
+      "lastSeenAt": "2026-10-07T22:30:53.097Z",
+      "dataUpdatedAt": "2026-10-07T22:30:52.377Z",
       "priority": 999999
     }
   ],
