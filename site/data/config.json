@@ -1,45 +1,31 @@
 {
-  "LOCAL_BOT_URL": "https://skirt-vitamin-hold-wherever.trycloudflare.com",
-  "LOCAL_BOT_URLS": [
-    "https://bedford-maximize-contrary-capture.trycloudflare.com"
-  ],
-  "HOSTS": [
-    {
-      "id": "1",
-      "url": "https://bedford-maximize-contrary-capture.trycloudflare.com",
-      "instanceId": "1:5564:1791472008061:4ooo7c9x",
-      "online": true,
-      "heartbeatAt": "2026-10-08T15:11:28.239Z",
-      "lastSeenAt": "2026-10-08T15:11:28.642Z",
-      "dataUpdatedAt": "2026-10-08T15:11:18.544Z",
-      "priority": 999999
-    }
-  ],
-  "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://skirt-vitamin-hold-wherever.trycloudflare.com",
-  "NEXORIA_HOST_ID": "1",
-  "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
-  "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
-  "DISCORD_CLIENT_ID": "1545012669113827488",
-  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
-  "DISCORD_SUPPORT_URL": "https://discord.gg/qrMmetkGvk",
-  "DISCORD_SERVER_LINK": "https://discord.gg/qrMmetkGvk",
-  "BOT_PERMISSIONS": "8",
-  "ASSET_VERSION": "20261008.01",
-  "BASE_PATH": "/NEXORIA/",
-  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite",
-  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
-  "OAUTH_SCOPES": [
-    "identify",
-    "guilds"
-  ],
-  "ROBLOX_OAUTH_SCOPES": [
-    "openid",
-    "profile",
-    "game-pass:read",
-    "group-forum:read",
-    "group:read",
-    "user.inventory-item:read"
-  ],
-  "ROBLOX_CLIENT_ID": "3562926819934711864"
+    "LOCAL_BOT_URL":  "https://skirt-vitamin-hold-wherever.trycloudflare.com",
+    "LOCAL_BOT_URLS":  [
+                           "https://bedford-maximize-contrary-capture.trycloudflare.com",
+                           "https://estate-boolean-geology-fixtures.trycloudflare.com"
+                       ],
+    "HOSTS":  [
+                  {
+                      "id":  "1",
+                      "url":  "https://bedford-maximize-contrary-capture.trycloudflare.com"
+                  },
+                  {
+                      "id":  "1",
+                      "url":  "https://estate-boolean-geology-fixtures.trycloudflare.com"
+                  }
+              ],
+    "PRIMARY_HOST_ID":  "1",
+    "PRIMARY_HOST_URL":  "https://skirt-vitamin-hold-wherever.trycloudflare.com",
+    "NEXORIA_HOST_ID":  "1",
+    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+    "DISCORD_CLIENT_ID":  "1545012669113827488",
+    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "DISCORD_SUPPORT_URL":  "https://discord.gg/qrMmetkGvk",
+    "DISCORD_SERVER_LINK":  "https://discord.gg/qrMmetkGvk",
+    "BOT_PERMISSIONS":  "8",
+    "ASSET_VERSION":  "20261003.21",
+    "BASE_PATH":  "/NEXORIA/",
+    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/"
 }
