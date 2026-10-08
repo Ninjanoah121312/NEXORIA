@@ -9,14 +9,14 @@
       "url": "https://estate-boolean-geology-fixtures.trycloudflare.com",
       "instanceId": "1:28364:1791480786659:mf3n0zft",
       "online": true,
-      "heartbeatAt": "2026-10-08T17:40:26.986Z",
-      "lastSeenAt": "2026-10-08T17:40:27.528Z",
+      "heartbeatAt": "2026-10-08T17:40:36.986Z",
+      "lastSeenAt": "2026-10-08T17:40:37.274Z",
       "dataUpdatedAt": "2026-10-08T17:40:27.287Z",
       "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://skirt-vitamin-hold-wherever.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://estate-boolean-geology-fixtures.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
