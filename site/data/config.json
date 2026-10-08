@@ -9,14 +9,14 @@
       "url": "https://draws-travelers-tons-ski.trycloudflare.com",
       "instanceId": "1:18156:1791482368458:9uwjyz7f",
       "online": true,
-      "heartbeatAt": "2026-10-08T18:00:48.524Z",
-      "lastSeenAt": "2026-10-08T18:00:49.027Z",
-      "dataUpdatedAt": "2026-10-08T18:00:38.735Z",
+      "heartbeatAt": "2026-10-08T18:00:58.526Z",
+      "lastSeenAt": "2026-10-08T18:00:58.994Z",
+      "dataUpdatedAt": "2026-10-08T18:00:58.749Z",
       "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://recognized-appearing-consulting-absence.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://draws-travelers-tons-ski.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
