@@ -1,17 +1,17 @@
 {
   "LOCAL_BOT_URL": "https://estate-boolean-geology-fixtures.trycloudflare.com",
   "LOCAL_BOT_URLS": [
-    "https://bedford-maximize-contrary-capture.trycloudflare.com"
+    "https://estate-boolean-geology-fixtures.trycloudflare.com"
   ],
   "HOSTS": [
     {
       "id": "1",
-      "url": "https://bedford-maximize-contrary-capture.trycloudflare.com",
+      "url": "https://estate-boolean-geology-fixtures.trycloudflare.com",
       "instanceId": "1:48068:1791482128862:63w98o58",
       "online": true,
-      "heartbeatAt": "2026-10-08T17:55:28.862Z",
-      "lastSeenAt": "2026-10-08T17:55:29.511Z",
-      "dataUpdatedAt": "2026-10-08T17:55:28.949Z",
+      "heartbeatAt": "2026-10-08T17:55:38.871Z",
+      "lastSeenAt": "2026-10-08T17:55:47.633Z",
+      "dataUpdatedAt": "2026-10-08T17:55:31.809Z",
       "priority": 999999
     }
   ],
