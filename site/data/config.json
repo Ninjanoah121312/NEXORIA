@@ -1,22 +1,22 @@
 {
   "LOCAL_BOT_URL": "https://recognized-appearing-consulting-absence.trycloudflare.com",
   "LOCAL_BOT_URLS": [
-    "https://recognized-appearing-consulting-absence.trycloudflare.com"
+    "https://draws-travelers-tons-ski.trycloudflare.com"
   ],
   "HOSTS": [
     {
       "id": "1",
-      "url": "https://recognized-appearing-consulting-absence.trycloudflare.com",
+      "url": "https://draws-travelers-tons-ski.trycloudflare.com",
       "instanceId": "1:18156:1791482368458:9uwjyz7f",
       "online": true,
-      "heartbeatAt": "2026-10-08T18:00:18.499Z",
-      "lastSeenAt": "2026-10-08T18:00:20.368Z",
-      "dataUpdatedAt": "2026-10-08T18:00:18.717Z",
+      "heartbeatAt": "2026-10-08T18:00:38.515Z",
+      "lastSeenAt": "2026-10-08T18:00:39.158Z",
+      "dataUpdatedAt": "2026-10-08T18:00:38.735Z",
       "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://recognized-appearing-consulting-absence.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://draws-travelers-tons-ski.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
