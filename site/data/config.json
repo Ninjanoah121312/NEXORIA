@@ -1,17 +1,18 @@
 {
-  "LOCAL_BOT_URL": "https://renewal-attributes-proceeds-chris.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://skirt-vitamin-hold-wherever.trycloudflare.com",
   "LOCAL_BOT_URLS": [
-    "https://bedford-maximize-contrary-capture.trycloudflare.com",
     "https://renewal-attributes-proceeds-chris.trycloudflare.com"
   ],
   "HOSTS": [
     {
       "id": "1",
-      "url": "https://bedford-maximize-contrary-capture.trycloudflare.com"
-    },
-    {
-      "id": "1",
-      "url": "https://renewal-attributes-proceeds-chris.trycloudflare.com"
+      "url": "https://renewal-attributes-proceeds-chris.trycloudflare.com",
+      "instanceId": "1:17112:1791480321767:rb130jzj",
+      "online": true,
+      "heartbeatAt": "2026-10-08T17:25:51.799Z",
+      "lastSeenAt": "2026-10-08T17:25:52.382Z",
+      "dataUpdatedAt": "2026-10-08T17:25:52.042Z",
+      "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
