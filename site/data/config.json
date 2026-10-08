@@ -1,31 +1,32 @@
 {
-    "LOCAL_BOT_URL":  "https://estate-boolean-geology-fixtures.trycloudflare.com",
-    "LOCAL_BOT_URLS":  [
-                           "https://bedford-maximize-contrary-capture.trycloudflare.com",
-                           "https://recognized-appearing-consulting-absence.trycloudflare.com"
-                       ],
-    "HOSTS":  [
-                  {
-                      "id":  "1",
-                      "url":  "https://bedford-maximize-contrary-capture.trycloudflare.com"
-                  },
-                  {
-                      "id":  "1",
-                      "url":  "https://recognized-appearing-consulting-absence.trycloudflare.com"
-                  }
-              ],
-    "PRIMARY_HOST_ID":  "1",
-    "PRIMARY_HOST_URL":  "https://estate-boolean-geology-fixtures.trycloudflare.com",
-    "NEXORIA_HOST_ID":  "1",
-    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
-    "DISCORD_CLIENT_ID":  "1545012669113827488",
-    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "DISCORD_SUPPORT_URL":  "https://discord.gg/qrMmetkGvk",
-    "DISCORD_SERVER_LINK":  "https://discord.gg/qrMmetkGvk",
-    "BOT_PERMISSIONS":  "8",
-    "ASSET_VERSION":  "20261003.21",
-    "BASE_PATH":  "/NEXORIA/",
-    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
-    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/"
+  "LOCAL_BOT_URL": "https://estate-boolean-geology-fixtures.trycloudflare.com",
+  "LOCAL_BOT_URLS": [
+    "https://estate-boolean-geology-fixtures.trycloudflare.com"
+  ],
+  "HOSTS": [
+    {
+      "id": "1",
+      "url": "https://estate-boolean-geology-fixtures.trycloudflare.com",
+      "instanceId": "1:48068:1791482128862:63w98o58",
+      "online": true,
+      "heartbeatAt": "2026-10-08T17:55:58.890Z",
+      "lastSeenAt": "2026-10-08T17:56:09.486Z",
+      "dataUpdatedAt": "2026-10-08T17:55:58.950Z",
+      "priority": 999999
+    }
+  ],
+  "PRIMARY_HOST_ID": "1",
+  "PRIMARY_HOST_URL": "https://estate-boolean-geology-fixtures.trycloudflare.com",
+  "NEXORIA_HOST_ID": "1",
+  "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
+  "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+  "DISCORD_CLIENT_ID": "1545012669113827488",
+  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
+  "DISCORD_SUPPORT_URL": "https://discord.gg/qrMmetkGvk",
+  "DISCORD_SERVER_LINK": "https://discord.gg/qrMmetkGvk",
+  "BOT_PERMISSIONS": "8",
+  "ASSET_VERSION": "20261003.21",
+  "BASE_PATH": "/NEXORIA/",
+  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/"
 }
