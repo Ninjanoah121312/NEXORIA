@@ -9,14 +9,14 @@
       "url": "https://aims-qualification-verbal-defined.trycloudflare.com",
       "instanceId": "1:24932:1791476660265:8u87beny",
       "online": true,
-      "heartbeatAt": "2026-10-08T16:33:03.944Z",
-      "lastSeenAt": "2026-10-08T16:33:04.424Z",
-      "dataUpdatedAt": "2026-10-08T16:32:54.161Z",
+      "heartbeatAt": "2026-10-08T16:33:33.978Z",
+      "lastSeenAt": "2026-10-08T16:33:34.528Z",
+      "dataUpdatedAt": "2026-10-08T16:33:34.221Z",
       "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://skirt-vitamin-hold-wherever.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://aims-qualification-verbal-defined.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
