@@ -9,14 +9,14 @@
       "url": "https://gossip-emperor-silly-peoples.trycloudflare.com",
       "instanceId": "1:18396:1791559738450:5ylzbpcg",
       "online": true,
-      "heartbeatAt": "2026-10-09T20:30:54.452Z",
-      "lastSeenAt": "2026-10-09T20:30:54.976Z",
-      "dataUpdatedAt": "2026-10-09T20:30:54.700Z",
+      "heartbeatAt": "2026-10-09T20:31:14.466Z",
+      "lastSeenAt": "2026-10-09T20:31:14.963Z",
+      "dataUpdatedAt": "2026-10-09T20:31:04.709Z",
       "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://obj-meets-mem-requested.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://gossip-emperor-silly-peoples.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
