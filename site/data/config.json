@@ -1,5 +1,5 @@
 {
-  "LOCAL_BOT_URL": "https://beauty-translation-associate-builds.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://beans-artists-weblog-vision.trycloudflare.com",
   "LOCAL_BOT_URLS": [
     "https://beans-artists-weblog-vision.trycloudflare.com"
   ],
@@ -7,11 +7,11 @@
     {
       "id": "1",
       "url": "https://beans-artists-weblog-vision.trycloudflare.com",
-      "instanceId": "1:11756:1791543457297:abo1peuw",
+      "instanceId": "1:25712:1791546185934:bpjggiwh",
       "online": true,
-      "heartbeatAt": "2026-10-09T11:35:56.120Z",
-      "lastSeenAt": "2026-10-09T11:35:56.846Z",
-      "dataUpdatedAt": "2026-10-09T11:35:56.440Z",
+      "heartbeatAt": "2026-10-09T11:43:05.934Z",
+      "lastSeenAt": "2026-10-09T11:43:07.159Z",
+      "dataUpdatedAt": "2026-10-09T11:43:06.521Z",
       "priority": 999999
     }
   ],
