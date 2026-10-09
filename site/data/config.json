@@ -1,5 +1,5 @@
 {
-  "LOCAL_BOT_URL": "https://skirt-vitamin-hold-wherever.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://department-enquiry-put-inbox.trycloudflare.com",
   "LOCAL_BOT_URLS": [
     "https://department-enquiry-put-inbox.trycloudflare.com"
   ],
@@ -7,11 +7,11 @@
     {
       "id": "1",
       "url": "https://department-enquiry-put-inbox.trycloudflare.com",
-      "instanceId": "1:43792:1791483098780:bhuz9rc6",
+      "instanceId": "1:6968:1791526566819:5o2lcxxo",
       "online": true,
-      "heartbeatAt": "2026-10-08T21:51:56.423Z",
-      "lastSeenAt": "2026-10-08T21:51:56.901Z",
-      "dataUpdatedAt": "2026-10-08T21:51:46.746Z",
+      "heartbeatAt": "2026-10-09T06:16:09.084Z",
+      "lastSeenAt": "2026-10-09T06:16:09.150Z",
+      "dataUpdatedAt": "2026-10-09T06:16:08.245Z",
       "priority": 999999
     }
   ],
