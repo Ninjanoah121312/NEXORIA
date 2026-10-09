@@ -1,5 +1,5 @@
 {
-  "LOCAL_BOT_URL": "https://collins-bedroom-charleston-authorities.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://department-enquiry-put-inbox.trycloudflare.com",
   "LOCAL_BOT_URLS": [
     "https://collins-bedroom-charleston-authorities.trycloudflare.com"
   ],
@@ -9,9 +9,9 @@
       "url": "https://collins-bedroom-charleston-authorities.trycloudflare.com",
       "instanceId": "1:10540:1791531281502:nlc1h2wq",
       "online": true,
-      "heartbeatAt": "2026-10-09T07:41:21.787Z",
-      "lastSeenAt": "2026-10-09T07:41:23.098Z",
-      "dataUpdatedAt": "2026-10-09T07:41:22.622Z",
+      "heartbeatAt": "2026-10-09T07:41:51.805Z",
+      "lastSeenAt": "2026-10-09T07:41:52.602Z",
+      "dataUpdatedAt": "2026-10-09T07:41:52.144Z",
       "priority": 999999
     }
   ],
