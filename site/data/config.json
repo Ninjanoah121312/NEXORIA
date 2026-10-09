@@ -9,14 +9,14 @@
       "url": "https://beauty-translation-associate-builds.trycloudflare.com",
       "instanceId": "1:16104:1791532275559:z0lvb2vb",
       "online": true,
-      "heartbeatAt": "2026-10-09T08:02:26.058Z",
-      "lastSeenAt": "2026-10-09T08:02:27.787Z",
-      "dataUpdatedAt": "2026-10-09T08:02:26.802Z",
+      "heartbeatAt": "2026-10-09T08:02:46.075Z",
+      "lastSeenAt": "2026-10-09T08:02:47.444Z",
+      "dataUpdatedAt": "2026-10-09T08:02:46.646Z",
       "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://collins-bedroom-charleston-authorities.trycloudflare.com",
+  "PRIMARY_HOST_URL": "https://beauty-translation-associate-builds.trycloudflare.com",
   "NEXORIA_HOST_ID": "1",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
