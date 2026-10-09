@@ -1,5 +1,5 @@
 {
-  "LOCAL_BOT_URL": "https://gossip-emperor-silly-peoples.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://obj-meets-mem-requested.trycloudflare.com",
   "LOCAL_BOT_URLS": [
     "https://gossip-emperor-silly-peoples.trycloudflare.com"
   ],
@@ -9,9 +9,9 @@
       "url": "https://gossip-emperor-silly-peoples.trycloudflare.com",
       "instanceId": "1:18396:1791559738450:5ylzbpcg",
       "online": true,
-      "heartbeatAt": "2026-10-09T20:26:14.274Z",
-      "lastSeenAt": "2026-10-09T20:26:14.801Z",
-      "dataUpdatedAt": "2026-10-09T20:26:04.551Z",
+      "heartbeatAt": "2026-10-09T20:26:34.283Z",
+      "lastSeenAt": "2026-10-09T20:26:34.720Z",
+      "dataUpdatedAt": "2026-10-09T20:26:34.496Z",
       "priority": 999999
     }
   ],
