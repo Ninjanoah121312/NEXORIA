@@ -1,26 +1,32 @@
 {
-    "LOCAL_BOT_URL":  "https://gossip-emperor-silly-peoples.trycloudflare.com",
-    "LOCAL_BOT_URLS":  [
-                           "https://gossip-emperor-silly-peoples.trycloudflare.com"
-                       ],
-    "HOSTS":  [
-                  {
-                      "id":  "1",
-                      "url":  "https://gossip-emperor-silly-peoples.trycloudflare.com"
-                  }
-              ],
-    "PRIMARY_HOST_ID":  "1",
-    "PRIMARY_HOST_URL":  "https://gossip-emperor-silly-peoples.trycloudflare.com",
-    "NEXORIA_HOST_ID":  "1",
-    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
-    "DISCORD_CLIENT_ID":  "1545012669113827488",
-    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "DISCORD_SUPPORT_URL":  "https://discord.gg/qrMmetkGvk",
-    "DISCORD_SERVER_LINK":  "https://discord.gg/qrMmetkGvk",
-    "BOT_PERMISSIONS":  "8",
-    "ASSET_VERSION":  "20261003.21",
-    "BASE_PATH":  "/NEXORIA/",
-    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
-    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/"
+  "LOCAL_BOT_URL": "https://obj-meets-mem-requested.trycloudflare.com",
+  "LOCAL_BOT_URLS": [
+    "https://gossip-emperor-silly-peoples.trycloudflare.com"
+  ],
+  "HOSTS": [
+    {
+      "id": "1",
+      "url": "https://gossip-emperor-silly-peoples.trycloudflare.com",
+      "instanceId": "1:18396:1791559738450:5ylzbpcg",
+      "online": true,
+      "heartbeatAt": "2026-10-09T15:29:18.464Z",
+      "lastSeenAt": "2026-10-09T15:29:19.030Z",
+      "dataUpdatedAt": "2026-10-09T15:29:18.764Z",
+      "priority": 999999
+    }
+  ],
+  "PRIMARY_HOST_ID": "1",
+  "PRIMARY_HOST_URL": "https://gossip-emperor-silly-peoples.trycloudflare.com",
+  "NEXORIA_HOST_ID": "1",
+  "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
+  "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+  "DISCORD_CLIENT_ID": "1545012669113827488",
+  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
+  "DISCORD_SUPPORT_URL": "https://discord.gg/qrMmetkGvk",
+  "DISCORD_SERVER_LINK": "https://discord.gg/qrMmetkGvk",
+  "BOT_PERMISSIONS": "8",
+  "ASSET_VERSION": "20261003.21",
+  "BASE_PATH": "/NEXORIA/",
+  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/"
 }
