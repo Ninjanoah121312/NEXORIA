@@ -1,31 +1,32 @@
 {
-    "LOCAL_BOT_URL":  "https://beans-artists-weblog-vision.trycloudflare.com",
-    "LOCAL_BOT_URLS":  [
-                           "https://beauty-translation-associate-builds.trycloudflare.com",
-                           "https://beans-artists-weblog-vision.trycloudflare.com"
-                       ],
-    "HOSTS":  [
-                  {
-                      "id":  "1",
-                      "url":  "https://beauty-translation-associate-builds.trycloudflare.com"
-                  },
-                  {
-                      "id":  "1",
-                      "url":  "https://beans-artists-weblog-vision.trycloudflare.com"
-                  }
-              ],
-    "PRIMARY_HOST_ID":  "1",
-    "PRIMARY_HOST_URL":  "https://beans-artists-weblog-vision.trycloudflare.com",
-    "NEXORIA_HOST_ID":  "1",
-    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
-    "DISCORD_CLIENT_ID":  "1545012669113827488",
-    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "DISCORD_SUPPORT_URL":  "https://discord.gg/qrMmetkGvk",
-    "DISCORD_SERVER_LINK":  "https://discord.gg/qrMmetkGvk",
-    "BOT_PERMISSIONS":  "8",
-    "ASSET_VERSION":  "20261003.21",
-    "BASE_PATH":  "/NEXORIA/",
-    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
-    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/"
+  "LOCAL_BOT_URL": "https://beauty-translation-associate-builds.trycloudflare.com",
+  "LOCAL_BOT_URLS": [
+    "https://beans-artists-weblog-vision.trycloudflare.com"
+  ],
+  "HOSTS": [
+    {
+      "id": "1",
+      "url": "https://beans-artists-weblog-vision.trycloudflare.com",
+      "instanceId": "1:11756:1791543457297:abo1peuw",
+      "online": true,
+      "heartbeatAt": "2026-10-09T10:57:57.308Z",
+      "lastSeenAt": "2026-10-09T10:57:58.087Z",
+      "dataUpdatedAt": "2026-10-09T10:57:57.678Z",
+      "priority": 999999
+    }
+  ],
+  "PRIMARY_HOST_ID": "1",
+  "PRIMARY_HOST_URL": "https://beans-artists-weblog-vision.trycloudflare.com",
+  "NEXORIA_HOST_ID": "1",
+  "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
+  "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+  "DISCORD_CLIENT_ID": "1545012669113827488",
+  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
+  "DISCORD_SUPPORT_URL": "https://discord.gg/qrMmetkGvk",
+  "DISCORD_SERVER_LINK": "https://discord.gg/qrMmetkGvk",
+  "BOT_PERMISSIONS": "8",
+  "ASSET_VERSION": "20261003.21",
+  "BASE_PATH": "/NEXORIA/",
+  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/"
 }
