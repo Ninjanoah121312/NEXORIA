@@ -1,17 +1,18 @@
 {
-  "LOCAL_BOT_URL": "https://collins-bedroom-charleston-authorities.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://department-enquiry-put-inbox.trycloudflare.com",
   "LOCAL_BOT_URLS": [
-    "https://sorts-shelter-artwork-costume.trycloudflare.com",
     "https://collins-bedroom-charleston-authorities.trycloudflare.com"
   ],
   "HOSTS": [
     {
       "id": "1",
-      "url": "https://sorts-shelter-artwork-costume.trycloudflare.com"
-    },
-    {
-      "id": "1",
-      "url": "https://collins-bedroom-charleston-authorities.trycloudflare.com"
+      "url": "https://collins-bedroom-charleston-authorities.trycloudflare.com",
+      "instanceId": "1:10540:1791531281502:nlc1h2wq",
+      "online": true,
+      "heartbeatAt": "2026-10-09T07:35:01.524Z",
+      "lastSeenAt": "2026-10-09T07:35:02.540Z",
+      "dataUpdatedAt": "2026-10-09T07:34:56.830Z",
+      "priority": 999999
     }
   ],
   "PRIMARY_HOST_ID": "1",
