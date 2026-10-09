@@ -1,32 +1,31 @@
 {
-  "LOCAL_BOT_URL": "https://department-enquiry-put-inbox.trycloudflare.com",
-  "LOCAL_BOT_URLS": [
-    "https://department-enquiry-put-inbox.trycloudflare.com"
-  ],
-  "HOSTS": [
-    {
-      "id": "1",
-      "url": "https://department-enquiry-put-inbox.trycloudflare.com",
-      "instanceId": "1:8160:1791531100066:8oeex4kp",
-      "online": true,
-      "heartbeatAt": "2026-10-09T07:31:51.235Z",
-      "lastSeenAt": "2026-10-09T07:31:51.296Z",
-      "dataUpdatedAt": "2026-10-09T07:31:50.504Z",
-      "priority": 999999
-    }
-  ],
-  "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://department-enquiry-put-inbox.trycloudflare.com",
-  "NEXORIA_HOST_ID": "1",
-  "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
-  "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
-  "DISCORD_CLIENT_ID": "1545012669113827488",
-  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
-  "DISCORD_SUPPORT_URL": "https://discord.gg/qrMmetkGvk",
-  "DISCORD_SERVER_LINK": "https://discord.gg/qrMmetkGvk",
-  "BOT_PERMISSIONS": "8",
-  "ASSET_VERSION": "20261003.21",
-  "BASE_PATH": "/NEXORIA/",
-  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite.html",
-  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/"
+    "LOCAL_BOT_URL":  "https://sorts-shelter-artwork-costume.trycloudflare.com",
+    "LOCAL_BOT_URLS":  [
+                           "https://department-enquiry-put-inbox.trycloudflare.com",
+                           "https://sorts-shelter-artwork-costume.trycloudflare.com"
+                       ],
+    "HOSTS":  [
+                  {
+                      "id":  "1",
+                      "url":  "https://department-enquiry-put-inbox.trycloudflare.com"
+                  },
+                  {
+                      "id":  "1",
+                      "url":  "https://sorts-shelter-artwork-costume.trycloudflare.com"
+                  }
+              ],
+    "PRIMARY_HOST_ID":  "1",
+    "PRIMARY_HOST_URL":  "https://sorts-shelter-artwork-costume.trycloudflare.com",
+    "NEXORIA_HOST_ID":  "1",
+    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+    "DISCORD_CLIENT_ID":  "1545012669113827488",
+    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "DISCORD_SUPPORT_URL":  "https://discord.gg/qrMmetkGvk",
+    "DISCORD_SERVER_LINK":  "https://discord.gg/qrMmetkGvk",
+    "BOT_PERMISSIONS":  "8",
+    "ASSET_VERSION":  "20261003.21",
+    "BASE_PATH":  "/NEXORIA/",
+    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/"
 }
