@@ -1,5 +1,5 @@
 {
-  "LOCAL_BOT_URL": "https://get-courts-parenting-alfred.trycloudflare.com",
+  "LOCAL_BOT_URL": "https://packaging-treasures-going-wyoming.trycloudflare.com",
   "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
   "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
   "DISCORD_CLIENT_ID": "1545012669113827488",
@@ -11,5 +11,5 @@
   "BASE_PATH": "/NEXORIA/",
   "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite.html",
   "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
-  "UPDATED_AT": "2026-10-22T22:30:36.916Z"
+  "UPDATED_AT": "2026-10-22T22:30:40.362Z"
 }
