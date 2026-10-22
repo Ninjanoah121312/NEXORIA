@@ -1,0 +1,31 @@
+NEXORIA GitHub Pages publishing layout
+
+The local website/ folder is the packaging root. Keep only the two GitHub Pages entry files at this level:
+  website/index.html
+  website/404.html
+
+All other published website files live under:
+  website/site/
+    code/
+    data/
+    images/
+    languages/
+    admin/
+    dashboard/
+    docs/
+    leaderboards/
+    my-tickets/
+    premium/
+    profile/
+    policy/
+    invite.html
+
+Published GitHub Pages layout:
+  /NEXORIA/index.html
+  /NEXORIA/404.html
+  /NEXORIA/site/...
+
+Public URL:
+  https://ninjanoah121312.github.io/NEXORIA/
+
+The client-side router keeps clean URLs such as /dashboard, /leaderboards, /docs, /servers/... and /terms or /privacy. GitHub Pages uses the root 404.html to load the root index.html for those SPA routes.
