@@ -1,32 +1,31 @@
 {
-  "LOCAL_BOT_URL": "https://periodically-ryan-missions-cards.trycloudflare.com",
-  "LOCAL_BOT_URLS": [
-    "https://periodically-ryan-missions-cards.trycloudflare.com"
-  ],
-  "HOSTS": [
-    {
-      "id": "1",
-      "url": "https://periodically-ryan-missions-cards.trycloudflare.com",
-      "instanceId": "1:22324:1792279794941:2v7izfaw",
-      "online": true,
-      "heartbeatAt": "2026-10-18T12:43:15.832Z",
-      "lastSeenAt": "2026-10-18T12:43:16.508Z",
-      "dataUpdatedAt": "2026-10-18T12:43:16.100Z",
-      "priority": 999999
-    }
-  ],
-  "PRIMARY_HOST_ID": "1",
-  "PRIMARY_HOST_URL": "https://periodically-ryan-missions-cards.trycloudflare.com",
-  "NEXORIA_HOST_ID": "1",
-  "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
-  "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
-  "DISCORD_CLIENT_ID": "1545012669113827488",
-  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
-  "DISCORD_SUPPORT_URL": "https://discord.gg/qrMmetkGvk",
-  "DISCORD_SERVER_LINK": "https://discord.gg/qrMmetkGvk",
-  "BOT_PERMISSIONS": "8",
-  "ASSET_VERSION": "20261003.21",
-  "BASE_PATH": "/NEXORIA/",
-  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite.html",
-  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/"
+    "LOCAL_BOT_URL":  "https://get-courts-parenting-alfred.trycloudflare.com",
+    "LOCAL_BOT_URLS":  [
+                           "https://periodically-ryan-missions-cards.trycloudflare.com",
+                           "https://get-courts-parenting-alfred.trycloudflare.com"
+                       ],
+    "HOSTS":  [
+                  {
+                      "id":  "1",
+                      "url":  "https://periodically-ryan-missions-cards.trycloudflare.com"
+                  },
+                  {
+                      "id":  "1",
+                      "url":  "https://get-courts-parenting-alfred.trycloudflare.com"
+                  }
+              ],
+    "PRIMARY_HOST_ID":  "1",
+    "PRIMARY_HOST_URL":  "https://get-courts-parenting-alfred.trycloudflare.com",
+    "NEXORIA_HOST_ID":  "1",
+    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+    "DISCORD_CLIENT_ID":  "1545012669113827488",
+    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
+    "DISCORD_SUPPORT_URL":  "https://discord.gg/qrMmetkGvk",
+    "DISCORD_SERVER_LINK":  "https://discord.gg/qrMmetkGvk",
+    "BOT_PERMISSIONS":  "8",
+    "ASSET_VERSION":  "20261003.21",
+    "BASE_PATH":  "/NEXORIA/",
+    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/"
 }
