@@ -1,0 +1,10 @@
+{
+  "default": "en",
+  "languages": [
+    {
+      "id": "en",
+      "name": "English",
+      "file": "en.json"
+    }
+  ]
+}
