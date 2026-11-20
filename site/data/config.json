@@ -1,15 +1,15 @@
 {
-    "LOCAL_BOT_URL":  "https://transcripts-leo-italia-executed.trycloudflare.com",
-    "UPDATED_AT":  "2026-11-20T16:29:52.6665288Z",
-    "PUBLIC_SITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "NOTE":  "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
-    "DISCORD_CLIENT_ID":  "1545012669113827488",
-    "REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/",
-    "DISCORD_SUPPORT_URL":  "https://discord.gg/qrMmetkGvk",
-    "DISCORD_SERVER_LINK":  "https://discord.gg/qrMmetkGvk",
-    "BOT_PERMISSIONS":  "8",
-    "ASSET_VERSION":  "20261003.21",
-    "BASE_PATH":  "/NEXORIA/",
-    "DISCORD_BOT_INVITE_URL":  "https://ninjanoah121312.github.io/NEXORIA/invite.html",
-    "ROBLOX_REDIRECT_URI":  "https://ninjanoah121312.github.io/NEXORIA/"
+  "LOCAL_BOT_URL": "https://transcripts-leo-italia-executed.trycloudflare.com",
+  "UPDATED_AT": "2026-11-20T16:30:01.218Z",
+  "PUBLIC_SITE_URL": "https://ninjanoah121312.github.io/NEXORIA/",
+  "NOTE": "The bot URL is configured by the private runtime/public bridge and must not contain secrets.",
+  "DISCORD_CLIENT_ID": "1545012669113827488",
+  "REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/",
+  "DISCORD_SUPPORT_URL": "https://discord.gg/qrMmetkGvk",
+  "DISCORD_SERVER_LINK": "https://discord.gg/qrMmetkGvk",
+  "BOT_PERMISSIONS": "8",
+  "ASSET_VERSION": "20261003.21",
+  "BASE_PATH": "/NEXORIA/",
+  "DISCORD_BOT_INVITE_URL": "https://ninjanoah121312.github.io/NEXORIA/invite.html",
+  "ROBLOX_REDIRECT_URI": "https://ninjanoah121312.github.io/NEXORIA/"
 }
