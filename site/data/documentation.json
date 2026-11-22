@@ -1,0 +1,4519 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-11-20T14:45:17.433Z",
+  "general": [
+    {
+      "id": "getting-started",
+      "title": "Getting started",
+      "category": "Website",
+      "summary": "Sign in, add NEXORIA to a server and open its dashboard.",
+      "sections": [
+        {
+          "heading": "Sign in",
+          "body": "Use Log in with Discord on the home page. NEXORIA only reads your basic profile and the list of servers you are in so it can show the servers you can manage."
+        },
+        {
+          "heading": "Add the bot",
+          "body": "Open Servers, choose a server you own or administrate and press Begin setup (or Invite Bot). After the bot joins, the server shows Manage Server."
+        },
+        {
+          "heading": "Open the dashboard",
+          "body": "Press Manage Server. Everything for that server is split into modules in the left sidebar: General, Moderation, Support, Community and Integrations."
+        }
+      ]
+    },
+    {
+      "id": "dashboard-access",
+      "title": "Dashboard access & roles",
+      "category": "Website",
+      "summary": "Who can open and edit a server's dashboard.",
+      "sections": [
+        {
+          "heading": "Owner and co-owners",
+          "body": "The server owner and configured co-owners can use every module and can decide who else may use the dashboard in Manage Servers > General Settings."
+        },
+        {
+          "heading": "Administrators",
+          "body": "A Discord administrator only gets dashboard access after the owner allows it in General Settings. Servers you cannot manage are hidden from the server switcher; the full server list shows them as No access."
+        },
+        {
+          "heading": "Member lists",
+          "body": "Whenever the dashboard lists members (for example in Owner control) they are sorted from the highest-ranked role in the server down to the lowest."
+        }
+      ]
+    },
+    {
+      "id": "account-settings",
+      "title": "Account settings",
+      "category": "Website",
+      "summary": "Profile, notifications, security and restrictions.",
+      "sections": [
+        {
+          "heading": "Notifications",
+          "body": "Choose which direct messages NEXORIA may send you, for example moderation warnings and ticket-report block notices."
+        },
+        {
+          "heading": "Security and restrictions",
+          "body": "Shows the sign-in sessions on your account and any block that stops you from reporting tickets, either in one server or globally."
+        },
+        {
+          "heading": "Connected accounts",
+          "body": "Link Roblox and other accounts. Linked accounts are used by Roblox Verification and anti-alt protection."
+        }
+      ]
+    },
+    {
+      "id": "ticket-reports-transcripts",
+      "title": "Ticket reports, files and transcripts",
+      "category": "Website",
+      "summary": "How reported tickets, stored files and downloaded transcripts work.",
+      "sections": [
+        {
+          "heading": "Reported tickets",
+          "body": "A reported ticket shows its status (Unresolved, Ongoing, Resolved or Denied) next to the report button and a global case ID such as TKT-000001 so staff and admins can find it quickly."
+        },
+        {
+          "heading": "Stored images and files",
+          "body": "Images and files from tickets are processed by the host: images are converted to text and compressed into a ZIP, files are kept inside ZIPs and are never executed. They are rebuilt only when someone opens or downloads them."
+        },
+        {
+          "heading": "Transcript downloads",
+          "body": "A downloaded transcript is a standalone file. Each image and file link contains a single-use download token (255 characters, valid for 3 days). After it is used or expires the link stops working. Administrators can revoke tokens from the Admin panel."
+        }
+      ]
+    },
+    {
+      "id": "server-switcher",
+      "title": "Server switcher",
+      "category": "Website",
+      "summary": "Switch between the servers you manage without leaving the dashboard.",
+      "sections": [
+        {
+          "heading": "Who appears",
+          "body": "Only servers where NEXORIA is installed AND where you are allowed to use the dashboard (owner, co-owner or an administrator the owner approved). Servers you cannot edit are not offered, and opening one from View All Servers shows Dashboard access required."
+        },
+        {
+          "heading": "Unsaved changes",
+          "body": "If a page has unsaved changes you are asked before switching."
+        }
+      ]
+    },
+    {
+      "id": "role-rules",
+      "title": "Roles: hierarchy and colours",
+      "category": "Website",
+      "summary": "Which roles you may grant and how names are coloured.",
+      "sections": [
+        {
+          "heading": "Granting roles",
+          "body": "Anywhere the dashboard gives roles to people (Roblox gamepass and group binds, reaction roles, join roles, the mute role, custom command role actions) you can only choose roles below your own highest role. Owners and co-owners can choose any role."
+        },
+        {
+          "heading": "Colours",
+          "body": "A member's name uses the colour of their highest role that has a colour, exactly like Discord. Roles use their own colour. Member lists are sorted from the highest-ranked role to the lowest."
+        }
+      ]
+    },
+    {
+      "id": "admin-panel",
+      "title": "Admin panel",
+      "category": "System",
+      "summary": "Sign-in, ticket review reports, blocked users and transcript downloads.",
+      "sections": [
+        {
+          "heading": "Signing in",
+          "body": "Enter the admin username and password. Your Discord account must also be granted admin access. Failed attempts are rate limited."
+        },
+        {
+          "heading": "Reported reviews",
+          "body": "Every report has a global case ID (RVW-000001 style) and a status: Unresolved, Ongoing or Resolved. Filter by status or search by case ID. You can block the reviewer in one server or on every server."
+        },
+        {
+          "heading": "Blocked users",
+          "body": "Security & restrictions lists everyone blocked from reviewing or reporting, per server or global, with an Unblock button."
+        },
+        {
+          "heading": "Transcript downloads",
+          "body": "Shows who downloaded a transcript and which of its single-use tokens were used. Invalidate a whole download or one token at any time."
+        }
+      ]
+    },
+    {
+      "id": "website-connection",
+      "title": "How the website finds the bot",
+      "category": "System",
+      "summary": "LOCAL_BOT_URL and the published config.",
+      "sections": [
+        {
+          "heading": "The one URL that matters",
+          "body": "The published config.json only needs LOCAL_BOT_URL (the current Cloudflare tunnel) and an UPDATED_AT time. Old multi-host fields are removed automatically."
+        },
+        {
+          "heading": "If the site says the bridge is waiting",
+          "body": "The website reads the published copy of config.json, not the local file. Check that start-tunnel.ps1 printed [GitHub] SUCCESS, then reload the site."
+        }
+      ]
+    },
+    {
+      "id": "file-storage",
+      "title": "How files are stored",
+      "category": "System",
+      "summary": "Images and files are kept inside ZIPs and rebuilt on demand.",
+      "sections": [
+        {
+          "heading": "No raw files",
+          "body": "Images (tickets, logging, moderation filters) become text inside a ZIP; every other file is stored inside a ZIP under a neutral name. Nothing on the host can run by accident."
+        },
+        {
+          "heading": "No backups",
+          "body": "NEXORIA does not keep backup copies of data files any more; older .bak files and the Backups folder are deleted at startup to save space."
+        }
+      ]
+    },
+    {
+      "id": "advanced-builder-guide",
+      "title": "Advanced builder: full guide",
+      "category": "Website",
+      "summary": "Everything on the Advanced command builder screen, button by button.",
+      "sections": [
+        {
+          "heading": "Opening it",
+          "body": "Dashboard > Custom Commands > New command > Advanced (or Edit on an existing command). The builder is a full-screen canvas with the node palette on the left, the canvas in the middle and a live preview on the right."
+        },
+        {
+          "heading": "Adding and moving nodes",
+          "body": "Click a node in the palette to drop it on the canvas, or drag one out. New nodes never land on top of another node; if the spot is taken the node is moved to the nearest free space. You can still drag nodes on top of each other yourself. Drag a node from anywhere that is not a text box or button."
+        },
+        {
+          "heading": "Connecting nodes",
+          "body": "Drag from an output port (right side) to an input port (left side). While you drag, the wire glows and every input you can connect to lights up. Wires route around other nodes automatically. Hover any port to see whether it is an input, an output, or the True / False branch."
+        },
+        {
+          "heading": "Selecting several nodes",
+          "body": "Ctrl + click (Cmd on Mac) to build a selection. A bar appears with Create template, Delete and Clear. Dragging one selected node moves all of them."
+        },
+        {
+          "heading": "Templates",
+          "body": "Right-click a node (or use the selection bar) and choose Create template, give it a name and description. The Templates button lists yours and the built-in ones with a search box; press Use to paste. Right-click a template to delete it. Templates keep the advanced variables they use and recreate them if missing."
+        },
+        {
+          "heading": "Variables button",
+          "body": "Opens the list of Advanced variables for this server. Use + New to add one. Click a variable to jump to the node that uses it. See Variables for how sharing between servers works."
+        },
+        {
+          "heading": "Undo, Redo, Fit",
+          "body": "Undo and Redo step through your edits. Fit zooms the canvas so every node is visible. Panning and zooming never count as changes."
+        },
+        {
+          "heading": "Saving and leaving",
+          "body": "Save command stores the command. Back or Exit asks what to do only when something really changed: Keep editing, Exit without saving, or Save. Opening the editor and looking around never triggers the question."
+        },
+        {
+          "heading": "Chart nodes",
+          "body": "The Charts group has 13 nodes (Bar, Line, Area, Pie, Donut, Scatter, Gauge, Sparkline, Histogram, Radar, Leaderboard, Table, Progress). Each shows a live preview of its own data inside the node. Choose where the data comes from: typed values (hardcoded, optional labels), an advanced variable, or the wire from the previous node. Values look like 3, 7, 5 or Mon:3, Tue:7. When the command runs the chart is posted in the channel as a text chart and its text is passed on to the next node."
+        },
+        {
+          "heading": "Preview and Ask docs",
+          "body": "Run in the preview panel simulates your command safely with a test message and test roles. Ask docs opens the docs assistant over the builder so you can ask about any node."
+        }
+      ]
+    },
+    {
+      "id": "variables-guide",
+      "title": "Variables: text, advanced and shared",
+      "category": "Website",
+      "summary": "How placeholders, stored values and shared values work.",
+      "sections": [
+        {
+          "heading": "Text variables",
+          "body": "Words in curly braces such as {user.mention}, {user.name}, {server.name} or {channel.mention} work in any message or text field. They are replaced each time the command runs. The Variables list in this documentation shows every one."
+        },
+        {
+          "heading": "Advanced variables",
+          "body": "Advanced variables are named values NEXORIA remembers (counters, flags, text). Create them in the builder (Variables > + New) or on the Custom Commands page. Read one with {name}. Change one with Set Variable, Increment Variable, Append Variable, Set Variable If or Delete Variable nodes."
+        },
+        {
+          "heading": "Shared variables",
+          "body": "Sharing lets another server use your variable. On the owner server press Share on the variable and pick Read or Read + Write; a long token is shown once. On the other server press Connect and paste the token; a local variable is created that follows the original. Revoke by turning sharing off, which invalidates the token and breaks every connection. Only give the token to servers you trust."
+        },
+        {
+          "heading": "Variables inside templates",
+          "body": "A template remembers which advanced variables its nodes use (with their value and description). Pasting the template creates any that do not exist yet, without touching ones that do."
+        }
+      ]
+    },
+    {
+      "id": "listeners-guide",
+      "title": "Listeners guide",
+      "category": "Website",
+      "summary": "Run flows when something happens in Discord.",
+      "sections": [
+        {
+          "heading": "What a listener is",
+          "body": "A listener is an Advanced flow that starts from a Discord event instead of a typed command. Create one on Custom Commands > Listeners."
+        },
+        {
+          "heading": "Events",
+          "body": "Pick the event on the Listener Event node: message created, edited or deleted, bulk delete, member joined, left or updated, and more. Event Value nodes expose fields such as the message text or the author."
+        },
+        {
+          "heading": "Good habits",
+          "body": "Add an If node early to ignore bots or channels you do not care about, and avoid listeners that send a message for every message (they can loop)."
+        }
+      ]
+    },
+    {
+      "id": "verification-guide",
+      "title": "Roblox verification guide",
+      "category": "Website",
+      "summary": "How members verify and how staff can verify them by hand.",
+      "sections": [
+        {
+          "heading": "Member commands",
+          "body": "Members can run /verify, ?verify or !verify. NEXORIA walks them through linking their Roblox account and then gives the roles that match their binds."
+        },
+        {
+          "heading": "Binds",
+          "body": "A bind connects something on Roblox (a gamepass, a group rank, an item...) to a Discord role. You can only choose roles below your own highest role unless you are the server owner or a co-owner."
+        },
+        {
+          "heading": "Editing, short names and order",
+          "body": "Every bind has an Edit button for all of its settings and an optional short name (up to 24 characters) shown in the list. Binds are checked from top to bottom and the order is the rank: the top bind is rank #1. Use the arrows to move a bind up or down."
+        },
+        {
+          "heading": "Only allow 1 role in a group",
+          "body": "Turn this on for the binds that should be exclusive. All binds with it on form one group, and a member only keeps the role of the highest-ranked matching bind (the one nearest the top). Lower ones are not given, and are taken away if the member already has them. Example: VIP 3 above VIP 2 above VIP 1, all with the setting on, so someone who owns all three passes only gets the VIP 3 role."
+        },
+        {
+          "heading": "Checked every time",
+          "body": "/verify, ?verify, !verify, the verify buttons and the website check live whether verification is on, every single time they are used. Switching the Roblox Verification module on in the sidebar also turns verification itself on."
+        },
+        {
+          "heading": "Manual verification",
+          "body": "The server owner or a co-owner can run /manualverify with the Discord member and, optionally, their Roblox username. The member is verified for that server only; their global NEXORIA integrations are not changed."
+        },
+        {
+          "heading": "If it says verification is off",
+          "body": "Check that the Roblox Verification module is switched on in the sidebar AND enabled on its own Settings tab. Both switches must be on."
+        }
+      ]
+    },
+    {
+      "id": "tickets-guide",
+      "title": "Tickets guide",
+      "category": "Website",
+      "summary": "Panels, claiming, reviews, reports, sharing and transcripts.",
+      "sections": [
+        {
+          "heading": "Panels and subjects",
+          "body": "Build the panel message and its subjects in Ticket Tool > Settings. Each subject can have its own staff roles, category, welcome text and DM behaviour."
+        },
+        {
+          "heading": "Claiming and closing",
+          "body": "Staff claim a ticket to take it. Closing sends the member a DM with a link to open the ticket and review it."
+        },
+        {
+          "heading": "Reviews are private",
+          "body": "A support review (0 to 10, in steps of 0.1; you can type 5,0 or 5.0) is private. Only the ticket owner (in My Tickets) and the NEXORIA admin panel can see it. Server owners and staff cannot read an individual review."
+        },
+        {
+          "heading": "Reporting",
+          "body": "Every ticket has a Report ticket button (in the ticket list and on the ticket page). Each report is a case with a global ID such as TKT-000001 and a status (Unresolved, Ongoing, Resolved or Denied) shown next to the button."
+        },
+        {
+          "heading": "Sharing",
+          "body": "Ticket sharing is off by default. Enable it on a ticket to get a link anyone can open read-only; Regenerate replaces the link and Disable sharing turns it off."
+        },
+        {
+          "heading": "Transcripts and files",
+          "body": "Images and files are stored safely on the host. Download Transcript saves a standalone page; its images and files open through single-use links that expire after 3 days."
+        }
+      ]
+    },
+    {
+      "id": "honeypot-guide",
+      "title": "Honeypot guide",
+      "category": "Website",
+      "summary": "How the honeypot channels and the kick message work.",
+      "sections": [
+        {
+          "heading": "Channels",
+          "body": "NEXORIA creates honeypot channels and spreads them through your category list so a bot that posts in every channel cannot skip them. Nobody should type in them."
+        },
+        {
+          "heading": "What happens",
+          "body": "When a member types there, NEXORIA removes their recent messages, applies the punishment you chose and DMs them: why it happened, a button to recover their account, and an invite back to your server. Administrators are never punished and do not add to the kick count."
+        },
+        {
+          "heading": "Statistics",
+          "body": "The Kicks button on a honeypot message shows how many people were removed in your server (per honeypot channel) and the global totals."
+        }
+      ]
+    },
+    {
+      "id": "setup-guide",
+      "title": "Setup: build and export",
+      "category": "Website",
+      "summary": "Server builder, progress estimate and exporting a server layout.",
+      "sections": [
+        {
+          "heading": "Building",
+          "body": "The builder can create roles, categories, channels, the ticket panel and honeypots. It asks whether to also set up Roblox verification. If you choose to replace existing channels it deletes and renames them one by one and shows what is left."
+        },
+        {
+          "heading": "Permissions",
+          "body": "The bot needs Manage Roles, Manage Channels and a role placed ABOVE the roles it must create or edit. If something fails the builder tells you which permission is missing instead of stopping silently."
+        },
+        {
+          "heading": "Progress",
+          "body": "The estimated time counts down every second and is re-estimated from how long steps are really taking."
+        },
+        {
+          "heading": "Export",
+          "body": "Export saves roles, channels, categories, permissions and the server icon (you choose which parts) but never messages, members or tokens."
+        }
+      ]
+    },
+    {
+      "id": "notifications-guide",
+      "title": "Notifications and your data",
+      "category": "Website",
+      "summary": "Which DMs NEXORIA can send and how to remove your saved docs conversations.",
+      "sections": [
+        {
+          "heading": "DM settings",
+          "body": "User Settings > Notifications lets you turn each kind of DM off (moderation warnings, ticket staff replies, review report updates, review restriction DMs, verification messages)."
+        },
+        {
+          "heading": "Docs conversations",
+          "body": "Conversations with the docs assistant are saved on the host for your Discord account. In User Settings > Data you can delete chosen conversations or all of them."
+        }
+      ]
+    },
+    {
+      "id": "status-uptime",
+      "title": "Status & uptime",
+      "category": "System",
+      "summary": "How host status, uptime and incidents are recorded.",
+      "sections": [
+        {
+          "heading": "Heartbeat",
+          "body": "The host writes a heartbeat once a minute. If the host stops without a clean shutdown, the gap is recorded as an incident the next time it starts."
+        },
+        {
+          "heading": "Clean stops",
+          "body": "Stopping or restarting the host normally records a clean stop, so planned restarts are not reported as unplanned downtime."
+        }
+      ]
+    },
+    {
+      "id": "glossary",
+      "title": "Glossary: how things work",
+      "category": "Website",
+      "summary": "Short explanations of the main ideas (nodes, variables, templates, reports...).",
+      "sections": [
+        {
+          "heading": "What are nodes?",
+          "body": "Nodes are the building blocks of an Advanced command or listener. Each node does one small job: send a message, check a role, wait, change a variable, ban a member...  You connect nodes with wires, from an output port (right side) to an input port (left side). When the command runs, NEXORIA starts at the Trigger and follows the wires from node to node.  - Open the Advanced builder: Custom Commands > New command > Advanced • Add nodes from the palette on the left, grouped by what they do • Hover a port to see what it does"
+        },
+        {
+          "heading": "Ports and wires",
+          "body": "A port is the small dot on the edge of a node. The dot on the left is the input, the dot(s) on the right are outputs.  Drag from an output port to an input port to make a wire. Branch nodes (the If nodes) have two outputs: True (green) and False (red). Select a wire and press Delete, or right-click it, to remove it.  Wires route around other nodes by themselves. While you drag a wire the possible inputs glow."
+        },
+        {
+          "heading": "Trigger",
+          "body": "The Trigger node starts a command. It sets the command name, the word people type, whether it is a slash command and/or uses a prefix, and the command scope.  Every command needs exactly one Trigger. Listeners use a Listener Event node instead, which starts the flow when a Discord event happens (a message is deleted, a member joins...)."
+        },
+        {
+          "heading": "Listeners",
+          "body": "A listener is an Advanced flow that runs when something happens in Discord instead of when someone types a command. Examples: log deleted messages, welcome new members, react to edited messages.  Start it with a Listener Event node and pick the event. Use Event Value nodes to read details about the event (the message text, the author...)."
+        },
+        {
+          "heading": "Slash command or prefix?",
+          "body": "A slash command is typed as /name and Discord shows its description. A prefix command is typed as a prefix plus the name, for example ?hello.  Command scope on the Trigger node chooses which one works: Prefix only, Slash only, or both. Slash commands need a description (use the Description node)."
+        },
+        {
+          "heading": "Text variables like {user.mention}",
+          "body": "Text variables are placeholders you type inside any message or text field, written in curly braces, for example {user.mention} or {server.name}. When the command runs NEXORIA swaps each one for the real value.  They only live for that one run. Documentation > Variables lists every one. For values that must be remembered between runs use Advanced variables."
+        },
+        {
+          "heading": "Advanced variables",
+          "body": "Advanced variables are values NEXORIA remembers between runs, for example a counter or a toggle. Create them from the Variables button in the builder (or Custom Commands > Advanced variables).  Use them as {name} in text fields, and change them with the Set Variable, Increment Variable, Append Variable and Delete Variable nodes. Each server has its own list."
+        },
+        {
+          "heading": "Shared variables",
+          "body": "A shared variable lets two servers use the same value.  - In the server that owns the variable, turn on sharing and choose read-only or read + write. NEXORIA shows a share token once; copy it then. • In the other server choose Connect and paste the token. A local variable is created that points at the original. • Reading gives the owner's current value. Writing only works if you enabled write access. • Turn sharing off at any time to revoke the token and break every connection.  Only share a token with servers you trust."
+        },
+        {
+          "heading": "Templates",
+          "body": "Templates save a group of nodes (with the variables they use) so you can paste them into any command.  - Ctrl + click nodes to select several, then press Create template, or right-click a node and choose Create template • Give it a name and description • Open Templates to search them, press Use to paste, or right-click one to delete it  Templates are stored on the host for your server. Pasting also creates any variables the template needs."
+        },
+        {
+          "heading": "Selecting several nodes",
+          "body": "Hold Ctrl (Cmd on Mac) and click nodes to add or remove them from the selection. A bar appears with Create template, Delete and Clear. Dragging any selected node moves the whole selection.  Click empty canvas to clear the selection."
+        },
+        {
+          "heading": "Branches (True / False)",
+          "body": "Branch nodes ask a yes/no question: does the member have a role, is the message long, is it after 22:00... They have two outputs. True runs when the answer is yes, False runs when it is no. Connect each output to the path that should run.  If an output has no wire the flow simply ends there."
+        },
+        {
+          "heading": "Who can use a command",
+          "body": "The Permissions node controls who may run a command: everyone, administrators, or specific roles. Logic nodes like If Permission and If Has Role can also check inside the flow.  To stop a person using the bot at all, use the Security nodes (Block User / Allow User) or the Access Control node."
+        },
+        {
+          "heading": "Built-in commands",
+          "body": "Built-in commands ship with NEXORIA (moderation, verification, dashboard...). Open the node view of one to see exactly how it runs; it is shown with the same node cards as the Advanced builder, read-only. To make your own variation build a new Advanced command."
+        },
+        {
+          "heading": "Modules",
+          "body": "NEXORIA is split into modules you can turn on and off per server: Moderation, Logging, Honeypot, Roblox Verification, Ticket Tool, Custom Commands, Member Automation, Reaction Roles, Webhooks and Setup. Each has its own page in the dashboard sidebar and its own documentation page."
+        },
+        {
+          "heading": "Dashboard access",
+          "body": "The server owner and co-owners (chosen on the website under General Settings) can always use the dashboard. An administrator gets access only after the owner allows it. The server switcher only lists servers you are allowed to open.  Co-owners may also pick roles above their own, which normal administrators cannot."
+        },
+        {
+          "heading": "Which roles can I assign?",
+          "body": "Wherever the dashboard gives roles to people (Roblox gamepass/group binds, reaction roles, join roles, the mute role, custom command role actions) you can only choose roles BELOW your own highest role. The server owner and co-owners can choose any role.  Roles above yours are greyed out, and the host refuses the save if one gets through."
+        },
+        {
+          "heading": "How do tickets work?",
+          "body": "Members press a button on the ticket panel and NEXORIA opens a private channel for them and the staff. Staff can claim, add people, close, and share a ticket. When a ticket closes the member can review the support they got (0-10).  Images and files sent in a ticket are stored on the host (images as text inside a ZIP, files inside ZIPs). Members can download a transcript; its image/file links are single-use and expire after 3 days."
+        },
+        {
+          "heading": "Ticket reports",
+          "body": "Every ticket has a Report button. A report gets a global case ID (TKT-000001 style) and a status: Unresolved, Ongoing, Resolved or Denied. The status is shown next to the button so everyone can see what happened.  Administrators work the reports in the Admin panel: filter by status, search by case ID, and change the status (the reporter gets a DM). Older review reports can also be blocked per server or globally."
+        },
+        {
+          "heading": "What is in a transcript?",
+          "body": "A transcript is a standalone HTML copy of a ticket. Text is inside the file. Images and files load from the NEXORIA host through links with a single-use token (255 characters, valid for 3 days). Click an image to preview and zoom, or download it.  Each link works once; download the transcript again for fresh links. Administrators can see who downloaded a transcript and invalidate tokens."
+        },
+        {
+          "heading": "Honeypot",
+          "body": "A honeypot is a channel no real member should ever type in. Hacked accounts that spam every channel type there, and NEXORIA then removes them (kick/softban, timeout or ban as you choose) and deletes their recent messages. The member gets a DM explaining what happened and how to recover the account.  Administrators are never punished and their messages do not count toward the kick statistics."
+        },
+        {
+          "heading": "How does Roblox verification work?",
+          "body": "Members link their Roblox account and receive roles for it. They can start with /verify, ?verify or !verify.  Roles can be tied to gamepasses, groups and other Roblox conditions (binds). The server owner or a co-owner can verify someone by hand with /manualverify (pick the Discord member and optionally type their Roblox username). Manual verification only counts in that server."
+        },
+        {
+          "heading": "Moderation module",
+          "body": "Moderation records every warn, mute, kick and ban as a case. Warning thresholds can run actions automatically (Log, Mute, Kick, Ban) when a member reaches a number of active warns.  Image filters block a specific image: upload it once and NEXORIA compares every image people post against it. A filter can combine actions (Log, Warn, Mute, Kick, Ban, Delete message)."
+        },
+        {
+          "heading": "Server builder and export",
+          "body": "Setup can build a ready-made server layout (roles, categories, channels, ticket panel, honeypots, optional Roblox verification) and can export your current server's structure (roles, channels, permissions, icon) without any messages, so you can rebuild it elsewhere.  The builder shows a live progress estimate and always asks before deleting or renaming anything."
+        },
+        {
+          "heading": "Logging module",
+          "body": "Logging writes server events (message edits and deletes, joins, leaves, role changes...) to channels you choose. Attachments from logged messages are stored safely inside ZIPs on the host and never as normal files."
+        },
+        {
+          "heading": "Chart nodes",
+          "body": "Chart nodes draw your numbers. Pick Bar, Line, Area, Pie, Donut, Scatter, Gauge, Sparkline, Histogram, Radar, Leaderboard, Table or Progress.  Each node shows a live preview inside the builder. The data can be:  - typed in (values like `3, 7, 5` or `Mon:3, Tue:7`, optional labels) • read from an advanced variable • taken from the wire, from the node before it  When the command runs the chart is posted as a text chart in the channel and also passed to the next node."
+        },
+        {
+          "heading": "Verification binds: rank and 1 role only",
+          "body": "Each Roblox bind has a short name, an Edit button, and a rank (its position in the list, top = #1).  Turn on Only allow 1 role in a group for the binds that must be exclusive. All binds with it on act as one group: the member gets only the role of the highest-ranked matching bind, and lower ones are not given (or are removed)."
+        },
+        {
+          "heading": "The docs assistant",
+          "body": "This window answers from the documentation only, there is no AI service or API key involved. Ask about a node, a variable, or a module.  Drag the title bar to move it, drag any edge to resize it, then press Save to remember the position. The conversation list on the left keeps your chats on the host; the three-dot menu downloads or deletes them."
+        }
+      ]
+    }
+  ],
+  "site": [],
+  "modules": [
+    {
+      "category": "Modules",
+      "moduleId": "custom-commands",
+      "title": "Custom Commands",
+      "summary": "Build prefix and slash commands with a visual node graph, branching conditions, roles, variables, Discord actions, a simulator, and execution controls. Basic mode is for simple responses; Advanced mode is a connected node editor for complete command logic.",
+      "sections": [
+        {
+          "heading": "Basic mode — quick commands",
+          "body": "Basic mode is for a straightforward trigger → response command. Choose Prefix or Slash, enter the trigger, add the response, choose who can run it, then save. Use Basic when the command only needs a small number of ordered actions and no visual branching."
+        },
+        {
+          "heading": "Advanced mode — visual command flows",
+          "body": "Advanced mode opens an empty canvas for a new command. Add exactly one Trigger node, then connect its output to the first executable node. Nothing is inserted automatically. Existing commands are migrated into their graph without changing their saved behavior."
+        },
+        {
+          "heading": "Every Advanced node",
+          "body": "Trigger — required entry node; sets command name, trigger, Prefix/Slash mode, scope, prefix, and slash description. Description — stores a separate slash-command description. Permissions — controls Everyone, Administrators, or selected roles. Send Message — sends plain Discord text with variables. Send Embed — sends a title/description/color embed. Reply — replies to the triggering message. Mention User — sends the command user's mention plus optional text. Add Role — adds a selected role to the user. Remove Role — removes a selected role. React — adds a reaction to the triggering message. DM User — sends the command user a direct message. Delete Trigger — deletes the prefix message that invoked the command. Wait — pauses execution for the selected delay. Stop — ends the flow immediately. If — flexible Target → Condition → Value/Role branching node. If Contains — checks trigger text for a substring. If Has Role — checks whether the user has a selected role. Random Chance — randomly chooses the True branch using a percentage. Comment — builder-only documentation note. Set Variable — creates or overwrites a temporary command variable. Change Variable — adds or subtracts a number from a variable. Log — writes a diagnostic message to the bot console.",
+          "visualNodes": [
+            {
+              "id": "n1",
+              "label": "Trigger",
+              "type": "node"
+            },
+            {
+              "id": "n2",
+              "label": "Description",
+              "type": "node"
+            },
+            {
+              "id": "n3",
+              "label": "Permissions",
+              "type": "node"
+            },
+            {
+              "id": "n4",
+              "label": "Scope Input",
+              "type": "node"
+            },
+            {
+              "id": "n5",
+              "label": "Send Message",
+              "type": "node"
+            },
+            {
+              "id": "n6",
+              "label": "Send Embed",
+              "type": "node"
+            },
+            {
+              "id": "n7",
+              "label": "Reply",
+              "type": "node"
+            },
+            {
+              "id": "n8",
+              "label": "Mention User",
+              "type": "node"
+            },
+            {
+              "id": "n9",
+              "label": "Add Role",
+              "type": "node"
+            },
+            {
+              "id": "n10",
+              "label": "Remove Role",
+              "type": "node"
+            },
+            {
+              "id": "n11",
+              "label": "React",
+              "type": "node"
+            },
+            {
+              "id": "n12",
+              "label": "DM User",
+              "type": "node"
+            },
+            {
+              "id": "n13",
+              "label": "Delete Trigger",
+              "type": "node"
+            },
+            {
+              "id": "n14",
+              "label": "Wait",
+              "type": "node"
+            },
+            {
+              "id": "n15",
+              "label": "Stop",
+              "type": "node"
+            },
+            {
+              "id": "n16",
+              "label": "If",
+              "type": "node"
+            },
+            {
+              "id": "n17",
+              "label": "If Contains",
+              "type": "node"
+            },
+            {
+              "id": "n18",
+              "label": "If Has Role",
+              "type": "node"
+            },
+            {
+              "id": "n19",
+              "label": "Random Chance",
+              "type": "node"
+            },
+            {
+              "id": "n20",
+              "label": "If Number",
+              "type": "node"
+            },
+            {
+              "id": "n21",
+              "label": "If Variable Exists",
+              "type": "node"
+            },
+            {
+              "id": "n22",
+              "label": "Comment",
+              "type": "node"
+            },
+            {
+              "id": "n23",
+              "label": "Set Variable",
+              "type": "node"
+            },
+            {
+              "id": "n24",
+              "label": "Change Variable",
+              "type": "node"
+            },
+            {
+              "id": "n25",
+              "label": "Log",
+              "type": "node"
+            },
+            {
+              "id": "n26",
+              "label": "Random Pick",
+              "type": "node"
+            },
+            {
+              "id": "n27",
+              "label": "Set Channel Topic",
+              "type": "node"
+            },
+            {
+              "id": "n28",
+              "label": "Pin Trigger",
+              "type": "node"
+            },
+            {
+              "id": "n29",
+              "label": "Unpin Trigger",
+              "type": "node"
+            },
+            {
+              "id": "n30",
+              "label": "Clear Reactions",
+              "type": "node"
+            },
+            {
+              "id": "n31",
+              "label": "Set Output",
+              "type": "node"
+            },
+            {
+              "id": "n32",
+              "label": "Get Variable",
+              "type": "node"
+            },
+            {
+              "id": "n33",
+              "label": "Text Uppercase",
+              "type": "node"
+            },
+            {
+              "id": "n34",
+              "label": "Text Lowercase",
+              "type": "node"
+            },
+            {
+              "id": "n35",
+              "label": "Text Trim",
+              "type": "node"
+            },
+            {
+              "id": "n36",
+              "label": "Text Replace",
+              "type": "node"
+            },
+            {
+              "id": "n37",
+              "label": "Text Length",
+              "type": "node"
+            },
+            {
+              "id": "n38",
+              "label": "Text Prefix",
+              "type": "node"
+            },
+            {
+              "id": "n39",
+              "label": "Text Suffix",
+              "type": "node"
+            },
+            {
+              "id": "n40",
+              "label": "Number Add",
+              "type": "node"
+            },
+            {
+              "id": "n41",
+              "label": "Number Subtract",
+              "type": "node"
+            },
+            {
+              "id": "n42",
+              "label": "Number Multiply",
+              "type": "node"
+            },
+            {
+              "id": "n43",
+              "label": "Number Divide",
+              "type": "node"
+            },
+            {
+              "id": "n44",
+              "label": "Round Number",
+              "type": "node"
+            },
+            {
+              "id": "n45",
+              "label": "Compare Output",
+              "type": "node"
+            },
+            {
+              "id": "n46",
+              "label": "Output Exists",
+              "type": "node"
+            },
+            {
+              "id": "n47",
+              "label": "Output Contains",
+              "type": "node"
+            },
+            {
+              "id": "n48",
+              "label": "Output Equals",
+              "type": "node"
+            },
+            {
+              "id": "n49",
+              "label": "If Bot User",
+              "type": "node"
+            },
+            {
+              "id": "n50",
+              "label": "If Direct Message",
+              "type": "node"
+            },
+            {
+              "id": "n51",
+              "label": "Current Channel ID",
+              "type": "node"
+            },
+            {
+              "id": "n52",
+              "label": "Current User ID",
+              "type": "node"
+            },
+            {
+              "id": "n53",
+              "label": "Current Server ID",
+              "type": "node"
+            },
+            {
+              "id": "n54",
+              "label": "Current Trigger",
+              "type": "node"
+            },
+            {
+              "id": "n55",
+              "label": "Current Message",
+              "type": "node"
+            },
+            {
+              "id": "n56",
+              "label": "Current Timestamp",
+              "type": "node"
+            },
+            {
+              "id": "n57",
+              "label": "Random Number",
+              "type": "node"
+            },
+            {
+              "id": "n58",
+              "label": "Join Text",
+              "type": "node"
+            },
+            {
+              "id": "n59",
+              "label": "Choose Value",
+              "type": "node"
+            },
+            {
+              "id": "n60",
+              "label": "Debug Output",
+              "type": "node"
+            }
+          ]
+        },
+        {
+          "heading": "Command nodes",
+          "body": "Trigger is required and defines the command name, trigger text, prefix/slash mode, scope, and slash description. Description stores a slash-command description when you want metadata separate from Trigger. Permissions controls Everyone, Administrators, or selected roles. These metadata nodes configure the command and are not sent to Discord as actions."
+        },
+        {
+          "heading": "Discord action nodes",
+          "body": "Send Message sends normal text and supports documented variables. Send Embed creates a title, description, and color. Reply replies to the triggering message. Mention User adds the command user's mention. Add Role and Remove Role change a member's roles when the bot can manage the target role. React reacts to the triggering message. DM User sends a direct message. Delete Trigger removes the triggering prefix message when Discord permissions allow it."
+        },
+        {
+          "heading": "Flow nodes",
+          "body": "Wait pauses execution for a controlled number of milliseconds. Stop ends execution immediately. Connect output ports directly to input ports; a normal input accepts one incoming connection. Wires move with nodes and can be selected and removed from the custom editor menu."
+        },
+        {
+          "heading": "Logic and condition nodes",
+          "body": "If is the flexible condition node. Choose a Target such as User, Message, Channel, Command, or Variable, then choose the matching condition and value/role. User supports Has Role, Doesn't Have Role, Is Administrator, and Is Server Owner. Message supports Contains, Doesn't Contain, Equals, and Doesn't Equal. Channel can check text, thread, and forum types. Command can compare name or trigger. Variable compares a stored command variable. Random Chance branches by percentage. Branch nodes expose separate True and False outputs."
+        },
+        {
+          "heading": "Variable nodes and custom variables",
+          "body": "Set Variable creates or overwrites a temporary command variable. Change Variable adds or subtracts a numeric amount. Custom variables can also be created in the command editor, edited, inserted into supported message fields, and deleted. Use {var.name} for custom command variables and the documented built-in variable names such as {user.mention}, {server.name}, {channel.name}, and {command.name}."
+        },
+        {
+          "heading": "Utility nodes",
+          "body": "Log writes a diagnostic line to the bot console and is useful while debugging a flow. Comment is a builder-only note and never sends a Discord message. Use comments to explain why a branch or variable exists."
+        },
+        {
+          "heading": "Preview, validation, and console",
+          "body": "Run opens the custom preview. It simulates a user invoking the command, shows bot replies as a conversation, evaluates branches, and records diagnostics. Preview runs do not change Discord. Nodes with missing required data receive a red problem outline. The console stays available between preview runs until Clear console is pressed."
+        },
+        {
+          "heading": "Editing and navigation",
+          "body": "Drag a node header to move it. Drag directly from an output port to an input port to create a wire. Right-click inside the builder opens only the NEXORIA editor menu with relevant actions such as Duplicate, Center, Delete, Remove connection, and Add node here. Back and Exit both respect unsaved changes and ask before leaving. Use Cancel/Back to leave the editor without accidentally navigating outside the command workflow."
+        },
+        {
+          "heading": "Examples",
+          "body": "Role gate: Trigger /staff → If (User → Has Role → Staff) → True → Add Role/Send Message; False → Send Message. Variable counter: Trigger ?count → Set Variable count=1 → Change Variable count +1 → Send Message \"Count: {count}\". Conditional text: Trigger ?hello → If (Message → Contains → hello) → True → Reply \"Hello!\"; False → Reply \"Try saying hello.\".",
+          "visualExamples": [
+            {
+              "title": "Role gate",
+              "nodes": [
+                {
+                  "label": "Trigger /staff"
+                },
+                {
+                  "label": "If → User → Has Role → Staff"
+                },
+                {
+                  "label": "True → Send Message"
+                },
+                {
+                  "label": "False → Send Message"
+                }
+              ]
+            },
+            {
+              "title": "Argument responder",
+              "nodes": [
+                {
+                  "label": "Trigger /echo"
+                },
+                {
+                  "label": "Scope Input → Argument #1"
+                },
+                {
+                  "label": "Send Message → You entered {scope-node-id}"
+                }
+              ]
+            },
+            {
+              "title": "Output transformation",
+              "nodes": [
+                {
+                  "label": "Trigger"
+                },
+                {
+                  "label": "Scope Input → Argument #1"
+                },
+                {
+                  "label": "Text Uppercase"
+                },
+                {
+                  "label": "Send Message → {output-node-id}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Built-in commands",
+          "body": "NEXORIA built-in commands are always available and cannot be disabled or deleted. Current built-ins are /dashboard, /help, /discord, /status, /verify, /unverify, /mute, and /unmute. Built-in commands are shown first; custom commands are listed after the built-in category."
+        },
+        {
+          "heading": "Scope nodes — typed outputs",
+          "body": "Scope Input is a reusable typed output node. Choose Text, Full Trigger Message, Rest of Message, Command Argument, Quoted Text, Number, Boolean, URL, Emoji, Command User Mention, First User Mention in Message, User ID, User Name, Role Mention/ID, Channel Mention/ID, Trigger Text, Command Name, Server Name/ID, or time values. Argument and quoted scopes can choose an argument number. Every scope node has a stable node ID token such as {scope-node-id}. Connect its value output to an action and insert the token into supported fields; NEXORIA resolves it at execution time. Example: Trigger → Scope Input (Command Argument #1) → Send Message with `You entered {scope-node-id}`. Multiple scope outputs can feed different nodes, and one output can be referenced by multiple downstream fields."
+        },
+        {
+          "heading": "Templates",
+          "body": "The Advanced builder includes reusable templates. Starter templates provide common patterns such as a welcome message, argument responder, and role gate. Save any graph as a named template with a description, then use it to create a new graph. Templates are stored for the server and reset command metadata such as the Trigger name so the same graph can be reused safely."
+        },
+        {
+          "heading": "Advanced variable usage and locations",
+          "body": "The Advanced Variables manager shows each variable's current value, permissions, known node locations, and shared-server consumers. Click a variable to inspect every command/node that references it. Select a location to open that command and focus the exact node. Inside the Advanced builder, the Variables panel provides the same navigation. Shared variables continue to respect read/write exposure permissions; a connection without the required permission is treated as a node problem."
+        },
+        {
+          "heading": "Output chaining",
+          "body": "Output nodes are first-class values. Connect a Scope Input or another output-producing node into a transform, condition, or action. Each output node has a stable token such as {node-id}. Message, embed, DM, log, variable, and compatible condition fields can resolve those tokens. One output can feed multiple downstream nodes, allowing a single captured value to be reused throughout a command."
+        },
+        {
+          "heading": "Roles you can grant",
+          "body": "When you pick a role that NEXORIA will give to people, you can only choose roles below your own highest role. The server owner and co-owners (set on the website under General Settings) can choose any role. Roles above your own are greyed out in the list, and the host rejects the save if one slips through."
+        },
+        {
+          "heading": "Builder: moving nodes",
+          "body": "Press and drag a node from anywhere that is not a text box, dropdown or button: the title bar, labels or empty space all work. Text is never selected while you drag."
+        },
+        {
+          "heading": "Builder: wires",
+          "body": "Wires follow a smooth curve when nothing is in the way and automatically route around other nodes when something is. Drag from an output port to an input port to connect; select a wire and press Delete to remove it."
+        },
+        {
+          "heading": "Builder: leaving the editor",
+          "body": "Back and Exit ask first when there are unsaved changes: Keep editing, Exit without saving, or Save. Closing the editor with Escape or by clicking outside asks the same question."
+        },
+        {
+          "heading": "Categories",
+          "body": "Categories are only for organising. They appear as a tree; the toggle on each row enables or disables every command in it at once."
+        },
+        {
+          "heading": "Custom command moderation case tracking",
+          "body": "Each custom command has a Case tracking setting. Normal command does not create a moderation record. Moderation case records a case after each successful command run for the mentioned or selected user, or for the person who ran the command when no target is selected. These entries appear in the server Moderation module and in the affected member’s My Moderation Cases dashboard. The case records the command name, category, action source and timestamp."
+        }
+      ]
+    },
+    {
+      "category": "Modules",
+      "moduleId": "developers",
+      "title": "Developers",
+      "summary": "Create server-bound, read-only Nexoria API keys; choose fine-grained data permissions; test REST endpoints; and inspect API usage logs.",
+      "sections": [
+        {
+          "heading": "Overview",
+          "body": "Developers provides programmatic, read-only access to approved Nexoria data for one Discord server. Each API key is bound to the server where it was created. A key cannot read another server, cannot modify Nexoria data, and can access only the scopes selected when it was created."
+        },
+        {
+          "heading": "Creating and managing API keys",
+          "body": "Open the Developers module in the server dashboard. Enter a descriptive name, choose one or more scopes, and set an expiration date or no expiration. You may optionally add exact website origins and/or source IP addresses as an extra restriction. New keys use Nexoria_Api_Key_ followed by exactly 50 random characters. The key list is masked by default; an authorized owner can explicitly reveal an active key, and the dashboard clears the revealed value when leaving the Developers tab. Owners can edit scopes and allowlists, reset a key (immediately invalidating the old secret), or revoke it."
+        },
+        {
+          "heading": "Authentication and base URL",
+          "body": "The REST base path is /developers/v1 on the Nexoria host URL shown in the module. Send Authorization: ApiKey Nexoria_Api_Key_<50-character-secret>. Every endpoint URL must include the target Discord guild ID as /servers/{serverId}/... and that ID must match the server to which the key is bound. All endpoints are read-only and return application/json."
+        },
+        {
+          "heading": "Available permission scopes",
+          "body": "server:read returns basic server metadata. leaderboards:read returns public leaderboard datasets only; private review identities and review contents are excluded. members:count returns aggregate member, bot and human counts only, not a member directory. roles:read returns role metadata. channels:read returns channel metadata only, not messages. tickets:read returns ticket metadata. tickets:content:read separately permits ticket message and form content. events:read returns event names, descriptions, schedules, statuses and categories. honeypot:stats:read returns aggregate trigger/action counts. counters:read returns configured counter metadata and values. verification:stats:read returns aggregate verification totals and pending counts. moderation:summary:read returns aggregate action counts only. moderation:leaderboard:read returns aggregate moderation leaderboard entries only for moderators who opted in; it never returns individual cases or private notes."
+        },
+        {
+          "heading": "Endpoints",
+          "body": "GET /servers/{serverId} — basic server metadata; requires server:read. GET /servers/{serverId}/stats — aggregate member, bot, human, channel and role counts; requires members:count. GET /servers/{serverId}/roles — role metadata; requires roles:read. GET /servers/{serverId}/channels — channel metadata; requires channels:read. GET /servers/{serverId}/tickets?state=pendingStaff&page=1&amount=25 — paginated ticket metadata; requires tickets:read. GET /servers/{serverId}/tickets/{ticketId} — one ticket; requires tickets:read. Ticket messages/form answers are returned only if tickets:content:read is also granted. POST /servers/{serverId}/search with JSON {\"text\":\"refund request\"} searches ticket metadata; message content is included only with tickets:content:read. GET /servers/{serverId}/leaderboards — list available public datasets; requires leaderboards:read. GET /servers/{serverId}/leaderboards/ticket-staff?limit=10 — top ticket staff by assigned volume; requires leaderboards:read. GET /servers/{serverId}/leaderboards/moderation-staff?limit=10 — opt-in moderation staff aggregate leaderboard; requires moderation:leaderboard:read. GET /servers/{serverId}/events — event schedule; requires events:read. GET /servers/{serverId}/honeypot/stats — aggregate honeypot metrics; requires honeypot:stats:read. GET /servers/{serverId}/counters — counter metadata; requires counters:read. GET /servers/{serverId}/verification/stats — aggregate verification totals; requires verification:stats:read. GET /servers/{serverId}/moderation/stats — aggregate moderation totals; requires moderation:summary:read."
+        },
+        {
+          "heading": "Pagination and filtering",
+          "body": "Ticket list endpoints accept page (starting at 1), amount (1–100; defaults to 25) and state (for example pendingStaff or closed). Responses include page, maxPage, total and elements. The search endpoint accepts a JSON request body with a text value between 1 and 200 characters."
+        },
+        {
+          "heading": "Try the API explorer",
+          "body": "The Try the API tab displays endpoint methods, paths, required scopes and example JSON responses. Paste a key into the interactive request field to execute a live request against the selected server. The key is used only for that request and is not saved by the dashboard. The explorer displays the HTTP status, response time and JSON response. Code samples are provided in curl, JavaScript, Python, C# and C++."
+        },
+        {
+          "heading": "Usage logs and audit logs",
+          "body": "Usage logs record request timestamp, API key name, HTTP method, endpoint path, response status and response duration. They also record denied attempts, source IP/origin, severity and the attempted data category (such as ticket metadata/content or leaderboard data) when it can be determined from the URL. Unknown, outdated, reset, revoked, expired keys, blocked origins/IPs, scope denials, server mismatches and rate-limit events are categorized as security warnings/danger. Logs never store raw secrets, authorization headers, request bodies, search terms, ticket contents or response payloads. Logs are capped to a rolling 1,500 entries. Key create/update/reset/revoke actions appear in server Audit Logs; ordinary API reads do not create audit-log entries."
+        },
+        {
+          "heading": "Privacy and security boundaries",
+          "body": "The API is read-only. Keys are server-bound and scope-limited. Optional exact website-origin and IP allowlists add a caller restriction; if either is configured, a matching allowed origin OR allowed source IP is accepted. The API does not expose private review content or reviewer identities, member directories or private member profiles, individual moderation case details, moderation notes, or channel message histories. Ticket content is available only through tickets:content:read. Secrets are verified using SHA-256 hashes and encrypted at rest with AES-256-GCM for explicit owner reveal. The encryption master key is stored in Data/Misc/developer-api-encryption.key and must be backed up securely."
+        },
+        {
+          "heading": "HTTP status codes",
+          "body": "200 means success. 400 means invalid input. 401 means missing, malformed, invalid, revoked or expired key. 403 means missing scope, server mismatch or source allowlist rejection. 404 means server or record unavailable. 429 means the key exceeded 120 requests per minute."
+        },
+        {
+          "heading": "Example: fetch pending tickets",
+          "body": "const response = await fetch(`${NEXORIA_API}/servers/${SERVER_ID}/tickets?state=pendingStaff&amount=25`, { headers: { Authorization: `ApiKey ${process.env.NEXORIA_API_KEY}` } }); const { elements: tickets } = await response.json(); console.log(`${tickets.length} tickets need attention`);"
+        },
+        {
+          "heading": "Nexoria AI documentation",
+          "body": "The Developers module is included in Nexoria's module documentation. Ask Nexoria AI questions such as “Which permission is needed to fetch ticket messages?”, “How do I paginate ticket results?”, or “What does a 403 missing_scope response mean?” The assistant should use this Developers documentation as its source."
+        },
+        {
+          "heading": "API key format, reveal and reset",
+          "body": "New API secrets use the prefix Nexoria_Api_Key_ followed by exactly 50 randomly generated characters (letters, numbers, period, underscore and comma). The full secret is never shown in the key list. Use Reveal key to request a no-store reveal; it is masked by default and the dashboard clears the revealed value when you leave the Developers tab or close the module. Secrets are verified using SHA-256 hashes and additionally encrypted with AES-256-GCM at rest so an owner can explicitly reveal an existing active key. The encryption master key is stored in Data/Misc/developer-api-encryption.key; back up this file securely with your data. Reset API key immediately replaces the secret, invalidates the previous value and records a security/audit event. Older keys without encrypted reveal data can be reset to adopt the new format."
+        },
+        {
+          "heading": "Website and IP allowlists",
+          "body": "Each API key can optionally restrict its callers using exact website origins and/or exact source IP addresses. Origins must include the scheme, for example https://analytics.example.com, without a path. IP entries must be exact IPv4 or IPv6 addresses. When either allowlist is configured, a request is accepted if its Origin matches an allowed origin OR its direct network peer IP matches an allowed IP. Leave both lists empty to disable this extra restriction. The host records the peer address it sees; when Nexoria runs behind a reverse proxy, the IP may be the proxy address unless the deployment network is configured to pass trusted client addresses safely."
+        },
+        {
+          "heading": "Editing API keys",
+          "body": "Open an active key and choose Edit permissions to change its name, granted scopes, website origins and source IPs. Permission changes take effect on the next API request. Reset key rotates the secret while preserving the key's name, expiration and access policy. Revoke permanently disables the key. The API key list masks the secret by default."
+        },
+        {
+          "heading": "Security alerts and danger logs",
+          "body": "Requests using unknown, malformed, outdated, reset, revoked or expired keys are recorded in Developers usage/security logs when the target server ID is present in the requested URL. Disallowed website origins and IP addresses, scope denials, server-scope mismatches and rate limiting are also categorized as security events with danger or warning severity. Entries include timestamp, attempted endpoint, data category (for example ticket metadata/content or leaderboard data), key name/ID when identifiable, source IP, origin, status and reason. Raw API secrets, authorization headers, request bodies, search terms and response payloads are never stored."
+        },
+        {
+          "heading": "Moderation staff leaderboard opt-in",
+          "body": "GET /servers/{serverId}/leaderboards/moderation-staff?limit=10 requires moderation:leaderboard:read. Each moderator independently opts in or out from My Moderation Cases in the website, with the same preference also visible in Developers module documentation. Only opted-in members appear, with display name, rank, total cases handled and aggregate action counts. Individual case records, targets, reasons, notes and private moderation details are never returned. Opting out removes the member from subsequent leaderboard responses."
+        },
+        {
+          "heading": "API key authentication format",
+          "body": "Send the complete key in the Authorization header exactly as Authorization: ApiKey Nexoria_Api_Key_<50-character-secret>. Every API request must also include the target Discord server guild ID in the URL as /servers/{serverId}/... . The guild ID must match the server for which the key was created. Keys cannot read data from another server even if the caller changes the serverId parameter."
+        },
+        {
+          "heading": "API service status and /api Discord command",
+          "body": "The global /api command works in servers and direct messages. Use /api status to see bot/API readiness, Discord gateway latency and process uptime. Use /api ping for a lightweight latency measurement. Authenticated REST diagnostics are GET /developers/v1/status and GET /developers/v1/ping. Status returns service, status, botReady, uptimeSeconds, discordGatewayLatencyMs and generatedAt. Ping returns ok, pong, latencyMs and timestamp. These diagnostics do not expose guild data."
+        },
+        {
+          "heading": "Ask Nexoria AI documentation through the API",
+          "body": "POST /developers/v1/documentation/ask requires documentation:ask and JSON body {\"question\":\"How do I create a ServerStats counter?\"}. The endpoint searches the published Nexoria documentation bundle only. It returns question, an answer grounded in matching documentation sections, sources with title, section and URL, grounding=published_nexoria_documentation and generatedAt. If no matching section exists, it says so rather than inventing behavior. JavaScript: const r=await fetch(BASE+'/documentation/ask',{method:'POST',headers:{Authorization:'ApiKey '+process.env.NEXORIA_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({question:'How do I create a counter?'})}); const answer=await r.json(); console.log(answer.answer,answer.sources). Python: requests.post(BASE+'/documentation/ask',headers={'Authorization':'ApiKey '+os.environ['NEXORIA_API_KEY']},json={'question':'How do I create a counter?'}). C#: HttpClient.PostAsync with JSON StringContent. curl: curl -X POST BASE/documentation/ask -H 'Authorization: ApiKey …' -H 'Content-Type: application/json' -d '{\"question\":\"How do I create a counter?\"}'."
+        },
+        {
+          "heading": "Read-only API commands",
+          "body": "The API does not execute arbitrary Discord slash commands. It exposes a fixed allowlist of safe, read-only operations. GET /developers/v1/commands requires commands:read and returns command names, descriptions, methods, required scopes and execution paths. POST /developers/v1/servers/{serverId}/commands/{command}/execute requires commands:execute plus the command's underlying data scope. Supported commands: server-info (server:read), server-stats (members:count), ticket-list (tickets:read; accepts state, page and amount), leaderboard-top (leaderboards:read; accepts board=ticket-staff or moderation-staff and limit; moderation-staff additionally requires moderation:leaderboard:read), events-list (events:read), counters-list (counters:read), moderation-summary (moderation:summary:read). Destructive commands, moderation actions, message sending, permission changes and arbitrary command strings are not available. Example: POST /servers/123/commands/server-stats/execute with {} returns aggregate members, bots, humans, channels and roles."
+        },
+        {
+          "heading": "Read feature settings safely",
+          "body": "GET /developers/v1/servers/{serverId}/settings requires settings:read. It returns only a strict allowlist of non-sensitive feature settings when present, such as ServerStats refresh interval, event reminder toggle/timezone/default duration and selected module enabled/method flags. The endpoint never serializes raw module configuration. Bot tokens, API keys, webhook secrets, private channel/role identifiers, user preferences, private moderation details and arbitrary custom settings are excluded. Response includes serverId, settings, a privacy explanation and generatedAt. An absent field means the setting is not available in the safe public projection; it does not mean the feature is disabled."
+        },
+        {
+          "heading": "New permission scopes",
+          "body": "documentation:ask allows questions against published documentation. commands:read lists the safe API command catalog. commands:execute enables the fixed read-only command executor; it does not grant write access and each command also checks its own data scope. settings:read exposes only the allowlisted non-sensitive settings projection. Grant only the scopes an integration needs. Changing a key's scopes takes effect on its next request."
+        },
+        {
+          "heading": "API response formats, latency and errors",
+          "body": "Successful responses use application/json with UTF-8 JSON objects. Collection endpoints commonly return {elements:[...]}; paginated lists also return page, maxPage and total when supported. Diagnostics return latencyMs and generatedAt/timestamp. The API records request duration in Developers usage logs. Common errors: 400 invalid input; 401 missing, malformed, unknown, expired or revoked key; 403 server mismatch, source restriction or missing permission; 404 unknown endpoint, server or resource; 429 per-key rate limit exceeded; 503 documentation bundle unavailable. Integrations should check response.ok/status and use bounded retries for 429/5xx responses."
+        },
+        {
+          "heading": "Complete integration examples",
+          "body": "Use a server-side environment variable such as NEXORIA_API_KEY. Never put a secret in browser JavaScript, mobile app bundles, public repositories or client-side HTML. JavaScript (Node.js): const headers={Authorization:`ApiKey ${process.env.NEXORIA_API_KEY}`}; const r=await fetch(`${BASE}/servers/${SERVER_ID}/settings`,{headers}); if(!r.ok) throw new Error(`Nexoria API ${r.status}`); console.log(await r.json()). Python: import os,requests; r=requests.get(f'{BASE}/servers/{SERVER_ID}/stats',headers={'Authorization':'ApiKey '+os.environ['NEXORIA_API_KEY']},timeout=15); r.raise_for_status(); print(r.json()). C#: create HttpClient, add Authorization: ApiKey from Environment.GetEnvironmentVariable, call GetAsync and EnsureSuccessStatusCode. C++ with libcurl: set CURLOPT_URL, add an Authorization: ApiKey header using curl_slist, call curl_easy_perform, inspect CURLINFO_RESPONSE_CODE, then free headers and handle. curl: curl -H 'Authorization: ApiKey …' 'https://YOUR_HOST/developers/v1/servers/SERVER_ID/stats'. Keep keys on trusted backends and use HTTPS."
+        }
+      ]
+    },
+    {
+      "category": "Modules",
+      "moduleId": "event-manager",
+      "title": "Event Manager",
+      "summary": "Create, publish, track and edit Discord events; organize them into rank-restricted categories; configure command access and personal notification preferences.",
+      "sections": [
+        {
+          "heading": "Event Manager dashboard",
+          "body": "The Event Manager dashboard lists every event saved for the selected server. Create events, edit their title, description, start time, category, announcement channel and status, or delete them. Status values are scheduled, ongoing, completed and cancelled. The dashboard is restricted to the server owner and configured co-owners."
+        },
+        {
+          "heading": "Creating events in Discord",
+          "body": "Use /event for the guided event creation command. Supply a title and future date/time in ISO 8601 format (include a timezone, for example 2026-12-10T19:30:00+01:00), then optionally choose a category, description and announcement channel. Use /event_classic for a shorter quick-create flow. The bot posts an event embed in the selected channel and saves the event to the dashboard."
+        },
+        {
+          "heading": "Event categories and ranks",
+          "body": "Categories group events by purpose, such as Community, Staff, Training or Tournaments. Each category can allow selected Discord roles to create events within it. An empty role list means any member can create events in that category. Configure role access with the category controls in the dashboard."
+        },
+        {
+          "heading": "Command access",
+          "body": "The dashboard includes role allow-lists for /event and /event_classic. Category permissions are also checked when /event is used. Discord administrator permissions are recognized for category creation. Configure the allowed ranks to match your server's staff structure."
+        },
+        {
+          "heading": "Event reminders",
+          "body": "Events can have a reminder lead time. The host schedules reminders for future events and posts them to the configured announcement channel. A reminder is scheduled when the event is saved and the host is running. Very distant reminders are scheduled when they fall within the supported timer window; restart-safe rehydration occurs when the module loads."
+        },
+        {
+          "heading": "Personal notification preferences",
+          "body": "Use /notifications in a server or direct message to manage event reminders and event announcements. Choose a server by name or select all, then set the notification type and enabled state. Users can also manage notification preferences from NEXORIA User Settings on the website. Notification preferences are personal and do not change other members' settings."
+        },
+        {
+          "heading": "Permissions and privacy",
+          "body": "Only the server owner or a configured co-owner can edit the server's event list, categories and rank configuration in the dashboard. Command use is checked against the selected category's role allow-list. User notification preferences are stored separately from server event data. Documentation describes supported behavior and intentionally excludes credentials, private tokens, internal security controls and sensitive operational details."
+        },
+        {
+          "heading": "Limitations and troubleshooting",
+          "body": "The bot must be online to send reminders and announcements. The bot needs permission to view and send messages in the chosen channel. Date/time values must be valid future timestamps when creating an event. If a server does not appear in /notifications autocomplete, confirm that NEXORIA is in that server and that you are a member."
+        }
+      ]
+    },
+    {
+      "category": "Modules",
+      "moduleId": "honeypot",
+      "title": "Nexoria Honeypot",
+      "summary": "Create visible trap channels that delete messages, apply a configurable punishment, optionally DM the user with a server invite, and record every trigger.",
+      "sections": [
+        {
+          "heading": "Honeypot channels",
+          "body": "Create multiple Honeypot text channels directly from the dashboard. NEXORIA places each new channel at a random position and tracks it by Discord channel ID, so renaming the channel does not break the trap. If the channel is deleted in Discord, it is removed from the dashboard automatically."
+        },
+        {
+          "heading": "Punishments",
+          "body": "Choose Softban (Kick), Timeout, Ban, or Log Only. Timeout and temporary Ban durations are configurable. The triggered message is deleted before the configured action is applied. Server owners and administrators are protected from automatic punishment."
+        },
+        {
+          "heading": "Trigger message",
+          "body": "Each Honeypot channel receives a NEXORIA-branded warning message with the current punishment and a live trigger count. The message includes NEXORIA Dashboard, NEXORIA Documentation, Invite NEXORIA, and a Kicks button showing the number of triggers in that channel."
+        },
+        {
+          "heading": "DM on trigger",
+          "body": "Optionally DM a triggered user with a NEXORIA-branded notice and an invite back to the server. Administrator example text is only included for administrator previews; administrators themselves are protected from automatic punishment."
+        },
+        {
+          "heading": "Logging",
+          "body": "Honeypot Triggered is a normal Logging event. The Honeypot module can set its log channel directly, and that same channel is synchronized with Logging → Honeypot Triggered. If no Discord log channel is selected, the event can still be retained in the Logging history."
+        },
+        {
+          "heading": "Punishment",
+          "body": "Punishment is a multi-select. When more than one is chosen the strongest applies: Ban over Kick over Timeout over Log."
+        },
+        {
+          "heading": "Global live statistics",
+          "body": "NEXORIA administrators can open Global Honeypot Statistics from dashboard navigation to view a global trigger trend graph, trigger/action totals, aggregate Discord member counts, server counts, and a per-server list with server names, member counts, and trigger totals. Inside a selected server Honeypot module, Live Statistics can switch between This server and Global graphs. Global server-name details are restricted to NEXORIA administrators. Member totals sum Discord-reported guild memberCount values for connected servers; they are not a count of individually monitored message content."
+        }
+      ]
+    },
+    {
+      "category": "Modules",
+      "moduleId": "logging",
+      "title": "Logging",
+      "summary": "Server activity logging — pick a channel per log type (or per whole category), self-posted or via webhook, with ignore lists for noisy channels/roles/users.",
+      "sections": [
+        {
+          "heading": "Log types",
+          "body": "Grouped into categories (Bot, Custom Commands, Applications, Channels, Roles, Members, Messages, Voice, and more) — expand a category to set a channel for each type inside it individually, or set the whole category at once. Custom Command Used records custom command execution with the user, channel, and command name."
+        },
+        {
+          "heading": "Self-post vs. webhook",
+          "body": "By default NEXORIA posts log messages itself. A channel can instead be set to use a webhook — useful for custom branding in that channel — but since anyone who obtains the webhook URL can post to it, this is opt-in per channel with a warning before you turn it on."
+        },
+        {
+          "heading": "Ignore lists",
+          "body": "Channels, roles, and users can be excluded from logging entirely, so noisy bots or a specific channel don't flood your log channels."
+        },
+        {
+          "heading": "Attachments",
+          "body": "Attachments from logged messages are never saved as normal files. Images are converted to text inside a ZIP and every other file (for example .bat or .cpp) is stored inside a ZIP, then rebuilt only when someone opens or downloads it. Risky file types download inside a ZIP."
+        },
+        {
+          "heading": "Snipe deleted messages",
+          "body": "Use /snipe with count:1 for the latest deleted message or count:5 for the five most recently deleted messages in the current channel. Only records marked deleted with a deletion timestamp are eligible; ordinary recent messages are never included. Add the user option to filter by author. Results are private. Each result is rendered as an embed, and larger counts are split into safe batches so they are not silently cut off by a single 2,000-character response limit. Snipe reads the persistent Message Archive and survives restarts."
+        },
+        {
+          "heading": "Message Archives and Logging visibility",
+          "body": "Message Archives are the canonical persistent record of human messages and deletion events. Archive ingestion and deletion markers are independent of whether a Discord logging destination is configured and independent of whether the Logging pages are exposed in the dashboard navigation. The Logging module controls staff-facing browsing and configured log delivery; it does not control whether the underlying archive records are maintained. /snipe reads deleted=true records with deletedAt timestamps from that same archive, including single-message and bulk deletions, so its history survives bot restarts without duplicate storage."
+        },
+        {
+          "heading": "Migration from the older snipe cache",
+          "body": "If Data/Misc/snipe_cache.json exists from an older NEXORIA version, the next startup imports its records into each server's Message Archive and removes the old cache only after the archive writes succeed. If migration fails, the original file is retained so the records are not lost."
+        }
+      ]
+    },
+    {
+      "category": "Modules",
+      "moduleId": "member-automation",
+      "title": "Member Automation",
+      "summary": "Gateway, Welcomer and Leaver automation in one module.",
+      "sections": [
+        {
+          "heading": "Gateway & Welcomer",
+          "body": "Automatically assign a configured join role and send a customizable welcome message."
+        },
+        {
+          "heading": "Leaver",
+          "body": "Send a customizable goodbye message with member ping and remaining member count."
+        },
+        {
+          "heading": "Join and bot roles",
+          "body": "When you pick a role that NEXORIA will give to people, you can only choose roles below your own highest role. The server owner and co-owners (set on the website under General Settings) can choose any role. Roles above your own are greyed out in the list, and the host rejects the save if one slips through."
+        }
+      ]
+    },
+    {
+      "category": "Modules",
+      "moduleId": "moderation",
+      "title": "Moderation",
+      "summary": "Warnings, mutes, kicks, bans and permanent moderation case history.",
+      "sections": [
+        {
+          "heading": "Commands",
+          "body": "NEXORIA provides /mute, /unmute, /ban, /unban, /kick, /warn, /unwarn, /list and /case. Commands are enabled by default while the module itself can be disabled per server."
+        },
+        {
+          "heading": "Warnings",
+          "body": "Warnings stack by user. /list shows active and historical warns, including when and why each warning was created. /unwarn closes the most recent active warning without deleting its history."
+        },
+        {
+          "heading": "Cases",
+          "body": "Every moderation action receives a server CASE ID and a global NEX ID. Case IDs can be opened from Discord through the linked NEXORIA website case page."
+        },
+        {
+          "heading": "Warning thresholds",
+          "body": "Server owners and configured co-owners can configure actions that trigger when a member reaches a selected active warning count or higher."
+        },
+        {
+          "heading": "Moderation emoji",
+          "body": "Choose a server emoji (or paste any emoji) in Settings > Moderation emoji. It is shown next to Moderation in the dashboard sidebar, the same way the other modules work."
+        },
+        {
+          "heading": "Image filters",
+          "body": "Upload an image to block it. The host stores the file locally and compares the SHA-256 hash of every image sent in your server with it, so only the exact same file matches. Each filter can run any combination of: Log, Warn, Mute, Kick, Ban and Delete message. A ban replaces kick/mute; a kick replaces mute."
+        },
+        {
+          "heading": "Warning threshold actions",
+          "body": "Warning rules can also run several actions at once (Log, Mute, Kick, Ban). Undoing a change returns the editor to its saved state and hides the Changes detected bar automatically."
+        },
+        {
+          "heading": "My Moderation Cases",
+          "body": "Members can open My Moderation Cases from the website navigation to review moderation cases recorded against their Discord account across servers where they are still a member. Each entry shows the server, case IDs, action type, status, reason, moderator and timestamps. This is a read-only personal view; server staff continue to manage cases in the Moderation module. Members can also choose, per server, whether their aggregate moderator totals may appear in the public Developers API moderation leaderboard. This opt-in is managed from My Moderation Cases; opting out removes the member from future leaderboard responses. Individual case details are never included."
+        }
+      ]
+    },
+    {
+      "category": "Roles",
+      "id": "reaction-roles",
+      "title": "Reaction Roles",
+      "summary": "Send editable role-selection messages using reactions, buttons, or dropdowns.",
+      "sections": [
+        {
+          "heading": "Messages",
+          "body": "Create and edit messages after sending. NEXORIA keeps the message ID so changes update the existing Discord message."
+        },
+        {
+          "heading": "Selection types",
+          "body": "Reactions support up to 20 role reactions. Buttons support up to 5 buttons. Dropdowns support up to 25 options."
+        },
+        {
+          "heading": "Cooldowns",
+          "body": "A per-user message cooldown prevents rapid role switching."
+        },
+        {
+          "heading": "Roles you can grant",
+          "body": "When you pick a role that NEXORIA will give to people, you can only choose roles below your own highest role. The server owner and co-owners (set on the website under General Settings) can choose any role. Roles above your own are greyed out in the list, and the host rejects the save if one slips through."
+        }
+      ],
+      "moduleId": "reaction-roles"
+    },
+    {
+      "category": "Modules",
+      "moduleId": "server-stats",
+      "title": "ServerStats",
+      "summary": "Create and maintain live Discord channel counters for server activity.",
+      "sections": [
+        {
+          "heading": "Overview",
+          "body": "ServerStats creates read-only voice channels whose names show live server totals. Counters refresh automatically every 15 minutes and can be refreshed manually with /counter update. Manage counters with /counter list, create, update, settings, change, delete, and reset. The module does not add a /help command."
+        },
+        {
+          "heading": "Commands",
+          "body": "/counter list lists configured counters and IDs. /counter create creates a counter channel. /counter update refreshes all counters immediately. /counter settings displays the update interval and configured total. /counter change renames a counter using its ID. /counter delete removes one counter and its channel. /counter reset removes all configured counters and their channels. Commands require Discord Manage Server permission."
+        },
+        {
+          "heading": "All 36 counter types",
+          "body": "Member counters: all (members and bots), members (members only), bots (bots only), bans (banned members), pending (pending members). Role counters: role (members with a selected role), roles (roles in server), norole (members without roles), onlinerole (online members with a selected role), offlinerole (offline members with a selected role). Status counters: online, offline, dnd, idle, streaming, playing (optionally filtered by game), onlinebot, status (requires a status filter). Ticket counters: ticketopen, ticketcreated, ticketclosed, ticketrenamed. Channel/category counters: connected, channels, parent (requires category), text, voice, categories, announcement, staging. Boost counters: boosts, tier. Emoji/sticker counters: emojis, static, animated, stickers."
+        },
+        {
+          "heading": "Permissions and limitations",
+          "body": "Counter commands require Manage Server. The bot needs Manage Channels and access to guild member/presence data. Role counters require a selected role; parent requires a category; status requires a status filter. Ticket counters read NEXORIA Ticket Tool records. Ban counts require the bot to fetch the server ban list. Presence values depend on Discord's available presence data."
+        },
+        {
+          "heading": "Documentation command",
+          "body": "The global /documentation command works in servers and direct messages. Choose Open documentation to receive the documentation link. Choose Ask a question and provide a question to receive a short answer based on published documentation, together with a direct documentation link."
+        }
+      ]
+    },
+    {
+      "category": "Server",
+      "id": "setup",
+      "title": "Server Setup",
+      "summary": "Configure a complete server baseline, copy a server structure, or import selected server settings.",
+      "sections": [
+        {
+          "heading": "Setup modes",
+          "body": "Full Server, roles, channels, permissions, logging and status can be applied independently."
+        },
+        {
+          "heading": "Server Copy Board",
+          "body": "Export a structure-only NEXORIA snapshot containing server settings, roles, role permissions and hierarchy, channels, categories, channel permission overwrites, optional emojis/stickers, and NEXORIA module settings. Messages, ticket transcripts and logging history are never exported."
+        },
+        {
+          "heading": "Import",
+          "body": "Paste a snapshot, load a JSON file, or paste it from the clipboard. You can choose whether to remove existing roles, channels, or expressions before importing, and can independently enable server settings and NEXORIA module settings. Role and channel IDs are remapped automatically so logging and module references continue to point at the imported structure."
+        },
+        {
+          "heading": "Discord limitations",
+          "body": "Managed bot/integration roles and Discord-managed resources cannot be deleted or recreated by a bot and are therefore skipped. Discord permissions and any settings the bot lacks permission to change are applied on a best-effort basis."
+        },
+        {
+          "heading": "Terminal announcements",
+          "body": "Turn announcement publishing off if you do not want announcements from the bot owner posted in this server."
+        },
+        {
+          "heading": "Quick Setup",
+          "body": "The first time a server owner or configured co-owner opens the dashboard, NEXORIA opens Quick Setup. Choose which modules should be enabled and which slash commands should be registered in that server. Enable all selects every available module and command; after that the same control changes to Disable all. You can reopen Quick Setup from the General section of the dashboard sidebar. Saving changes only module enable switches and the list of disabled slash commands; it preserves tickets, moderation cases, logs and other module data. The General Settings page also provides Reset module setup. That reset returns module enablement and slash-command selections to their default enabled state and opens Quick Setup again. It deliberately preserves tickets, moderation cases, logs, events, counters and other operational records."
+        }
+      ],
+      "moduleId": "setup"
+    },
+    {
+      "category": "Modules",
+      "moduleId": "ticket-tool",
+      "title": "Ticket Tool",
+      "summary": "Support tickets: panels users click to open a ticket, per-subject settings, staff claiming, closing DMs, share links, and insights.",
+      "sections": [
+        {
+          "heading": "Panels",
+          "body": "A panel is a message (plain text and/or an embed) with buttons or a dropdown that users click to open a ticket. Each option on a panel connects to a Ticket Template (a \"subject\"), so one panel can offer several kinds of tickets at once."
+        },
+        {
+          "heading": "Subjects (Ticket Templates)",
+          "body": "Each subject has its own welcome message, close message, staff roles, user/staff/claimer channel permissions, ticket limits, creation cooldowns, an optional auto-close timer, and its own logging toggles."
+        },
+        {
+          "heading": "Claiming & Staff-Only Claim",
+          "body": "Staff can claim a ticket to signal they're handling it. When Staff-Only Claim is on, only members with a staff role for that subject can claim."
+        },
+        {
+          "heading": "Closing DM",
+          "body": "A guild-wide, customizable embed DM sent to whoever opened a ticket once it's closed, separate from a subject's own plain-text close message. Supports {ticket.url} — a link back to the person's own authenticated ticket page."
+        },
+        {
+          "heading": "Share Links",
+          "body": "When sharing is turned on, a closed ticket can be given a public, read-only share link so its transcript can be sent to someone without dashboard access."
+        },
+        {
+          "heading": "Insights",
+          "body": "Ticket volume, close rate, and staff performance over a selectable time period, computed from real ticket data — nothing here is simulated."
+        },
+        {
+          "heading": "Reported reviews: status and case IDs",
+          "body": "When a review is reported, its report button shows the status (Unresolved, Ongoing or Resolved) and a global case ID such as RVW-000012. Administrators can filter by status and search by case ID in the Admin panel."
+        },
+        {
+          "heading": "Blocking reviewers",
+          "body": "Administrators can block a user from reviewing tickets in one server or on every server. The user gets a DM unless they turned off Review restriction DMs in User Settings > Notifications. Everyone who is blocked is listed under Admin panel > Security & restrictions > Blocked users."
+        },
+        {
+          "heading": "Images, files and transcripts",
+          "body": "Ticket images are converted to text and stored inside ZIP files; other files are stored inside ZIPs under a neutral name, so nothing on the host can run by accident. They are rebuilt only when opened or downloaded. Click an image to preview and zoom, or use Download. Downloaded transcripts load images and files through single-use tokens (255 characters, valid 3 days)."
+        },
+        {
+          "heading": "Transcript download tokens (admins)",
+          "body": "Admin panel > Tickets > Transcript downloads, and each ticket's detail view, show who downloaded a transcript, when, and which tokens were used. Invalidate a whole download or a single token at any time."
+        }
+      ]
+    },
+    {
+      "category": "Modules",
+      "moduleId": "verification",
+      "title": "Server Verification Methods",
+      "summary": "Configure Roblox, Steam and Google Email verification, account linking, anti-alt protection, member history and role binds.",
+      "sections": [
+        {
+          "heading": "Verification providers",
+          "body": "Choose Roblox, Steam, Google Email OAuth, or a combination in Server Verification Methods → Verification. Require every selected method (AND) or at least one selected method (OR). Roblox uses Roblox OAuth. Steam browser sign-in uses Steam OpenID 2.0, not a conventional OAuth client flow. Email verification for this feature uses Google OAuth 2.0 and accepts a Google-verified email address."
+        },
+        {
+          "heading": "Provider setup",
+          "body": "Configure STEAM_API_KEY optionally for Steam persona name/avatar details. Configure GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET and the exact HTTPS GOOGLE_REDIRECT_URI for Google Email OAuth. Keep all credentials in the private host config.env. Steam uses server-validated Steam OpenID 2.0. Email uses Google OAuth 2.0. Configure the exact HTTPS Google redirect URI and keep all credentials in the private host config.env. See the Server Verification Methods section in guide.md for setup and security notes."
+        },
+        {
+          "heading": "Anti-alt and linked-account bans",
+          "body": "The identity graph connects Discord accounts through Roblox, Steam and verified Google email identities. Anti-alt checks can use those cross-provider links. /banlinked bans a target and Discord accounts connected through historical identity links; the bot needs Ban Members permission and the actor needs server settings access, Ban Members permission, or owner/co-owner access."
+        },
+        {
+          "heading": "Privacy and profiles",
+          "body": "/privacy opens server-scoped privacy preferences. /profile [user] shows a Roblox profile card only when the target permits profile lookups and has not made their profile private. /update [user] refreshes linked Roblox and Steam profile details."
+        },
+        {
+          "heading": "Binds and groups",
+          "body": "Bind rules support Roblox group membership/roles, items, game passes and Discord role combinations (all selected Discord roles are required). Binds can be placed in named groups, enabled/disabled together, and set to exclusive mode so only the highest-ranked matching role in a group remains. Display-name templates support {role}, {username}, {roblox}, {steam} and {email}."
+        },
+        {
+          "heading": "Membership history and automatic role updates",
+          "body": "NEXORIA imports members visible at startup and records future joins/leaves. Bind reconciliation runs periodically and removes configured roles when Roblox group/item/game-pass conditions are lost. API errors do not trigger role removal. Discord cannot provide a complete historical roster of members who left before this feature was installed."
+        },
+        {
+          "heading": "Permissions",
+          "body": "The dashboard requires owner/co-owner access or configured General Settings dashboard access. The bot needs Manage Roles for bind changes and Ban Members for linked-account bans. Keep the bot's highest role above roles it must manage."
+        },
+        {
+          "heading": "Verification commands and buttons",
+          "body": "NEXORIA verification built-ins include /verify (and supported prefix aliases ?verify and !verify), /manualverify, /unverify, /verifyall, /verifychannel, /privacy, /profile, /update, and /banlinked. Verification messages also use the Verify with NEXORIA button, Complete Verification button, and account-sharing/privacy selection buttons. These buttons use the same verification service as the commands; verification is not limited to /verify. /verifyall and /verifychannel are owner-level management actions. Availability depends on configured command permissions and whether verification is enabled."
+        }
+      ]
+    },
+    {
+      "category": "Modules",
+      "moduleId": "webhook",
+      "title": "Webhooks",
+      "summary": "Create, customize and execute Discord webhooks.",
+      "sections": [
+        {
+          "heading": "Webhook control",
+          "body": "Create webhooks in text channels, change their names and avatars, choose channels, and send rich messages with embeds and mention controls."
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "key": "user.id",
+      "group": "user",
+      "description": "The user's Discord user id (a raw snowflake, not a mention)."
+    },
+    {
+      "key": "user.name",
+      "group": "user",
+      "description": "The user's Discord username."
+    },
+    {
+      "key": "user.mention",
+      "group": "user",
+      "description": "Pings the user, e.g. @SomeUser."
+    },
+    {
+      "key": "user.avatar",
+      "group": "user",
+      "description": "A direct URL to the user's avatar image."
+    },
+    {
+      "key": "server.id",
+      "group": "server",
+      "description": "This server's Discord id."
+    },
+    {
+      "key": "server.name",
+      "group": "server",
+      "description": "This server's name."
+    },
+    {
+      "key": "server.logo",
+      "group": "server",
+      "description": "A direct URL to this server's icon image (blank if it has none)."
+    },
+    {
+      "key": "server.memberCount",
+      "group": "server",
+      "description": "Total member count for this server."
+    },
+    {
+      "key": "server.onlineCount",
+      "group": "server",
+      "description": "Best-effort count of currently online members."
+    },
+    {
+      "key": "server.boostCount",
+      "group": "server",
+      "description": "This server's current boost/Nitro-boost count."
+    },
+    {
+      "key": "server.channelCount",
+      "group": "server",
+      "description": "Total number of channels in this server."
+    },
+    {
+      "key": "server.roleCount",
+      "group": "server",
+      "description": "Total number of roles in this server."
+    },
+    {
+      "key": "channel.id",
+      "group": "channel",
+      "description": "The id of the channel this ran in."
+    },
+    {
+      "key": "channel.name",
+      "group": "channel",
+      "description": "The name of the channel this ran in, e.g. #general."
+    },
+    {
+      "key": "channel.mention",
+      "group": "channel",
+      "description": "A clickable link to the channel this ran in."
+    },
+    {
+      "key": "user.displayName",
+      "group": "user",
+      "description": "The user's current Discord display/global name."
+    },
+    {
+      "key": "user.tag",
+      "group": "user",
+      "description": "The user's Discord tag/username."
+    },
+    {
+      "key": "user.bot",
+      "group": "user",
+      "description": "true when the user is a bot, otherwise false."
+    },
+    {
+      "key": "user.createdAt",
+      "group": "user",
+      "description": "The user's Discord account creation timestamp in ISO format."
+    },
+    {
+      "key": "server.ownerId",
+      "group": "server",
+      "description": "The Discord user id of the server owner."
+    },
+    {
+      "key": "server.createdAt",
+      "group": "server",
+      "description": "The server creation timestamp in ISO format."
+    },
+    {
+      "key": "server.boostTier",
+      "group": "server",
+      "description": "The server's current boost tier."
+    },
+    {
+      "key": "server.verificationLevel",
+      "group": "server",
+      "description": "The server's Discord verification level."
+    },
+    {
+      "key": "channel.categoryId",
+      "group": "channel",
+      "description": "The parent category id of this channel, if any."
+    },
+    {
+      "key": "channel.topic",
+      "group": "channel",
+      "description": "The channel topic, when available."
+    },
+    {
+      "key": "channel.type",
+      "group": "channel",
+      "description": "The Discord channel type value."
+    },
+    {
+      "key": "channel.url",
+      "group": "channel",
+      "description": "A direct Discord URL to the current channel."
+    },
+    {
+      "key": "channel.parentName",
+      "group": "channel",
+      "description": "The parent category name, when the channel belongs to a category."
+    },
+    {
+      "key": "server.iconUrl",
+      "group": "server",
+      "description": "Alias for the server icon URL."
+    },
+    {
+      "key": "server.boostProgress",
+      "group": "server",
+      "description": "Current boost count as a human-readable value."
+    },
+    {
+      "key": "bot.id",
+      "group": "bot",
+      "description": "NEXORIA's Discord user id."
+    },
+    {
+      "key": "bot.name",
+      "group": "bot",
+      "description": "NEXORIA's current Discord username."
+    },
+    {
+      "key": "bot.mention",
+      "group": "bot",
+      "description": "Mentions NEXORIA."
+    },
+    {
+      "key": "command.timestamp",
+      "group": "command",
+      "description": "The current command execution timestamp in ISO format."
+    },
+    {
+      "key": "time.unix",
+      "group": "time",
+      "description": "Current Unix timestamp in seconds."
+    },
+    {
+      "key": "time.iso",
+      "group": "time",
+      "description": "Current timestamp in ISO 8601 format."
+    },
+    {
+      "key": "time.date",
+      "group": "time",
+      "description": "Current local date formatted as YYYY-MM-DD."
+    },
+    {
+      "key": "time.time",
+      "group": "time",
+      "description": "Current local time formatted as HH:MM:SS."
+    },
+    {
+      "key": "ticket.id",
+      "group": "ticket",
+      "description": "This ticket's internal id.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.number",
+      "group": "ticket",
+      "description": "This ticket's display number, e.g. #14.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.subject",
+      "group": "ticket",
+      "description": "The subject name this ticket was opened under.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.priority",
+      "group": "ticket",
+      "description": "This ticket's priority (e.g. normal, high).",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.status",
+      "group": "ticket",
+      "description": "This ticket's current status (open/closed).",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.openedBy",
+      "group": "ticket",
+      "description": "The username of whoever opened this ticket.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.claimedBy",
+      "group": "ticket",
+      "description": "The username of whoever claimed this ticket (blank if unclaimed).",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.shareUrl",
+      "group": "ticket",
+      "description": "A link to this ticket's read-only share page.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.url",
+      "group": "ticket",
+      "description": "A link to the ticket owner's own authenticated ticket page (Closing DM message only).",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.openedById",
+      "group": "ticket",
+      "description": "The Discord id of the ticket opener.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.claimedById",
+      "group": "ticket",
+      "description": "The Discord id of the staff member who claimed the ticket.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.closedBy",
+      "group": "ticket",
+      "description": "The username of the person who closed the ticket.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.closedById",
+      "group": "ticket",
+      "description": "The Discord id of the person who closed the ticket.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.channelId",
+      "group": "ticket",
+      "description": "The Discord channel id for this ticket.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.createdAt",
+      "group": "ticket",
+      "description": "The ticket creation timestamp in ISO format.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.closedAt",
+      "group": "ticket",
+      "description": "The ticket closure timestamp in ISO format.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "ticket.messageCount",
+      "group": "ticket",
+      "description": "The number of stored ticket messages.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "subject.name",
+      "group": "subject",
+      "description": "The name of the ticket subject someone picked.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "subject.description",
+      "group": "subject",
+      "description": "The description text set on this ticket subject.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "subject.id",
+      "group": "subject",
+      "description": "The internal id of the ticket subject.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "subject.category",
+      "group": "subject",
+      "description": "The subject's configured category.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "subject.priority",
+      "group": "subject",
+      "description": "The subject's default ticket priority.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "subject.active",
+      "group": "subject",
+      "description": "true when the subject is active.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "subject.ticketNameFormat",
+      "group": "subject",
+      "description": "The subject's ticket-name format.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "subject.staffRoleCount",
+      "group": "subject",
+      "description": "Number of staff roles assigned to the subject.",
+      "moduleId": "ticket-tool"
+    },
+    {
+      "key": "command.id",
+      "group": "command",
+      "description": "The internal custom-command id.",
+      "moduleId": "custom-commands"
+    },
+    {
+      "key": "command.name",
+      "group": "command",
+      "description": "The custom-command name.",
+      "moduleId": "custom-commands"
+    },
+    {
+      "key": "command.trigger",
+      "group": "command",
+      "description": "The command trigger.",
+      "moduleId": "custom-commands"
+    },
+    {
+      "key": "command.scope",
+      "group": "command",
+      "description": "The command scope: prefix, slash, or both.",
+      "moduleId": "custom-commands"
+    },
+    {
+      "key": "command.category",
+      "group": "command",
+      "description": "The custom-command category id.",
+      "moduleId": "custom-commands"
+    },
+    {
+      "key": "command.enabled",
+      "group": "command",
+      "description": "true when the custom command is enabled.",
+      "moduleId": "custom-commands"
+    },
+    {
+      "key": "event.type",
+      "group": "event",
+      "description": "The listener event name.",
+      "moduleId": "custom-commands"
+    },
+    {
+      "key": "event.userId",
+      "group": "event",
+      "description": "The user id associated with a listener event.",
+      "moduleId": "custom-commands"
+    },
+    {
+      "key": "event.channelId",
+      "group": "event",
+      "description": "The channel id associated with a listener event.",
+      "moduleId": "custom-commands"
+    },
+    {
+      "key": "event.memberCount",
+      "group": "event",
+      "description": "The current server member count for listener events.",
+      "moduleId": "custom-commands"
+    },
+    {
+      "key": "event.message",
+      "group": "event",
+      "description": "The message content for message events.",
+      "moduleId": "custom-commands"
+    },
+    {
+      "key": "command.permissionMode",
+      "group": "command",
+      "description": "The command permission mode.",
+      "moduleId": "custom-commands"
+    }
+  ],
+  "faq": [
+    {
+      "id": "nodes",
+      "title": "What are nodes?",
+      "keywords": [
+        "node",
+        "nodes",
+        "block",
+        "blocks",
+        "what is a node",
+        "what are nodes",
+        "what are nodes?"
+      ],
+      "answer": "Nodes are the building blocks of an Advanced command or listener. Each node does one small job: send a message, check a role, wait, change a variable, ban a member...\n\nYou connect nodes with wires, from an output port (right side) to an input port (left side). When the command runs, NEXORIA starts at the Trigger and follows the wires from node to node.\n\n- Open the Advanced builder: Custom Commands > New command > Advanced\n- Add nodes from the palette on the left, grouped by what they do\n- Hover a port to see what it does",
+      "related": [
+        "What are ports and wires?",
+        "List Logic nodes",
+        "What does Send Message do?"
+      ]
+    },
+    {
+      "id": "ports-wires",
+      "title": "Ports and wires",
+      "keywords": [
+        "port",
+        "ports",
+        "wire",
+        "wires",
+        "connect",
+        "connection",
+        "connections",
+        "link nodes",
+        "connect nodes",
+        "connecting nodes",
+        "connect two nodes",
+        "join nodes",
+        "how do i connect"
+      ],
+      "answer": "A port is the small dot on the edge of a node. The dot on the left is the input, the dot(s) on the right are outputs.\n\nDrag from an output port to an input port to make a wire. Branch nodes (the If nodes) have two outputs: True (green) and False (red). Select a wire and press Delete, or right-click it, to remove it.\n\nWires route around other nodes by themselves. While you drag a wire the possible inputs glow.",
+      "related": [
+        "What are nodes?",
+        "How do branches work?"
+      ]
+    },
+    {
+      "id": "trigger",
+      "title": "Trigger",
+      "keywords": [
+        "trigger",
+        "start",
+        "starting",
+        "command name",
+        "begin"
+      ],
+      "answer": "The Trigger node starts a command. It sets the command name, the word people type, whether it is a slash command and/or uses a prefix, and the command scope.\n\nEvery command needs exactly one Trigger. Listeners use a Listener Event node instead, which starts the flow when a Discord event happens (a message is deleted, a member joins...).",
+      "related": [
+        "What is a listener?",
+        "Slash command or prefix?"
+      ]
+    },
+    {
+      "id": "listener",
+      "title": "Listeners",
+      "keywords": [
+        "listener",
+        "listeners",
+        "event",
+        "events",
+        "react to"
+      ],
+      "answer": "A listener is an Advanced flow that runs when something happens in Discord instead of when someone types a command. Examples: log deleted messages, welcome new members, react to edited messages.\n\nStart it with a Listener Event node and pick the event. Use Event Value nodes to read details about the event (the message text, the author...).",
+      "related": [
+        "What is a trigger?"
+      ]
+    },
+    {
+      "id": "slash-prefix",
+      "title": "Slash command or prefix?",
+      "keywords": [
+        "slash",
+        "prefix",
+        "scope",
+        "slash command",
+        "prefix command"
+      ],
+      "answer": "A slash command is typed as /name and Discord shows its description. A prefix command is typed as a prefix plus the name, for example ?hello.\n\nCommand scope on the Trigger node chooses which one works: Prefix only, Slash only, or both. Slash commands need a description (use the Description node).",
+      "related": [
+        "What is a trigger?"
+      ]
+    },
+    {
+      "id": "text-variables",
+      "title": "Text variables like {user.mention}",
+      "keywords": [
+        "variable",
+        "variables",
+        "placeholder",
+        "placeholders",
+        "{user",
+        "user.mention",
+        "curly",
+        "braces"
+      ],
+      "answer": "Text variables are placeholders you type inside any message or text field, written in curly braces, for example {user.mention} or {server.name}. When the command runs NEXORIA swaps each one for the real value.\n\nThey only live for that one run. Documentation > Variables lists every one. For values that must be remembered between runs use Advanced variables.",
+      "related": [
+        "What are advanced variables?",
+        "How do shared variables work?"
+      ]
+    },
+    {
+      "id": "advanced-variables",
+      "title": "Advanced variables",
+      "keywords": [
+        "advanced variable",
+        "advanced variables",
+        "persistent",
+        "remember",
+        "store a value",
+        "counter",
+        "save a value"
+      ],
+      "answer": "Advanced variables are values NEXORIA remembers between runs, for example a counter or a toggle. Create them from the Variables button in the builder (or Custom Commands > Advanced variables).\n\nUse them as {name} in text fields, and change them with the Set Variable, Increment Variable, Append Variable and Delete Variable nodes. Each server has its own list.",
+      "related": [
+        "How do shared variables work?",
+        "What does Set Variable do?"
+      ]
+    },
+    {
+      "id": "shared-variables",
+      "title": "Shared variables",
+      "keywords": [
+        "shared",
+        "share",
+        "sharing",
+        "shared variable",
+        "shared variables",
+        "token",
+        "connect variable",
+        "between servers"
+      ],
+      "answer": "A shared variable lets two servers use the same value.\n\n- In the server that owns the variable, turn on sharing and choose read-only or read + write. NEXORIA shows a share token once; copy it then.\n- In the other server choose Connect and paste the token. A local variable is created that points at the original.\n- Reading gives the owner's current value. Writing only works if you enabled write access.\n- Turn sharing off at any time to revoke the token and break every connection.\n\nOnly share a token with servers you trust.",
+      "related": [
+        "What are advanced variables?"
+      ]
+    },
+    {
+      "id": "templates",
+      "title": "Templates",
+      "keywords": [
+        "template",
+        "templates",
+        "reuse",
+        "copy nodes",
+        "save nodes"
+      ],
+      "answer": "Templates save a group of nodes (with the variables they use) so you can paste them into any command.\n\n- Ctrl + click nodes to select several, then press Create template, or right-click a node and choose Create template\n- Give it a name and description\n- Open Templates to search them, press Use to paste, or right-click one to delete it\n\nTemplates are stored on the host for your server. Pasting also creates any variables the template needs.",
+      "related": [
+        "How do I select several nodes?"
+      ]
+    },
+    {
+      "id": "multi-select",
+      "title": "Selecting several nodes",
+      "keywords": [
+        "select several",
+        "multi select",
+        "multiple nodes",
+        "ctrl click",
+        "select many",
+        "group"
+      ],
+      "answer": "Hold Ctrl (Cmd on Mac) and click nodes to add or remove them from the selection. A bar appears with Create template, Delete and Clear. Dragging any selected node moves the whole selection.\n\nClick empty canvas to clear the selection.",
+      "related": [
+        "What are templates?"
+      ]
+    },
+    {
+      "id": "branches",
+      "title": "Branches (True / False)",
+      "keywords": [
+        "branch",
+        "branches",
+        "true",
+        "false",
+        "if",
+        "condition",
+        "conditions",
+        "decision"
+      ],
+      "answer": "Branch nodes ask a yes/no question: does the member have a role, is the message long, is it after 22:00... They have two outputs. True runs when the answer is yes, False runs when it is no. Connect each output to the path that should run.\n\nIf an output has no wire the flow simply ends there.",
+      "related": [
+        "List Logic nodes"
+      ]
+    },
+    {
+      "id": "permissions",
+      "title": "Who can use a command",
+      "keywords": [
+        "permission",
+        "permissions",
+        "who can run",
+        "who can use",
+        "restrict command"
+      ],
+      "answer": "The Permissions node controls who may run a command: everyone, administrators, or specific roles. Logic nodes like If Permission and If Has Role can also check inside the flow.\n\nTo stop a person using the bot at all, use the Security nodes (Block User / Allow User) or the Access Control node.",
+      "related": [
+        "List Security nodes"
+      ]
+    },
+    {
+      "id": "builtin",
+      "title": "Built-in commands",
+      "keywords": [
+        "built in",
+        "builtin",
+        "built-in",
+        "default command",
+        "default commands"
+      ],
+      "answer": "Built-in commands ship with NEXORIA (moderation, verification, dashboard...). Open the node view of one to see exactly how it runs; it is shown with the same node cards as the Advanced builder, read-only. To make your own variation build a new Advanced command.",
+      "related": [
+        "What are nodes?"
+      ]
+    },
+    {
+      "id": "modules",
+      "title": "Modules",
+      "keywords": [
+        "module",
+        "modules",
+        "feature",
+        "features",
+        "what can the bot do"
+      ],
+      "answer": "NEXORIA is split into modules you can turn on and off per server: Moderation, Logging, Honeypot, Roblox Verification, Ticket Tool, Custom Commands, Member Automation, Reaction Roles, Webhooks and Setup. Each has its own page in the dashboard sidebar and its own documentation page.",
+      "related": [
+        "How does Roblox verification work?",
+        "How do tickets work?"
+      ]
+    },
+    {
+      "id": "dashboard-access",
+      "title": "Dashboard access",
+      "keywords": [
+        "dashboard access",
+        "who can edit",
+        "dashboard permission",
+        "co-owner",
+        "co owner",
+        "coowner",
+        "admin access",
+        "manage server"
+      ],
+      "answer": "The server owner and co-owners (chosen on the website under General Settings) can always use the dashboard. An administrator gets access only after the owner allows it. The server switcher only lists servers you are allowed to open.\n\nCo-owners may also pick roles above their own, which normal administrators cannot.",
+      "related": [
+        "Which roles can I assign?"
+      ]
+    },
+    {
+      "id": "role-rules",
+      "title": "Which roles can I assign?",
+      "keywords": [
+        "role hierarchy",
+        "assign role",
+        "higher role",
+        "role above",
+        "which roles",
+        "grant role"
+      ],
+      "answer": "Wherever the dashboard gives roles to people (Roblox gamepass/group binds, reaction roles, join roles, the mute role, custom command role actions) you can only choose roles BELOW your own highest role. The server owner and co-owners can choose any role.\n\nRoles above yours are greyed out, and the host refuses the save if one gets through.",
+      "related": [
+        "Dashboard access"
+      ]
+    },
+    {
+      "id": "tickets",
+      "title": "How do tickets work?",
+      "keywords": [
+        "ticket",
+        "tickets",
+        "support ticket",
+        "ticket tool",
+        "open a ticket"
+      ],
+      "answer": "Members press a button on the ticket panel and NEXORIA opens a private channel for them and the staff. Staff can claim, add people, close, and share a ticket. When a ticket closes the member can review the support they got (0-10).\n\nImages and files sent in a ticket are stored on the host (images as text inside a ZIP, files inside ZIPs). Members can download a transcript; its image/file links are single-use and expire after 3 days.",
+      "related": [
+        "How do ticket reports work?",
+        "What is in a transcript?"
+      ]
+    },
+    {
+      "id": "ticket-reports",
+      "title": "Ticket reports",
+      "keywords": [
+        "report",
+        "reports",
+        "report ticket",
+        "report review",
+        "case",
+        "case id",
+        "unresolved",
+        "ongoing",
+        "denied"
+      ],
+      "answer": "Every ticket has a Report button. A report gets a global case ID (TKT-000001 style) and a status: Unresolved, Ongoing, Resolved or Denied. The status is shown next to the button so everyone can see what happened.\n\nAdministrators work the reports in the Admin panel: filter by status, search by case ID, and change the status (the reporter gets a DM). Older review reports can also be blocked per server or globally.",
+      "related": [
+        "How do tickets work?"
+      ]
+    },
+    {
+      "id": "transcripts",
+      "title": "What is in a transcript?",
+      "keywords": [
+        "transcript",
+        "transcripts",
+        "download transcript",
+        "ticket download",
+        "expires",
+        "token"
+      ],
+      "answer": "A transcript is a standalone HTML copy of a ticket. Text is inside the file. Images and files load from the NEXORIA host through links with a single-use token (255 characters, valid for 3 days). Click an image to preview and zoom, or download it.\n\nEach link works once; download the transcript again for fresh links. Administrators can see who downloaded a transcript and invalidate tokens.",
+      "related": [
+        "How do tickets work?"
+      ]
+    },
+    {
+      "id": "honeypot",
+      "title": "Honeypot",
+      "keywords": [
+        "honeypot",
+        "honey pot",
+        "bait",
+        "trap channel",
+        "compromised account"
+      ],
+      "answer": "A honeypot is a channel no real member should ever type in. Hacked accounts that spam every channel type there, and NEXORIA then removes them (kick/softban, timeout or ban as you choose) and deletes their recent messages. The member gets a DM explaining what happened and how to recover the account.\n\nAdministrators are never punished and their messages do not count toward the kick statistics.",
+      "related": [
+        "Modules"
+      ]
+    },
+    {
+      "id": "verification",
+      "title": "How does Roblox verification work?",
+      "keywords": [
+        "verify",
+        "verification",
+        "roblox",
+        "gamepass",
+        "link roblox",
+        "roblox account",
+        "manualverify",
+        "manual verify"
+      ],
+      "answer": "Members link their Roblox account and receive roles for it. They can start with /verify, ?verify or !verify.\n\nRoles can be tied to gamepasses, groups and other Roblox conditions (binds). The server owner or a co-owner can verify someone by hand with /manualverify (pick the Discord member and optionally type their Roblox username). Manual verification only counts in that server.",
+      "related": [
+        "Which roles can I assign?"
+      ]
+    },
+    {
+      "id": "moderation",
+      "title": "Moderation module",
+      "keywords": [
+        "moderation",
+        "warn",
+        "warning",
+        "mute",
+        "kick",
+        "ban",
+        "image filter",
+        "case",
+        "threshold"
+      ],
+      "answer": "Moderation records every warn, mute, kick and ban as a case. Warning thresholds can run actions automatically (Log, Mute, Kick, Ban) when a member reaches a number of active warns.\n\nImage filters block a specific image: upload it once and NEXORIA compares every image people post against it. A filter can combine actions (Log, Warn, Mute, Kick, Ban, Delete message).",
+      "related": [
+        "Honeypot"
+      ]
+    },
+    {
+      "id": "setup",
+      "title": "Server builder and export",
+      "keywords": [
+        "setup",
+        "server builder",
+        "build server",
+        "export server",
+        "template server",
+        "build my server"
+      ],
+      "answer": "Setup can build a ready-made server layout (roles, categories, channels, ticket panel, honeypots, optional Roblox verification) and can export your current server's structure (roles, channels, permissions, icon) without any messages, so you can rebuild it elsewhere.\n\nThe builder shows a live progress estimate and always asks before deleting or renaming anything.",
+      "related": [
+        "Modules"
+      ]
+    },
+    {
+      "id": "logging",
+      "title": "Logging module",
+      "keywords": [
+        "logging",
+        "logs",
+        "log channel",
+        "message log",
+        "audit"
+      ],
+      "answer": "Logging writes server events (message edits and deletes, joins, leaves, role changes...) to channels you choose. Attachments from logged messages are stored safely inside ZIPs on the host and never as normal files.",
+      "related": [
+        "Modules"
+      ]
+    },
+    {
+      "id": "charts",
+      "title": "Chart nodes",
+      "keywords": [
+        "chart",
+        "charts",
+        "graph",
+        "graphs",
+        "bar chart",
+        "line chart",
+        "pie chart",
+        "gauge",
+        "leaderboard chart",
+        "histogram",
+        "sparkline"
+      ],
+      "answer": "Chart nodes draw your numbers. Pick Bar, Line, Area, Pie, Donut, Scatter, Gauge, Sparkline, Histogram, Radar, Leaderboard, Table or Progress.\n\nEach node shows a live preview inside the builder. The data can be:\n\n- typed in (values like `3, 7, 5` or `Mon:3, Tue:7`, optional labels)\n- read from an advanced variable\n- taken from the wire, from the node before it\n\nWhen the command runs the chart is posted as a text chart in the channel and also passed to the next node.",
+      "related": [
+        "What are advanced variables?",
+        "List Charts nodes"
+      ]
+    },
+    {
+      "id": "bind-groups",
+      "title": "Verification binds: rank and 1 role only",
+      "keywords": [
+        "bind",
+        "binds",
+        "bind group",
+        "only 1 role",
+        "one role",
+        "exclusive",
+        "bind order",
+        "bind rank",
+        "short name"
+      ],
+      "answer": "Each Roblox bind has a short name, an Edit button, and a rank (its position in the list, top = #1).\n\nTurn on Only allow 1 role in a group for the binds that must be exclusive. All binds with it on act as one group: the member gets only the role of the highest-ranked matching bind, and lower ones are not given (or are removed).",
+      "related": [
+        "How does Roblox verification work?"
+      ]
+    },
+    {
+      "id": "docs-assistant",
+      "title": "The docs assistant",
+      "keywords": [
+        "assistant",
+        "ask docs",
+        "ask the docs",
+        "help bot",
+        "this window"
+      ],
+      "answer": "This window answers from the documentation only, there is no AI service or API key involved. Ask about a node, a variable, or a module.\n\nDrag the title bar to move it, drag any edge to resize it, then press Save to remember the position. The conversation list on the left keeps your chats on the host; the three-dot menu downloads or deletes them.",
+      "related": [
+        "What are nodes?"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "type": "trigger",
+      "label": "Trigger",
+      "group": "Command",
+      "color": "violet",
+      "icon": "bolt",
+      "help": "Required starting point. Choose prefix or slash command and define its trigger.",
+      "branch": false,
+      "sample": {
+        "name": "Welcome",
+        "trigger": "welcome",
+        "slash": "yes",
+        "triggerPrefix": "?",
+        "scope": {
+          "value": "Slash command",
+          "options": [
+            "Prefix only",
+            "Slash only",
+            "Prefix and slash"
+          ]
+        }
+      }
+    },
+    {
+      "type": "description",
+      "label": "Description",
+      "group": "Command",
+      "color": "cyan",
+      "icon": "file-description",
+      "help": "Optional command description. Used by slash commands.",
+      "branch": false,
+      "sample": {
+        "description": "Greets a new member"
+      }
+    },
+    {
+      "type": "permissions",
+      "label": "Permissions",
+      "group": "Command",
+      "color": "blue",
+      "icon": "shield-lock",
+      "help": "Choose who can execute the command and required roles.",
+      "branch": false,
+      "sample": {
+        "permissionMode": {
+          "value": "Specific roles",
+          "options": [
+            "Everyone",
+            "Administrators",
+            "Specific roles"
+          ]
+        },
+        "allowedRoles": "Moderator"
+      }
+    },
+    {
+      "type": "listenerTrigger",
+      "label": "Listener Event",
+      "group": "Listeners",
+      "color": "violet",
+      "icon": "activity",
+      "help": "Starts this graph when the selected Discord event occurs.",
+      "branch": false,
+      "sample": {
+        "name": "Log deleted messages",
+        "event": {
+          "value": "messageDelete",
+          "options": [
+            "messageCreate",
+            "messageUpdate",
+            "messageDelete",
+            "messageDeleteBulk",
+            "memberJoin",
+            "memberLeave",
+            "memberUpdate",
+            "memberRoleUpdate",
+            "userUpdate",
+            "reactionAdd",
+            "reactionRemove",
+            "channelCreate",
+            "channelDelete",
+            "channelUpdate",
+            "threadCreate",
+            "threadDelete",
+            "threadUpdate",
+            "roleCreate",
+            "roleDelete",
+            "roleUpdate",
+            "voiceStateUpdate",
+            "inviteCreate",
+            "inviteDelete",
+            "guildUpdate",
+            "banAdd",
+            "banRemove",
+            "stageCreate",
+            "stageDelete",
+            "stageUpdate",
+            "webhookUpdate",
+            "emojiCreate",
+            "emojiDelete",
+            "emojiUpdate",
+            "stickerCreate",
+            "stickerDelete",
+            "stickerUpdate",
+            "scheduledEventCreate",
+            "scheduledEventDelete",
+            "scheduledEventUpdate",
+            "soundboardCreate",
+            "soundboardDelete",
+            "soundboardUpdate",
+            "threadMembersUpdate",
+            "typingStart",
+            "presenceUpdate",
+            "interactionCreate",
+            "customCommandUsed"
+          ]
+        }
+      }
+    },
+    {
+      "type": "eventValue",
+      "label": "Event Value",
+      "group": "Listeners",
+      "color": "teal",
+      "icon": "brackets",
+      "help": "Expose a listener event field as an output.",
+      "branch": false,
+      "sample": {
+        "field": "message.content"
+      }
+    },
+    {
+      "type": "scopeInput",
+      "label": "Scope Input",
+      "group": "Inputs",
+      "color": "teal",
+      "icon": "brackets",
+      "help": "Produces a reusable value from the command context. Connect it to an action and use {node-id} in text fields.",
+      "branch": false,
+      "sample": {
+        "scopeType": {
+          "value": "Command argument",
+          "options": [
+            "Command argument",
+            "Mentioned user",
+            "Message text",
+            "Channel",
+            "Role"
+          ]
+        },
+        "argument": "1"
+      }
+    },
+    {
+      "type": "setChannelSlowmode",
+      "label": "Set Slowmode",
+      "group": "Discord",
+      "color": "cyan",
+      "icon": "clock",
+      "help": "Set the current channel slowmode.",
+      "branch": false,
+      "sample": {
+        "seconds": {
+          "value": "10 seconds",
+          "options": [
+            "Off",
+            "5 seconds",
+            "10 seconds",
+            "30 seconds",
+            "1 minute",
+            "5 minutes",
+            "1 hour"
+          ]
+        }
+      }
+    },
+    {
+      "type": "setChannelName",
+      "label": "Set Channel Name",
+      "group": "Discord",
+      "color": "cyan",
+      "icon": "hash",
+      "help": "Rename the current channel.",
+      "branch": false,
+      "sample": {
+        "value": "ticket-{user.name}"
+      }
+    },
+    {
+      "type": "createRole",
+      "label": "Create Role",
+      "group": "Discord",
+      "color": "cyan",
+      "icon": "shield-plus",
+      "help": "Create a role and output its id.",
+      "branch": false,
+      "sample": {
+        "name": "Verified",
+        "color": "#22c55e"
+      }
+    },
+    {
+      "type": "createChannel",
+      "label": "Create Channel",
+      "group": "Discord",
+      "color": "cyan",
+      "icon": "plus",
+      "help": "Create a text channel and output its id.",
+      "branch": false,
+      "sample": {
+        "name": "welcome-{user.name}"
+      }
+    },
+    {
+      "type": "moveMember",
+      "label": "Move Member",
+      "group": "Discord",
+      "color": "cyan",
+      "icon": "headphones",
+      "help": "Move the current member to a voice channel.",
+      "branch": false,
+      "sample": {
+        "channelId": "Voice lobby"
+      }
+    },
+    {
+      "type": "setServerName",
+      "label": "Set Server Name",
+      "group": "Discord",
+      "color": "cyan",
+      "icon": "server",
+      "help": "Rename the current server.",
+      "branch": false,
+      "sample": {
+        "value": "NEXORIA HQ"
+      }
+    },
+    {
+      "type": "setAvatar",
+      "label": "Set Server Icon",
+      "group": "Discord",
+      "color": "cyan",
+      "icon": "photo",
+      "help": "Change the server icon from a URL.",
+      "branch": false,
+      "sample": {
+        "url": "https://example.com/icon.png"
+      }
+    },
+    {
+      "type": "message",
+      "label": "Send Message",
+      "group": "Discord",
+      "color": "violet",
+      "icon": "message",
+      "help": "Send a Discord message.",
+      "branch": false,
+      "sample": {
+        "content": "Welcome {user.mention}!"
+      }
+    },
+    {
+      "type": "sendEmbed",
+      "label": "Send Embed",
+      "group": "Discord",
+      "color": "violet",
+      "icon": "layout-dashboard",
+      "help": "Send a custom Discord embed.",
+      "branch": false,
+      "sample": {
+        "title": "Rules",
+        "content": "Be kind. No spam.",
+        "color": "#8b5cf6"
+      }
+    },
+    {
+      "type": "reply",
+      "label": "Reply",
+      "group": "Discord",
+      "color": "cyan",
+      "icon": "corner-down-left",
+      "help": "Reply to the triggering message.",
+      "branch": false,
+      "sample": {
+        "content": "Pong! {latency}ms"
+      }
+    },
+    {
+      "type": "mentionUser",
+      "label": "Mention User",
+      "group": "Discord",
+      "color": "teal",
+      "icon": "at",
+      "help": "Send a message that mentions the command user.",
+      "branch": false,
+      "sample": {
+        "content": "{user.mention}, check your DMs"
+      }
+    },
+    {
+      "type": "addRole",
+      "label": "Add Role",
+      "group": "Discord",
+      "color": "cyan",
+      "icon": "shield-plus",
+      "help": "Add a selected role to the command user.",
+      "branch": false,
+      "sample": {
+        "roleId": "Member"
+      }
+    },
+    {
+      "type": "removeRole",
+      "label": "Remove Role",
+      "group": "Discord",
+      "color": "red",
+      "icon": "shield-x",
+      "help": "Remove a selected role from the command user.",
+      "branch": false,
+      "sample": {
+        "roleId": "Unverified"
+      }
+    },
+    {
+      "type": "react",
+      "label": "React",
+      "group": "Discord",
+      "color": "pink",
+      "icon": "mood-smile",
+      "help": "React to the triggering message.",
+      "branch": false,
+      "sample": {
+        "emoji": "👍"
+      }
+    },
+    {
+      "type": "dmUser",
+      "label": "DM User",
+      "group": "Discord",
+      "color": "teal",
+      "icon": "mail",
+      "help": "Send a direct message to the command user.",
+      "branch": false,
+      "sample": {
+        "content": "Thanks for joining!"
+      }
+    },
+    {
+      "type": "deleteTrigger",
+      "label": "Delete Trigger",
+      "group": "Discord",
+      "color": "red",
+      "icon": "trash",
+      "help": "Delete the prefix message that triggered the command.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "setChannelTopic",
+      "label": "Set Channel Topic",
+      "group": "Discord",
+      "color": "cyan",
+      "icon": "message-2",
+      "help": "Set the current text channel topic.",
+      "branch": false,
+      "sample": {
+        "value": "Support for {server.name}"
+      }
+    },
+    {
+      "type": "pinTrigger",
+      "label": "Pin Trigger",
+      "group": "Discord",
+      "color": "pink",
+      "icon": "pin",
+      "help": "Pin the triggering message when possible.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "unpinTrigger",
+      "label": "Unpin Trigger",
+      "group": "Discord",
+      "color": "pink",
+      "icon": "pin",
+      "help": "Unpin the triggering message when possible.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "clearReactions",
+      "label": "Clear Reactions",
+      "group": "Discord",
+      "color": "red",
+      "icon": "mood-off",
+      "help": "Remove reactions from the triggering message.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "sendToChannel",
+      "label": "Send To Channel",
+      "group": "Discord",
+      "color": "blue",
+      "icon": "message",
+      "help": "Send a message to another channel. Channel is an ID or #name.",
+      "branch": false,
+      "sample": {
+        "value": "#announcements",
+        "content": "Hello team!"
+      }
+    },
+    {
+      "type": "startThread",
+      "label": "Start Thread",
+      "group": "Discord",
+      "color": "blue",
+      "icon": "message",
+      "help": "Start a thread from the triggering message (needs Create Public Threads).",
+      "branch": false,
+      "sample": {
+        "value": "Discussion: {user.name}"
+      }
+    },
+    {
+      "type": "kickUser",
+      "label": "Kick User",
+      "group": "Moderation",
+      "color": "red",
+      "icon": "logout",
+      "help": "Kick the current or selected member.",
+      "branch": false,
+      "sample": {
+        "reason": "Rule 3: no advertising"
+      }
+    },
+    {
+      "type": "banUser",
+      "label": "Ban User",
+      "group": "Moderation",
+      "color": "red",
+      "icon": "ban",
+      "help": "Ban the current or selected member.",
+      "branch": false,
+      "sample": {
+        "reason": "Raid account",
+        "days": {
+          "value": "Delete 1 day",
+          "options": [
+            "Delete no messages",
+            "Delete 1 day",
+            "Delete 7 days"
+          ]
+        }
+      }
+    },
+    {
+      "type": "timeoutUser",
+      "label": "Mute User (role)",
+      "group": "Moderation",
+      "color": "red",
+      "icon": "clock",
+      "help": "Give the configured mute role for a configurable duration; NEXORIA removes the role when it expires.",
+      "branch": false,
+      "sample": {
+        "duration": {
+          "value": "10 minutes",
+          "options": [
+            "60 seconds",
+            "5 minutes",
+            "10 minutes",
+            "1 hour",
+            "1 day",
+            "1 week"
+          ]
+        },
+        "reason": "Cool off"
+      }
+    },
+    {
+      "type": "removeTimeout",
+      "label": "Unmute User",
+      "group": "Moderation",
+      "color": "green",
+      "icon": "lock-open",
+      "help": "Remove the configured NEXORIA mute role and cancel its expiry schedule.",
+      "branch": false,
+      "sample": {
+        "reason": "Time served"
+      }
+    },
+    {
+      "type": "warnUser",
+      "label": "Warn User",
+      "group": "Moderation",
+      "color": "yellow",
+      "icon": "alert-triangle",
+      "help": "Create a moderation warning log for the member.",
+      "branch": false,
+      "sample": {
+        "reason": "Please keep chat clean"
+      }
+    },
+    {
+      "type": "setNickname",
+      "label": "Set Nickname",
+      "group": "Moderation",
+      "color": "cyan",
+      "icon": "edit",
+      "help": "Change the current member's nickname.",
+      "branch": false,
+      "sample": {
+        "value": "[AFK] {user.name}"
+      }
+    },
+    {
+      "type": "deleteMessage",
+      "label": "Delete Message",
+      "group": "Moderation",
+      "color": "red",
+      "icon": "trash",
+      "help": "Delete the triggering message.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "purgeMessages",
+      "label": "Purge Messages",
+      "group": "Moderation",
+      "color": "red",
+      "icon": "trash",
+      "help": "Bulk delete recent messages.",
+      "branch": false,
+      "sample": {
+        "count": {
+          "value": "20 messages",
+          "options": [
+            "5 messages",
+            "10 messages",
+            "20 messages",
+            "50 messages",
+            "100 messages"
+          ]
+        }
+      }
+    },
+    {
+      "type": "accessControl",
+      "label": "Access Control",
+      "group": "Security",
+      "color": "red",
+      "icon": "shield-lock",
+      "help": "Explicit deny lists always win. Optional allow lists can restrict who may run this graph.",
+      "branch": false,
+      "sample": {
+        "allow": "Allow list: @Staff",
+        "deny": "Deny list: @Muted"
+      }
+    },
+    {
+      "type": "blockUser",
+      "label": "Block User",
+      "group": "Security",
+      "color": "red",
+      "icon": "user-off",
+      "help": "Add a bot-level restriction for the current user.",
+      "branch": false,
+      "sample": {
+        "reason": "Spamming commands"
+      }
+    },
+    {
+      "type": "allowUser",
+      "label": "Allow User",
+      "group": "Security",
+      "color": "green",
+      "icon": "user-check",
+      "help": "Remove a bot-level restriction.",
+      "branch": false,
+      "sample": {
+        "reason": "Appeal accepted"
+      }
+    },
+    {
+      "type": "userHasPermission",
+      "label": "If Permission",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "shield-check",
+      "help": "Branch on a Discord permission.",
+      "branch": true,
+      "sample": {
+        "permission": "ManageMessages"
+      }
+    },
+    {
+      "type": "ifChannelName",
+      "label": "If Channel Name",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "hash",
+      "help": "Branch when the current channel name matches text.",
+      "branch": true,
+      "sample": {
+        "value": "general"
+      }
+    },
+    {
+      "type": "ifUserId",
+      "label": "If User ID",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "user",
+      "help": "Branch when the current user id matches.",
+      "branch": true,
+      "sample": {
+        "value": "123456789012345678"
+      }
+    },
+    {
+      "type": "ifMessageLength",
+      "label": "If Message Length",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "ruler",
+      "help": "Branch on message character length.",
+      "branch": true,
+      "sample": {
+        "condition": {
+          "value": "longer than",
+          "options": [
+            "longer than",
+            "shorter than",
+            "exactly"
+          ]
+        },
+        "value": "200"
+      }
+    },
+    {
+      "type": "ifContainsAny",
+      "label": "If Contains Any",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "filter",
+      "help": "Branch if any configured word appears.",
+      "branch": true,
+      "sample": {
+        "words": "invite, discord.gg"
+      }
+    },
+    {
+      "type": "ifContainsAll",
+      "label": "If Contains All",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "filter",
+      "help": "Branch if every configured word appears.",
+      "branch": true,
+      "sample": {
+        "words": "free, nitro"
+      }
+    },
+    {
+      "type": "ifRegex",
+      "label": "If Regex",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "code",
+      "help": "Branch using a regular expression.",
+      "branch": true,
+      "sample": {
+        "pattern": "https?://\\S+"
+      }
+    },
+    {
+      "type": "ifAccountAge",
+      "label": "If Account Age",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "calendar",
+      "help": "Branch on account age in days.",
+      "branch": true,
+      "sample": {
+        "condition": {
+          "value": "younger than",
+          "options": [
+            "younger than",
+            "older than"
+          ]
+        },
+        "days": "7 days"
+      }
+    },
+    {
+      "type": "ifMemberCount",
+      "label": "If Member Count",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "users",
+      "help": "Branch on current server member count.",
+      "branch": true,
+      "sample": {
+        "condition": {
+          "value": "at least",
+          "options": [
+            "at least",
+            "at most",
+            "exactly"
+          ]
+        },
+        "value": "100"
+      }
+    },
+    {
+      "type": "ifTime",
+      "label": "If Time",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "clock",
+      "help": "Branch against a 24-hour clock time.",
+      "branch": true,
+      "sample": {
+        "condition": {
+          "value": "after",
+          "options": [
+            "after",
+            "before"
+          ]
+        },
+        "value": "22:00"
+      }
+    },
+    {
+      "type": "ifEventType",
+      "label": "If Event Type",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "activity",
+      "help": "Branch on the listener event name.",
+      "branch": true,
+      "sample": {
+        "value": "memberJoin"
+      }
+    },
+    {
+      "type": "randomBranch",
+      "label": "Random Branch",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "dice",
+      "help": "Choose one of several weighted branches.",
+      "branch": false,
+      "sample": {
+        "weights": {
+          "value": "True 70% · False 30%",
+          "options": [
+            "True 50% · False 50%",
+            "True 70% · False 30%",
+            "True 90% · False 10%"
+          ]
+        }
+      }
+    },
+    {
+      "type": "ifCondition",
+      "label": "If",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "git-branch",
+      "help": "Branch using a target, condition and optional value or role.",
+      "branch": true,
+      "sample": {
+        "target": {
+          "value": "User",
+          "options": [
+            "User",
+            "Message author",
+            "Mentioned user"
+          ]
+        },
+        "condition": {
+          "value": "Has role",
+          "options": [
+            "Has role",
+            "Is bot",
+            "Is administrator",
+            "Message contains",
+            "Equals"
+          ]
+        },
+        "roleId": "Staff"
+      }
+    },
+    {
+      "type": "ifContains",
+      "label": "If Contains",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "filter",
+      "help": "Branch based on text in the trigger message.",
+      "branch": true,
+      "sample": {
+        "value": "hello"
+      }
+    },
+    {
+      "type": "ifHasRole",
+      "label": "If Has Role",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "shield-check",
+      "help": "Branch based on whether the user has a role.",
+      "branch": true,
+      "sample": {
+        "roleId": "Member"
+      }
+    },
+    {
+      "type": "randomChance",
+      "label": "Random Chance",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "dice",
+      "help": "Take the true branch by a percentage chance.",
+      "branch": true,
+      "sample": {
+        "chance": "25%"
+      }
+    },
+    {
+      "type": "ifNumber",
+      "label": "If Number",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "math",
+      "help": "Compare a numeric variable or value.",
+      "branch": true,
+      "sample": {
+        "name": "points",
+        "condition": {
+          "value": ">=",
+          "options": [
+            ">=",
+            "<=",
+            ">",
+            "<",
+            "="
+          ]
+        },
+        "value": "10"
+      }
+    },
+    {
+      "type": "ifVariableExists",
+      "label": "If Variable Exists",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "variable",
+      "help": "Branch when an Advanced variable is available to read.",
+      "branch": true,
+      "sample": {
+        "name": "welcomed"
+      }
+    },
+    {
+      "type": "comment",
+      "label": "Comment",
+      "group": "Logic",
+      "color": "gray",
+      "icon": "note",
+      "help": "Builder-only note; not sent to Discord.",
+      "branch": false,
+      "sample": {
+        "content": "Builder-only note: checks VIP status"
+      }
+    },
+    {
+      "type": "compareOutput",
+      "label": "Compare Output",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "git-branch",
+      "help": "Compare an input output against a value and branch True or False.",
+      "branch": true,
+      "sample": {
+        "condition": {
+          "value": "equals",
+          "options": [
+            "equals",
+            "contains",
+            "starts with",
+            "ends with"
+          ]
+        },
+        "value": "yes"
+      }
+    },
+    {
+      "type": "outputExists",
+      "label": "Output Exists",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "circle-check",
+      "help": "Branch based on whether an output has a value.",
+      "branch": true,
+      "sample": {
+        "name": "result"
+      }
+    },
+    {
+      "type": "outputContains",
+      "label": "Output Contains",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "filter",
+      "help": "Branch when an output contains text.",
+      "branch": true,
+      "sample": {
+        "value": "ok"
+      }
+    },
+    {
+      "type": "outputEquals",
+      "label": "Output Equals",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "equals",
+      "help": "Branch when an output equals a value.",
+      "branch": true,
+      "sample": {
+        "value": "done"
+      }
+    },
+    {
+      "type": "isBotUser",
+      "label": "If Bot User",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "robot",
+      "help": "Branch based on whether the command user is a bot.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "isDirectMessage",
+      "label": "If Direct Message",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "message-off",
+      "help": "Branch based on whether the context is a DM.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "chooseValue",
+      "label": "Choose Value",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "switch-2",
+      "help": "Choose between two values based on a condition output.",
+      "branch": false,
+      "sample": {
+        "value": "A or B"
+      }
+    },
+    {
+      "type": "ifHasAttachment",
+      "label": "If Has Attachment",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "photo",
+      "help": "Branch on whether the message has a file or image attached.",
+      "branch": true,
+      "sample": {}
+    },
+    {
+      "type": "ifMentionsUser",
+      "label": "If Mentions User",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "user",
+      "help": "Branch on whether the message mentions anyone (or a specific user ID in the value).",
+      "branch": true,
+      "sample": {
+        "value": "123456789012345678"
+      }
+    },
+    {
+      "type": "ifStartsWith",
+      "label": "If Starts With",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "filter",
+      "help": "Branch when the message starts with the value.",
+      "branch": true,
+      "sample": {
+        "value": "!"
+      }
+    },
+    {
+      "type": "ifEndsWith",
+      "label": "If Ends With",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "filter",
+      "help": "Branch when the message ends with the value.",
+      "branch": true,
+      "sample": {
+        "value": "?"
+      }
+    },
+    {
+      "type": "ifIsAdmin",
+      "label": "If Is Administrator",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "shield",
+      "help": "Branch on whether the member has the Administrator permission.",
+      "branch": true,
+      "sample": {}
+    },
+    {
+      "type": "ifIsOwner",
+      "label": "If Is Server Owner",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "shield",
+      "help": "Branch on whether the member owns the server.",
+      "branch": true,
+      "sample": {}
+    },
+    {
+      "type": "ifRoleCount",
+      "label": "If Role Count",
+      "group": "Logic",
+      "color": "orange",
+      "icon": "shield",
+      "help": "Branch when the member has at least this many roles (value).",
+      "branch": true,
+      "sample": {
+        "value": "3"
+      }
+    },
+    {
+      "type": "textContainsAny",
+      "label": "Text Contains Any",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "filter",
+      "help": "Output true when any word is present.",
+      "branch": false,
+      "sample": {
+        "words": "hi, hello"
+      }
+    },
+    {
+      "type": "textContainsAll",
+      "label": "Text Contains All",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "filter",
+      "help": "Output true when all words are present.",
+      "branch": false,
+      "sample": {
+        "words": "red, blue"
+      }
+    },
+    {
+      "type": "textRegexExtract",
+      "label": "Regex Extract",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "code",
+      "help": "Extract the first regex match.",
+      "branch": false,
+      "sample": {
+        "pattern": "\\d+"
+      }
+    },
+    {
+      "type": "textSplit",
+      "label": "Split Text",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "arrows-split",
+      "help": "Split text and return an indexed part.",
+      "branch": false,
+      "sample": {
+        "separator": ",",
+        "index": "0"
+      }
+    },
+    {
+      "type": "textJoin",
+      "label": "Join List",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "link",
+      "help": "Join list values with a separator.",
+      "branch": false,
+      "sample": {
+        "separator": ", "
+      }
+    },
+    {
+      "type": "textUpper",
+      "label": "Text Uppercase",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "Convert an input output to uppercase.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "textLower",
+      "label": "Text Lowercase",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "Convert an input output to lowercase.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "textTrim",
+      "label": "Text Trim",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "scissors",
+      "help": "Remove whitespace around an input output.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "textReplace",
+      "label": "Text Replace",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "replace",
+      "help": "Replace matching text in an input output.",
+      "branch": false,
+      "sample": {
+        "find": "bad",
+        "replace": "***"
+      }
+    },
+    {
+      "type": "textLength",
+      "label": "Text Length",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "ruler",
+      "help": "Output the character length of an input.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "textPrefix",
+      "label": "Text Prefix",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "text-plus",
+      "help": "Add text before an input output.",
+      "branch": false,
+      "sample": {
+        "value": "> "
+      }
+    },
+    {
+      "type": "textSuffix",
+      "label": "Text Suffix",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "text-plus",
+      "help": "Add text after an input output.",
+      "branch": false,
+      "sample": {
+        "value": "!"
+      }
+    },
+    {
+      "type": "joinText",
+      "label": "Join Text",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "link",
+      "help": "Combine an input output with a separator.",
+      "branch": false,
+      "sample": {
+        "separator": " "
+      }
+    },
+    {
+      "type": "textCapitalize",
+      "label": "Text Capitalize",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "Capitalise the first letter of the input and lower-case the rest.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "textTitleCase",
+      "label": "Text Title Case",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "Capitalise Every Word Of The Input.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "textReverse",
+      "label": "Text Reverse",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "Reverse the characters of the input.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "textSubstring",
+      "label": "Text Substring",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "Take part of the input. Value is start,length (for example 0,5 = first five characters).",
+      "branch": false,
+      "sample": {
+        "value": "0,5"
+      }
+    },
+    {
+      "type": "textRepeat",
+      "label": "Text Repeat",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "Repeat the input text N times (value = N, up to 50).",
+      "branch": false,
+      "sample": {
+        "value": "3"
+      }
+    },
+    {
+      "type": "textCountWords",
+      "label": "Text Count Words",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "Count the words in the input.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "textIndexOf",
+      "label": "Text Index Of",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "Position of the value inside the input (-1 if it is not there).",
+      "branch": false,
+      "sample": {
+        "value": "@"
+      }
+    },
+    {
+      "type": "textSlugify",
+      "label": "Text Slugify",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "Turn the input into a-url-friendly-slug.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "textRemoveSpaces",
+      "label": "Text Remove Spaces",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "Remove every space from the input.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "textStartsWith",
+      "label": "Text Starts With",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "true when the input starts with the value, otherwise false.",
+      "branch": false,
+      "sample": {
+        "value": "http"
+      }
+    },
+    {
+      "type": "textEndsWith",
+      "label": "Text Ends With",
+      "group": "Transform",
+      "color": "cyan",
+      "icon": "typography",
+      "help": "true when the input ends with the value, otherwise false.",
+      "branch": false,
+      "sample": {
+        "value": ".png"
+      }
+    },
+    {
+      "type": "numberMin",
+      "label": "Number Min",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "minus",
+      "help": "Minimum of input and value.",
+      "branch": false,
+      "sample": {
+        "value": "100"
+      }
+    },
+    {
+      "type": "numberMax",
+      "label": "Number Max",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "plus",
+      "help": "Maximum of input and value.",
+      "branch": false,
+      "sample": {
+        "value": "0"
+      }
+    },
+    {
+      "type": "numberAbs",
+      "label": "Absolute Number",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "math",
+      "help": "Absolute value.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "numberRandomFloat",
+      "label": "Random Decimal",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "dice",
+      "help": "Random decimal between min and max.",
+      "branch": false,
+      "sample": {
+        "min": "0",
+        "max": "1"
+      }
+    },
+    {
+      "type": "numberAdd",
+      "label": "Number Add",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "plus",
+      "help": "Add a number to an input output.",
+      "branch": false,
+      "sample": {
+        "value": "5"
+      }
+    },
+    {
+      "type": "numberSubtract",
+      "label": "Number Subtract",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "minus",
+      "help": "Subtract a number from an input output.",
+      "branch": false,
+      "sample": {
+        "value": "5"
+      }
+    },
+    {
+      "type": "numberMultiply",
+      "label": "Number Multiply",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "x",
+      "help": "Multiply an input output.",
+      "branch": false,
+      "sample": {
+        "value": "2"
+      }
+    },
+    {
+      "type": "numberDivide",
+      "label": "Number Divide",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "divide",
+      "help": "Divide an input output.",
+      "branch": false,
+      "sample": {
+        "value": "2"
+      }
+    },
+    {
+      "type": "numberRound",
+      "label": "Round Number",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "math",
+      "help": "Round an input number.",
+      "branch": false,
+      "sample": {
+        "digits": {
+          "value": "0 decimals",
+          "options": [
+            "0 decimals",
+            "1 decimal",
+            "2 decimals"
+          ]
+        }
+      }
+    },
+    {
+      "type": "numberModulo",
+      "label": "Number Modulo",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "plus",
+      "help": "Remainder after dividing the input by the value.",
+      "branch": false,
+      "sample": {
+        "value": "2"
+      }
+    },
+    {
+      "type": "numberPower",
+      "label": "Number Power",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "plus",
+      "help": "Raise the input to the power of the value.",
+      "branch": false,
+      "sample": {
+        "value": "2"
+      }
+    },
+    {
+      "type": "numberSqrt",
+      "label": "Number Square Root",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "plus",
+      "help": "Square root of the input.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "numberFloor",
+      "label": "Number Floor",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "plus",
+      "help": "Round the input down to a whole number.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "numberCeil",
+      "label": "Number Ceil",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "plus",
+      "help": "Round the input up to a whole number.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "numberClamp",
+      "label": "Number Clamp",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "plus",
+      "help": "Keep the input between min and max. Value is min,max (for example 0,100).",
+      "branch": false,
+      "sample": {
+        "value": "0,100"
+      }
+    },
+    {
+      "type": "numberPercent",
+      "label": "Number Percent",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "plus",
+      "help": "What percentage of the input is the value (for example 25% of 200 = 50: value 25).",
+      "branch": false,
+      "sample": {
+        "value": "25"
+      }
+    },
+    {
+      "type": "numberNegate",
+      "label": "Number Negate",
+      "group": "Math",
+      "color": "yellow",
+      "icon": "plus",
+      "help": "Flip the sign of the input (5 becomes -5).",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "chartBar",
+      "label": "Bar Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Bar chart: one bar per value. Values can be typed in, read from a variable, or arrive on the wire. Optionally posts the chart to the channel.",
+      "branch": false,
+      "sample": {
+        "title": "Messages this week",
+        "chartSource": {
+          "value": "Hardcoded values",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "labels": "Mon, Tue, Wed, Thu",
+        "values": "3, 7, 5, 9"
+      }
+    },
+    {
+      "type": "chartLine",
+      "label": "Line Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Line chart: values joined by a line. Values can be typed in, read from a variable, or arrive on the wire. Optionally posts the chart to the channel.",
+      "branch": false,
+      "sample": {
+        "title": "Members over time",
+        "chartSource": {
+          "value": "Hardcoded values",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "labels": "W1, W2, W3, W4, W5",
+        "values": "120, 135, 160, 158, 190"
+      }
+    },
+    {
+      "type": "chartArea",
+      "label": "Area Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Area chart: a line chart with the area filled in. Values can be typed in, read from a variable, or arrive on the wire. Optionally posts the chart to the channel.",
+      "branch": false,
+      "sample": {
+        "title": "Online per hour",
+        "chartSource": {
+          "value": "Hardcoded values",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "labels": "9, 10, 11, 12",
+        "values": "4, 9, 14, 11"
+      }
+    },
+    {
+      "type": "chartPie",
+      "label": "Pie Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Pie chart: each value's share of the total. Values can be typed in, read from a variable, or arrive on the wire. Optionally posts the chart to the channel.",
+      "branch": false,
+      "sample": {
+        "title": "Ticket outcomes",
+        "chartSource": {
+          "value": "Hardcoded values",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "values": "Solved:12, Open:5, Denied:3"
+      }
+    },
+    {
+      "type": "chartDonut",
+      "label": "Donut Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Donut chart: a pie chart with a hole in the middle. Values can be typed in, read from a variable, or arrive on the wire. Optionally posts the chart to the channel.",
+      "branch": false,
+      "sample": {
+        "title": "Role share",
+        "chartSource": {
+          "value": "Hardcoded values",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "values": "Staff:8, VIP:22, Members:70"
+      }
+    },
+    {
+      "type": "chartScatter",
+      "label": "Scatter Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Scatter plot: values as dots (use x:y pairs for exact positions). Values can be typed in, read from a variable, or arrive on the wire. Optionally posts the chart to the channel.",
+      "branch": false,
+      "sample": {
+        "title": "Level vs coins",
+        "chartSource": {
+          "value": "Hardcoded values",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "values": "1:20, 2:45, 3:38, 4:90, 5:75"
+      }
+    },
+    {
+      "type": "chartGauge",
+      "label": "Gauge Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Gauge: one value shown against a maximum. Values can be typed in, read from a variable, or arrive on the wire. Optionally posts the chart to the channel.",
+      "branch": false,
+      "sample": {
+        "title": "Server boost progress",
+        "chartSource": {
+          "value": "Hardcoded values",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "values": "62",
+        "gaugeMax": "100"
+      }
+    },
+    {
+      "type": "chartSparkline",
+      "label": "Sparkline Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Sparkline: a tiny trend line with no axes. Values can be typed in, read from a variable, or arrive on the wire. Optionally posts the chart to the channel.",
+      "branch": false,
+      "sample": {
+        "title": "Joins",
+        "chartSource": {
+          "value": "Advanced variable",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "name": "join_history"
+      }
+    },
+    {
+      "type": "chartHistogram",
+      "label": "Histogram Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Histogram: how many values fall into each range (bins). Values can be typed in, read from a variable, or arrive on the wire. Optionally posts the chart to the channel.",
+      "branch": false,
+      "sample": {
+        "title": "Account ages (days)",
+        "chartSource": {
+          "value": "Hardcoded values",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "values": "5, 12, 12, 30, 31, 45, 90, 91, 200",
+        "bins": "4"
+      }
+    },
+    {
+      "type": "chartLeaderboard",
+      "label": "Leaderboard Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Ranking: the highest values on top with medals for the first three. Values can be typed in, read from an advanced variable, or taken from the wire.",
+      "branch": false,
+      "sample": {
+        "title": "Top chatters",
+        "chartSource": {
+          "value": "Hardcoded values",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "values": "Ava:120, Ben:95, Cleo:210, Dan:60"
+      }
+    },
+    {
+      "type": "chartTable",
+      "label": "Table Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "A simple two-column table of label and value. Values can be typed in, read from an advanced variable, or taken from the wire.",
+      "branch": false,
+      "sample": {
+        "title": "Stats",
+        "chartSource": {
+          "value": "Hardcoded values",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "values": "Members:240, Online:61, Bots:4"
+      }
+    },
+    {
+      "type": "chartProgress",
+      "label": "Progress Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Progress bars: each value as a percentage of the maximum (Gauge maximum). Values can be typed in, read from an advanced variable, or taken from the wire.",
+      "branch": false,
+      "sample": {
+        "title": "Goals",
+        "chartSource": {
+          "value": "Hardcoded values",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        },
+        "values": "Members:240, Boosts:9",
+        "gaugeMax": "300"
+      }
+    },
+    {
+      "type": "chartRadar",
+      "label": "Radar Chart",
+      "group": "Charts",
+      "color": "pink",
+      "icon": "activity",
+      "help": "Radar chart: one axis per label, great for comparing skills or stats. Values can be typed in, read from a variable, or arrive on the wire. Optionally posts the chart to the channel.",
+      "branch": false,
+      "sample": {
+        "title": "Skill check",
+        "chartSource": {
+          "value": "Wire input",
+          "options": [
+            "Hardcoded values",
+            "Advanced variable",
+            "Wire input"
+          ]
+        }
+      }
+    },
+    {
+      "type": "setVariableIf",
+      "label": "Set Variable If",
+      "group": "Variables",
+      "color": "green",
+      "icon": "variable",
+      "help": "Set a variable only when a connected condition is true.",
+      "branch": false,
+      "sample": {
+        "name": "vip",
+        "value": "true"
+      }
+    },
+    {
+      "type": "appendVariable",
+      "label": "Append Variable",
+      "group": "Variables",
+      "color": "green",
+      "icon": "text-plus",
+      "help": "Append text to a variable.",
+      "branch": false,
+      "sample": {
+        "name": "log",
+        "value": "step done; "
+      }
+    },
+    {
+      "type": "deleteVariable",
+      "label": "Delete Variable",
+      "group": "Variables",
+      "color": "green",
+      "icon": "trash",
+      "help": "Delete a local advanced variable value.",
+      "branch": false,
+      "sample": {
+        "name": "temp"
+      }
+    },
+    {
+      "type": "setVariable",
+      "label": "Set Variable",
+      "group": "Variables",
+      "color": "green",
+      "icon": "variable",
+      "help": "Set a temporary command variable for later nodes.",
+      "branch": false,
+      "sample": {
+        "name": "points",
+        "value": "10"
+      }
+    },
+    {
+      "type": "incrementVariable",
+      "label": "Change Variable",
+      "group": "Variables",
+      "color": "green",
+      "icon": "math",
+      "help": "Add or subtract a number from a command variable.",
+      "branch": false,
+      "sample": {
+        "name": "points",
+        "amount": "+1"
+      }
+    },
+    {
+      "type": "randomPick",
+      "label": "Random Pick",
+      "group": "Variables",
+      "color": "green",
+      "icon": "dice",
+      "help": "Store one random item from a list in a variable.",
+      "branch": false,
+      "sample": {
+        "name": "prize",
+        "values": "Gold, Silver, Bronze"
+      }
+    },
+    {
+      "type": "stopIf",
+      "label": "Stop If",
+      "group": "Flow",
+      "color": "gray",
+      "icon": "player-stop",
+      "help": "Stop when a connected boolean is true.",
+      "branch": false,
+      "sample": {
+        "condition": {
+          "value": "is true",
+          "options": [
+            "is true",
+            "is false"
+          ]
+        }
+      }
+    },
+    {
+      "type": "loopCount",
+      "label": "Repeat",
+      "group": "Flow",
+      "color": "yellow",
+      "icon": "repeat",
+      "help": "Repeat the next branch a limited number of times.",
+      "branch": false,
+      "sample": {
+        "count": "3 times"
+      }
+    },
+    {
+      "type": "waitUntil",
+      "label": "Wait Until",
+      "group": "Flow",
+      "color": "yellow",
+      "icon": "clock",
+      "help": "Wait for a short duration before continuing.",
+      "branch": false,
+      "sample": {
+        "ms": "2000 ms"
+      }
+    },
+    {
+      "type": "delay",
+      "label": "Wait",
+      "group": "Flow",
+      "color": "yellow",
+      "icon": "clock",
+      "help": "Pause execution for milliseconds.",
+      "branch": false,
+      "sample": {
+        "ms": "1000 ms"
+      }
+    },
+    {
+      "type": "stop",
+      "label": "Stop",
+      "group": "Flow",
+      "color": "gray",
+      "icon": "player-stop",
+      "help": "Stop executing the command immediately.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "setOutput",
+      "label": "Set Output",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "brackets",
+      "help": "Create a reusable output value that downstream nodes can consume.",
+      "branch": false,
+      "sample": {
+        "name": "result",
+        "value": "ok"
+      }
+    },
+    {
+      "type": "getVariable",
+      "label": "Get Variable",
+      "group": "Outputs",
+      "color": "green",
+      "icon": "variable",
+      "help": "Read an Advanced variable and expose its value as a node output.",
+      "branch": false,
+      "sample": {
+        "name": "points"
+      }
+    },
+    {
+      "type": "currentChannelId",
+      "label": "Current Channel ID",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "hash",
+      "help": "Output the current channel ID.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "currentUserId",
+      "label": "Current User ID",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "user",
+      "help": "Output the command user's ID.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "currentServerId",
+      "label": "Current Server ID",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "server",
+      "help": "Output the current server ID.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "currentTrigger",
+      "label": "Current Trigger",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "bolt",
+      "help": "Output the trigger used to invoke the command.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "currentMessage",
+      "label": "Current Message",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "message",
+      "help": "Output the triggering message content.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "currentTimestamp",
+      "label": "Current Timestamp",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "clock",
+      "help": "Output the current Unix timestamp.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "currentUserName",
+      "label": "Current User Name",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "user",
+      "help": "Output the name of the member who ran the command.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "currentChannelName",
+      "label": "Current Channel Name",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "hash",
+      "help": "Output the name of the channel the command ran in.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "currentServerName",
+      "label": "Current Server Name",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "servers",
+      "help": "Output the name of this server.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "currentMemberCount",
+      "label": "Current Member Count",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "users",
+      "help": "Output how many members the server has.",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "currentDate",
+      "label": "Current Date",
+      "group": "Outputs",
+      "color": "teal",
+      "icon": "calendar",
+      "help": "Output today's date and time (ISO format, UTC).",
+      "branch": false,
+      "sample": {}
+    },
+    {
+      "type": "sendLog",
+      "label": "Send Log",
+      "group": "Utility",
+      "color": "blue",
+      "icon": "notebook",
+      "help": "Write a structured person/event log through the Logging module.",
+      "branch": false,
+      "sample": {
+        "title": "Command used",
+        "content": "{user.name} ran /welcome"
+      }
+    },
+    {
+      "type": "logUser",
+      "label": "Log Person",
+      "group": "Utility",
+      "color": "blue",
+      "icon": "user",
+      "help": "Write a person-specific log entry with user, channel and reason.",
+      "branch": false,
+      "sample": {
+        "reason": "Joined from invite link"
+      }
+    },
+    {
+      "type": "notifyStaff",
+      "label": "Notify Staff",
+      "group": "Utility",
+      "color": "blue",
+      "icon": "bell",
+      "help": "Send a staff notification to a configured channel.",
+      "branch": false,
+      "sample": {
+        "channelId": "#staff-alerts",
+        "content": "Check {user.mention}"
+      }
+    },
+    {
+      "type": "log",
+      "label": "Log",
+      "group": "Utility",
+      "color": "blue",
+      "icon": "terminal-2",
+      "help": "Write a diagnostic line to the bot console.",
+      "branch": false,
+      "sample": {
+        "content": "Reached step 3"
+      }
+    },
+    {
+      "type": "randomNumber",
+      "label": "Random Number",
+      "group": "Utility",
+      "color": "yellow",
+      "icon": "dice",
+      "help": "Output a random number between a minimum and maximum.",
+      "branch": false,
+      "sample": {
+        "min": "1",
+        "max": "100"
+      }
+    },
+    {
+      "type": "debugOutput",
+      "label": "Debug Output",
+      "group": "Utility",
+      "color": "blue",
+      "icon": "terminal-2",
+      "help": "Log an output value while keeping it available downstream.",
+      "branch": false,
+      "sample": {
+        "name": "result"
+      }
+    },
+    {
+      "type": "aiAnswer",
+      "label": "Ask AI",
+      "group": "AI",
+      "color": "pink",
+      "icon": "sparkles",
+      "help": "Ask the configured AI model a question using only the selected scope and connected inputs.",
+      "branch": false,
+      "sample": {
+        "content": "Answer: {message}"
+      }
+    }
+  ],
+  "nodeGroupNotes": {
+    "Command": "Every command starts here. These nodes describe the command itself rather than doing work.",
+    "Listeners": "Listeners react to Discord events instead of a typed command.",
+    "Inputs": "Inputs turn something from the command (text, mentions, IDs...) into a value other nodes can use as {node-id}.",
+    "Discord": "Actions that send messages or change things in your server.",
+    "Moderation": "Actions against members and messages. The bot needs the matching Discord permission, and its role must be above the target.",
+    "Security": "Allow/deny rules and bot-level restrictions.",
+    "Logic": "Branch nodes have two outputs: True (green) and False (red). Connect each to the path that should run.",
+    "Transform": "Text tools. Connect text in, use the result downstream.",
+    "Math": "Number tools.",
+    "Variables": "Store values for later nodes in the same run.",
+    "Flow": "Control the order, timing and stopping of a flow.",
+    "Outputs": "Read values from the current run or publish a named output.",
+    "Utility": "Logging, notes and debugging.",
+    "Charts": "Charts turn numbers into a picture. In the builder every chart node shows a live preview of its own data. Data can be typed in, read from an advanced variable, or arrive on the wire from the node before it. When the command runs the chart is posted as a text chart (bars, lines, pies...) and its text is also passed on to the next node.",
+    "AI": "AI-assisted answers."
+  },
+  "nodeGroupOrder": [
+    "Command",
+    "Listeners",
+    "Inputs",
+    "Discord",
+    "Moderation",
+    "Security",
+    "Logic",
+    "Transform",
+    "Math",
+    "Charts",
+    "Variables",
+    "Flow",
+    "Outputs",
+    "Utility",
+    "AI"
+  ]
+}
